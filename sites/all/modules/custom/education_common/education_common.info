@@ -1,0 +1,8 @@
+name = Education common
+description = "Provides some base improvements for education site"
+package = Custom
+core = 7.x
+
+version = "7.x-3.0-dev"
+project = "education_common"
+datestamp = "1543859284"
