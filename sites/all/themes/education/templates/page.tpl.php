@@ -246,7 +246,9 @@
     <div id="popup__overlay" class="popup__overlay" style="display: none;"></div>
 
     <!--------------------------------------->
+    <?php if (isset($quick_order_form)): ?>
     <?php print $quick_order_form; ?>
+    <?php endif; ?>
     <!--------------------------------------->
 
   </div></div> <!-- /#page, /#page-wrapper -->
