@@ -166,9 +166,6 @@
         </div></div> <!-- /.section, /#messages -->
     <?php endif; ?>
 
-
-    <a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="2781">быстрый заказ</a>
-
     <?php if ($page['featured']): ?>
       <div id="featured"><div class="section clearfix">
           <?php print render($page['featured']); ?>

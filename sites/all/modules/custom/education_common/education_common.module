@@ -21,11 +21,12 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
-  $block_quick_order =  education_common_get_rendered_block('education_common', 'form-quick-order');
-  $variables['quick_order_form'] =  $block_quick_order;
-  drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
+  if (strstr(current_path(), 'user/')) {
+    $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
+    $variables['quick_order_form'] = $block_quick_order;
+    drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
+  }
 }
-
 
 /**
  * Implements hook_block_info
@@ -189,8 +190,8 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       $form_state['values']['order_id'] = $order_id;
 
       $order = commerce_order_load($order_id);
-      //$order_mail_data = hb_order_get_order_mail_data($order);
-      //$order_mail_data_admin = hb_order_get_order_mail_data_admin($order);
+      //$order_mail_data = education_common_get_order_mail_data($order);
+      //$order_mail_data_admin = education_common_get_order_mail_data_admin($order);
 
       $order_user = user_load($order->uid);
       // получим тип заказа
@@ -203,7 +204,7 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       }
 
       /*
-      rules_invoke_event('hb_order_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
+      rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
         $form_state['values']['user_phone'], $order_id, $order_mail_data, $order_mail_data_admin, $order_type_title);
       */
 
