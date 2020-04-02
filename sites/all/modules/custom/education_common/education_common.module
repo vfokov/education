@@ -1,0 +1,354 @@
+<?php
+
+function education_common_preprocess_user_profile(&$variables) {
+  //unset($variables['elements']['user_picture']);
+  //unset($variables['user_profile']);
+}
+
+
+/**
+ * Helper to rendered block().
+ */
+function education_common_get_rendered_block($module_name, $block_name) {
+  $block_render_data = block_load($module_name, $block_name);
+  $block_render_data = _block_render_blocks(array($block_render_data));
+  $block_build = _block_get_renderable_array($block_render_data);
+  $rendered_block = drupal_render($block_build);
+  return $rendered_block;
+}
+
+/**
+ * Override or insert variables into the node template.
+ */
+function education_common_preprocess_page(&$variables) {
+  $block_quick_order =  education_common_get_rendered_block('education_common', 'form-quick-order');
+  $variables['quick_order_form'] =  $block_quick_order;
+  drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
+}
+
+
+/**
+ * Implements hook_block_info
+ */
+function education_common_block_info() {
+  $blocks['form-quick-order'] = array(
+    'info' => 'Booking form',
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view
+ */
+function education_common_block_view($delta = '') {
+  $block = array(
+    'subject' => '',
+    'content' => '',
+  );
+
+  switch ($delta) {
+    case 'form-quick-order':
+      $block['subject'] = t('Book a lesson');
+      $block['content'] = drupal_get_form('education_common_quick_order');
+      break;
+  }
+  return $block;
+}
+
+
+/**
+ * Quick order form
+ */
+function education_common_quick_order($form, &$form_state) {
+  global $user;
+
+  //if ($user->uid) {
+  $user_profile = user_load($user->uid);
+  //}
+
+  $form['info'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="form__desc">For quick booking fill the form.<br /> Our manager will get in touch with you.<br /></div>',
+    '#theme_wrappers' => array(),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+    '#attributes' => array(
+      'placeholder' => 'You name',
+    ),
+    '#theme_wrappers' => array(),
+    '#default_value' => isset($user_profile->field_user_fio[LANGUAGE_NONE]) ? $user_profile->field_user_fio[LANGUAGE_NONE][0]['value'] :  '',
+    '#required' => TRUE,
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['user_phone'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+    '#attributes' => array(
+      'placeholder' => t('Phone'),
+    ),
+    '#theme_wrappers' => array(),
+    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
+    '#required' => TRUE,
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['email'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+    '#attributes' => array(
+      'placeholder' => 'E-mail',
+    ),
+    '#theme_wrappers' => array(),
+    '#default_value' => isset($user_profile->mail) ? $user_profile->mail :  '',
+    '#required' => TRUE,
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['current_path'] = array(
+    '#type' => 'hidden',
+    '#default_value' => current_path(),
+  );
+
+  $form['product_id'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['teacher_uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['lesson_date'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['product_quantity'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'1',
+  );
+
+  /*
+  $form['is_cart'] = array(
+    '#type' => 'hidden',
+    '#default_value' => current_path() == 'cart' ? '1' : '0',
+  );
+  */
+
+  $form['terms_of_use'] = array(
+    '#theme_wrappers' => array(),
+    '#type' => 'checkbox',
+    '#title' => 'Настоящим подтверждаю, что я ознакомлен и согласен с условиями политики конфиденциальности.',
+    '#required' => TRUE,
+    '#suffix' => '<a class="term_of_use" href="/terms-of-use">Learn more</a>',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Book'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'education_common_quick_order_ajax_callback',
+    ),
+  );
+
+  //honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  return $form;
+}
+
+
+function education_common_quick_order_submit(&$form, &$form_state) {
+  global $user;
+
+  $product_id = $form_state['values']['product_id'];
+
+  if ($form_state['values']['product_quantity']) {
+    if ($product_id) {
+      $teacher_uid = $form_state['values']['teacher_uid'];
+      $date = $form_state['values']['lesson_date'];
+
+      $order_id = education_common_create_quick_order($user, $product_id, $form_state['values']['product_quantity'], $date, $teacher_uid,
+        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['is_cart']);
+
+      $form_state['values']['order_id'] = $order_id;
+
+      $order = commerce_order_load($order_id);
+      //$order_mail_data = hb_order_get_order_mail_data($order);
+      //$order_mail_data_admin = hb_order_get_order_mail_data_admin($order);
+
+      $order_user = user_load($order->uid);
+      // получим тип заказа
+      if ($order_user && in_array(2, array_keys($order_user->roles))) {
+        $order_type_title = 'заказ';
+      }
+
+      if ($order_user && in_array(5, array_keys($order_user->roles))) {
+        $order_type_title = 'оптовый заказ';
+      }
+
+      /*
+      rules_invoke_event('hb_order_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
+        $form_state['values']['user_phone'], $order_id, $order_mail_data, $order_mail_data_admin, $order_type_title);
+      */
+
+    }
+  }
+}
+
+
+function education_common_quick_order_ajax_callback(&$form, &$form_state) {
+  $current_path = '';
+  $current_path_text = '';
+
+  if (form_get_errors()) {
+    $commands[] = ajax_command_html('#' . $form['#id'], render($form));
+    $errors = form_get_errors();
+    if (isset($errors['name'])) {
+
+      if ($errors['name'] == 'user_mail_exists') {
+        $commands[] = ajax_command_after('#fast_cart input[name="name"]', '<div class="field__error">This value is in use</div>');
+      }
+      else {
+        $commands[] = ajax_command_after('#fast_cart input[name="name"]', '<div class="field__error">Field "Name" is required</div>');
+      }
+    }
+
+    if (isset($errors['user_phone'])) {
+      $commands[] = ajax_command_after('#fast_cart input[name="user_phone"]', '<div class="field__error">Field "Phone" is required</div>');
+    }
+
+    if (isset($errors['email'])) {
+
+      $email_error_text = $errors['email'] == 'email_error' ? 'E-mail address is not corrent' : 'Field "E-mail" is required';
+
+      if ($errors['email'] == 'user_mail_exists') {
+        $email_error_text = 'This value is in use';
+      }
+
+      $commands[] = ajax_command_after('#fast_cart input[name="email"]', '<div class="field__error">' . $email_error_text . '</div>');
+    }
+
+    if (isset($errors['terms_of_use'])) {
+      $commands[] = ajax_command_after('#fast_cart .term_of_use', '<div class="field__error terms">Must be your agreement</div>');
+    }
+  }
+
+  else {
+    if ($form_state['values']['is_cart']) {
+      $commands[] = array('command' => 'reloadPage');
+    }
+
+    if ($form_state['values']['current_path']) {
+      $current_path_text = 'Return to page';
+      $current_path = $form_state['values']['current_path'];
+
+      if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+        $current_path_text = 'Return to page';
+      }
+    }
+
+    $message = "<p>";
+    $path_to_return = l($current_path_text, $current_path);
+
+    if (isset($form_state['values']['is_cr'])) {
+
+    }
+
+    else {
+      $message .= '<div class="form__block"><div class="form__desc">Thanks for booking!<br />
+    Details of the booking were send to email.<br />
+        Our manager will get in touch with you soon<br /><br />' . $path_to_return . '</div></div>';
+    }
+
+    $message .= "</p>";
+    $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  }
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+
+}
+
+
+/**
+ * Создание "быстрого заказа"
+ */
+function education_common_create_quick_order($user, $product_id, $quantity=1, $date, $teacher_uid,  $user_phone, $name, $email, $is_cart) {
+
+  global $user;
+
+  //$user_phone = hb_user_clear_phone($user_phone);
+
+  // for anonymous
+  if (!$user->uid) {
+    // TODO check by email
+    /*
+    $user_account = user_load_by_mail($email);
+    if ($user_account) {
+      $new_user = $user_account;
+    }
+    */
+    //}
+
+  }
+
+  $new_user = TRUE;
+
+  // Create order
+  if ($new_user) {
+    $order = commerce_order_new($new_user->uid, 'pending');
+  }
+  else {
+    $order = commerce_order_new($user->uid, 'pending');
+  }
+  commerce_order_save($order);
+
+  // Create order line item
+  $product = commerce_product_load($product_id);
+  $line_item = commerce_product_line_item_new($product, $quantity, $order->order_id);
+  commerce_line_item_save($line_item);
+
+  // Attach line item to order
+  $order->commerce_line_items['und'][] = (array)$line_item;
+  // TODO - для order NEED to ADD fields lesson_date и teacher
+  $order->field_order_lesson_date['und'][0]['value'] = $date;
+  $order->field_lesson_teacher_uid['und'][0]['value'] = $teacher_uid;
+
+  /*
+  $profile_wrapper = entity_metadata_wrapper('commerce_customer_profile', $profile);
+
+  $profile_wrapper->commerce_customer_address->name_line = $name;
+  $profile_wrapper->commerce_customer_address->phone_number = $user_phone;
+
+  // $profile_wrapper->field_phone = $user_phone;
+//  $profile_wrapper->field_email = $email;
+  $profile_wrapper->save();
+
+  $order->commerce_customer_shipping[LANGUAGE_NONE][0]['profile_id'] = $profile->profile_id;
+  */
+  commerce_order_save($order);
+
+  if ($user_phone) {
+    // sms о заказе
+    // $msg = 'Booking  № ' . $order->order_id . ' is created';
+    //  education_common_send_sms($order, $msg, $user_phone);
+  }
+
+  return $order->order_id;
+}
+
