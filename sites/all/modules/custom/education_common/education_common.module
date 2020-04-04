@@ -77,12 +77,12 @@ function education_common_quick_order($form, &$form_state) {
 
   $form['name'] = array(
     '#type' => 'textfield',
-    '#title' => '',
+    '#title' => 'Your name',
     '#attributes' => array(
-      'placeholder' => 'You name',
+      'placeholder' => 'Your name',
     ),
-    '#theme_wrappers' => array(),
-    '#default_value' => isset($user_profile->field_user_fio[LANGUAGE_NONE]) ? $user_profile->field_user_fio[LANGUAGE_NONE][0]['value'] :  '',
+    //'#theme_wrappers' => array(),
+    '#default_value' => isset($user_profile->name) ? $user_profile->name :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -90,11 +90,11 @@ function education_common_quick_order($form, &$form_state) {
 
   $form['user_phone'] = array(
     '#type' => 'textfield',
-    '#title' => '',
+    '#title' => 'Phone',
     '#attributes' => array(
       'placeholder' => t('Phone'),
     ),
-    '#theme_wrappers' => array(),
+    //'#theme_wrappers' => array(),
     '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
@@ -103,11 +103,11 @@ function education_common_quick_order($form, &$form_state) {
 
   $form['email'] = array(
     '#type' => 'textfield',
-    '#title' => '',
+    '#title' => 'E-mail',
     '#attributes' => array(
       'placeholder' => 'E-mail',
     ),
-    '#theme_wrappers' => array(),
+    //'#theme_wrappers' => array(),
     '#default_value' => isset($user_profile->mail) ? $user_profile->mail :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
@@ -130,8 +130,33 @@ function education_common_quick_order($form, &$form_state) {
   );
 
   $form['lesson_date'] = array(
+    /*
     '#type' => 'hidden',
     '#default_value' =>'',
+    */
+    '#type' => 'textfield',
+    '#title' => 'Lesson date',
+    '#attributes' => array(
+      'placeholder' => t('Lesson date'),
+    ),
+    //'#theme_wrappers' => array(),
+    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
+    '#required' => TRUE,
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['skype'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Skype login',
+    '#attributes' => array(
+      'placeholder' => t('Skype login'),
+    ),
+    //'#theme_wrappers' => array(),
+    '#default_value' =>  isset($user_profile->field_skype['und']) ? $user_profile->field_skype['und'][0]['value'] :  '',
+    '#required' => TRUE,
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
   );
 
   $form['product_quantity'] = array(
@@ -185,7 +210,7 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       $date = $form_state['values']['lesson_date'];
 
       $order_id = education_common_create_quick_order($user, $product_id, $form_state['values']['product_quantity'], $date, $teacher_uid,
-        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['is_cart']);
+        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $form_state['values']['is_cart']);
 
       $form_state['values']['order_id'] = $order_id;
 
@@ -287,9 +312,89 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
 
 
 /**
+ * Создание пользователя во время создания "быстрого заказа"
+ */
+function education_common_create_quick_order_user($name, $pass, $mail, $phone, $skype) {
+
+  //$roles =  array(DRUPAL_AUTHENTICATED_RID => TRUE);
+  $roles =  array(DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+    5 => 'Student',); //
+
+  $new_user = user_save(NULL, array(
+    //'name' => $mail,
+    'name' => $name,
+    //'pass' => $pass,
+    'mail' => $mail,
+    'init' => 'email address',
+    'status' => 1,
+    'roles' => $roles,  //
+
+    'field_phone' => array(
+      'und' => array(
+        0 => array(
+          'value' => $phone,
+        )
+      )
+    ),
+
+    'field_skype' => array(
+      'und' => array(
+        0 => array(
+          'value' => $skype,
+        )
+      )
+    ),
+
+    /*
+    'field_discount' => array(
+      'und' => array(
+        0 => array(
+          'value' => 0,
+        )
+      )
+    ),
+    */
+
+    /*
+    'field_user_guid' => array(
+      'und' => array(
+        0 => array(
+          'value' => $guid,
+        )
+      )
+    ),
+    */
+
+    /*
+    'field_user_fio' => array(
+      'und' => array(
+        0 => array(
+          'value' => $name,
+        )
+      )
+    ),
+    */
+
+    /*
+    'field_terms_of_use' => array(
+      'und' => array(
+        0 => array(
+          'value' => 1,
+        )
+      )
+    ),
+    */
+
+  ));
+
+  return $new_user;
+}
+
+
+/**
  * Создание "быстрого заказа"
  */
-function education_common_create_quick_order($user, $product_id, $quantity=1, $date, $teacher_uid,  $user_phone, $name, $email, $is_cart) {
+function education_common_create_quick_order($user, $product_id, $quantity=1, $date, $teacher_uid,  $user_phone, $name, $email, $skype, $is_cart) {
 
   global $user;
 
@@ -298,17 +403,20 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
   // for anonymous
   if (!$user->uid) {
     // TODO check by email
-    /*
+
     $user_account = user_load_by_mail($email);
     if ($user_account) {
       $new_user = $user_account;
     }
-    */
+
     //}
+    else {
+      $new_user = education_common_create_quick_order_user($name, 0, $email, $user_phone, $skype);
+    }
 
   }
 
-  $new_user = TRUE;
+  //$new_user = TRUE;
 
   // Create order
   if ($new_user) {
@@ -328,7 +436,8 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
   $order->commerce_line_items['und'][] = (array)$line_item;
   // TODO - для order NEED to ADD fields lesson_date и teacher
   $order->field_order_lesson_date['und'][0]['value'] = $date;
-  $order->field_lesson_teacher_uid['und'][0]['value'] = $teacher_uid;
+  $order->field_lesson_teacher_uid['und'][0]['uid'] = $teacher_uid;
+  $order->field_skype['und'][0]['value'] = $skype;
 
   /*
   $profile_wrapper = entity_metadata_wrapper('commerce_customer_profile', $profile);
