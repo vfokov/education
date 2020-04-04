@@ -30,12 +30,25 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
 
     //unset($form['teacher_lessons_dates']);
 
+    /*
+    $field_grade_subject_options = $form['field_grade_subject']['#options'];
+    $field_grade_subject_options_new = array();
+    foreach ($field_grade_subject_options as $option) {
+      if (!strstr($option, 'Grade')) {
+        $field_grade_subject_options_new[] = $option;
+      }
+    }
+    $form['field_grade_subject']['#options'] = $field_grade_subject_options_new;
+    */
+
+    $f = 1;
+
     $form['teacher_lessons_dates']['#access'] = FALSE;
 
     $form['teacher_date_dates'] = array (
       '#type' => 'date_popup',
       '#size' => 30,
-      '#default_value' => '',
+      '#default_value' => date('Y-m-d', time()),
       '#date_format' => 'Y-m-d',
       '#date_year_range' => '-3:+3',
       '#description' => '',
@@ -75,6 +88,8 @@ function education_common_search_api_query_alter(SearchApiQueryInterface $query)
   if ($query->getOption('search id') == 'search_api_views:teachers_index:page') {
 
     if (isset($_GET['time_slider'])) {
+
+      //echo '<pre>'; print_r($_GET['time_slider']); echo '</pre>';  die();
 
       $g = 1;
 
