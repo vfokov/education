@@ -1,5 +1,153 @@
 <?php
 
+
+include_once 'inc/education_common.properties.inc';
+
+
+function education_common_preprocess_views_view(&$vars) {
+
+  $name = $vars['view']->name;
+
+  $n = 1;
+
+  if ($name == 'lesson_calendar') {
+    foreach ($vars['view']->result as $res_item) {
+      //$res_item->field_data_field_lesson_date_field_lesson_date_value
+    }
+  }
+
+}
+
+/**
+ * Implements hook_form_alter
+ */
+function education_common_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form['#id'] == 'views-exposed-form-teachers-index-page') {
+    ///////////////////////////////////////////////////
+    $w = 1;
+    $form['submit']['#weight'] = 30;
+
+    //unset($form['teacher_lessons_dates']);
+
+    $form['teacher_lessons_dates']['#access'] = FALSE;
+
+    $form['teacher_date_dates'] = array (
+      '#type' => 'date_popup',
+      '#size' => 30,
+      '#default_value' => '',
+      '#date_format' => 'Y-m-d',
+      '#date_year_range' => '-3:+3',
+      '#description' => '',
+    );
+
+    $form['time_slider'] = array(
+      '#title' => 'Select time range',
+      '#input_title' => NULL,
+      '#input2_title' => NULL,
+      '#type' => 'slider',
+      '#default_value' => array('value' => 0.00, 'value2' => 24.00),
+      //'#orientation' => 'vertical',
+     // '#slider_style' => 'orange',
+      '#range' => TRUE,
+      '#min' => 0.00,
+      '#max' => 24.00,
+      '#step' => 1.00,
+     // '#display_bubble' => TRUE,
+      //'#display_bubble_format' => '$%{value}%MIN||$%{value}%MAX',
+      //'#required' => 1,
+      //'#disabled' => TRUE,
+      '#display_inputs' => FALSE,
+      '#display_values' => TRUE,
+      '#display_values_format' => '%{value}%.00',
+      '#weight' => 29,
+    );
+    ///////////////////////////////////////////////////
+  }
+
+}
+
+/**
+ * hook_search_api_query_alter
+ */
+function education_common_search_api_query_alter(SearchApiQueryInterface $query) {
+
+  if ($query->getOption('search id') == 'search_api_views:teachers_index:page') {
+
+    if (isset($_GET['time_slider'])) {
+
+      $g = 1;
+
+      $time_slider_arr = $_GET['time_slider'];
+      $time_slider_from = $_GET['time_slider']['value'];
+      $time_slider_to = $_GET['time_slider']['value2'];
+
+      $teacher_lesson_date = strtotime($_GET['teacher_date_dates']['date']);
+
+      $t_d = date('Y-m-d H:i', $teacher_lesson_date);
+
+
+      $right_filter = $query->createFilter('AND');
+
+      $time_min = $teacher_lesson_date + $time_slider_from * 3600;
+      $time_max = $teacher_lesson_date + $time_slider_to * 3600;
+
+      $t_d_min = date('Y-m-d H:i', $time_min);
+      $t_d_max = date('Y-m-d H:i', $time_max);
+
+      //1586401200
+
+      $t  =1;
+
+      $right_filter->condition('teacher_lessons_dates', $time_min, '>=');
+      $right_filter->condition('teacher_lessons_dates', $time_max, '<=');
+
+      $main_filter = $query->createFilter('AND');
+      $main_filter->filter($right_filter);
+      $query->filter($main_filter);
+    }
+
+  }
+
+}
+
+function education_common_set_query_filter_ad(&$query) {
+  /*
+  $pg_num = preg_replace('~[^0-9]+~', '', arg(1));
+
+  //set range of rated power valuee ( -10% - +30%)
+  $pg_num_min = $pg_num - $pg_num * 0.1;
+  $pg_num_max = $pg_num + $pg_num * 0.3;
+
+  $right_filter = $query->createFilter('AND');
+  $right_filter->condition('field_rated_power:field_watts', $pg_num_min . ' кВт', '>=');
+  $right_filter->condition('field_rated_power:field_watts', $pg_num_max . ' кВт', '<=');
+
+  // for all but 1000-kvt
+  if (arg(1) != 'ad-1000') {
+    // condition field_engine:field_manufacturer
+    $man_filter = $query->createFilter('OR');
+    $man_tids = array(166, 61, 63, 55, 58);
+
+    foreach ($man_tids as $tid) {
+      $man_filter->condition('field_engine:field_manufacturer', $tid, '=');
+    }
+  }
+
+  $main_filter = $query->createFilter('AND');
+  $main_filter->filter($right_filter);
+
+  //filter all but 1000-kvt
+  if (arg(1) != 'ad-1000') {
+    $main_filter->filter($man_filter);
+  }
+
+  $query->filter($main_filter);
+  */
+
+}
+
+
 function education_common_preprocess_user_profile(&$variables) {
   //unset($variables['elements']['user_picture']);
   //unset($variables['user_profile']);
@@ -21,6 +169,17 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
+
+  $usr = user_load(3);
+
+  $us_wr = entity_metadata_wrapper('user', $usr);
+
+  //$teacher_lessons = $us_wr->teacher_lessons->value();
+  $teacher_lessons_dates = $us_wr->teacher_lessons_dates->value();
+
+  $t = 1;
+
+
   if (strstr(current_path(), 'user/')) {
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
     $variables['quick_order_form'] = $block_quick_order;
