@@ -2,20 +2,74 @@
 
 
 include_once 'inc/education_common.properties.inc';
+include_once 'inc/education_common.emails.inc';
 
+
+/**
+ * Implements hook_theme()
+ */
+function education_common_theme() {
+  return array(
+    'education_common_mail_body' => array(
+      'variables' => array(
+        'order_items' => NULL,
+        'order_num' => NULL,
+        'order_uid' => NULL,
+        'order_total' => NULL,
+        //'order_delivery'=> NULL,
+        //'order_payment'=> NULL,
+        //'order_comment'=> NULL,
+      ),
+      'path' => drupal_get_path('module', 'education_common') . '/templates',
+      'template' => 'education-common-mail-body',
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_rules_event_info()
+ */
+function education_common_rules_event_info() {
+  return array(
+    'education_common_send_message_to_user' => array(
+      'label' => t('Send message to user'),
+      'module' => 'education_common',
+      'group' => 'Booking a lesson' ,
+      'variables' => array(
+        'email' => array('type' => 'text', 'label' => t('User email form quick order form')),
+        'name' => array('type' => 'text', 'label' => t('User name')),
+        'phone' => array('type' => 'text', 'label' => t('User phone')),
+        'skype' => array('type' => 'text', 'label' => t('Skype login')),
+        'order_id' => array('type' => 'text', 'label' => t('Order Id')),
+        'order_mail_data' => array('type' => 'text', 'label' => t('Order mail data')),
+        //'order_mail_data_admin' => array('type' => 'text', 'label' => t('Order mail data admin')),
+        //'order_type_title' => array('type' => 'text', 'label' => t('Order typ title')),
+      ),
+    ),
+
+    'education_common_send_new_user_account_data' => array(
+      'label' => t('Send new user account data'),
+      'module' => 'education_common',
+      'group' => 'Booking a lesson' ,
+      'variables' => array(
+        'email' => array('type' => 'text', 'label' => t('User email form quick order form')),
+        'name' => array('type' => 'text', 'label' => t('User name')),
+        'phone' => array('type' => 'text', 'label' => t('User phone')),
+        'one_time_login' => array('type' => 'text', 'label' => t('User one time login url')),
+      ),
+    ),
+
+  );
+}
 
 function education_common_preprocess_views_view(&$vars) {
-
   $name = $vars['view']->name;
-
-  $n = 1;
-
   if ($name == 'lesson_calendar') {
     foreach ($vars['view']->result as $res_item) {
       //$res_item->field_data_field_lesson_date_field_lesson_date_value
     }
   }
-
 }
 
 /**
@@ -25,11 +79,9 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
 
   if ($form['#id'] == 'views-exposed-form-teachers-index-page') {
     ///////////////////////////////////////////////////
-    $w = 1;
     $form['submit']['#weight'] = 30;
 
     //unset($form['teacher_lessons_dates']);
-
     /*
     $field_grade_subject_options = $form['field_grade_subject']['#options'];
     $field_grade_subject_options_new = array();
@@ -40,8 +92,6 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
     }
     $form['field_grade_subject']['#options'] = $field_grade_subject_options_new;
     */
-
-    $f = 1;
 
     $form['teacher_lessons_dates']['#access'] = FALSE;
 
@@ -84,35 +134,24 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
  * hook_search_api_query_alter
  */
 function education_common_search_api_query_alter(SearchApiQueryInterface $query) {
-
   if ($query->getOption('search id') == 'search_api_views:teachers_index:page') {
-
     if (isset($_GET['time_slider'])) {
 
       //echo '<pre>'; print_r($_GET['time_slider']); echo '</pre>';  die();
-
-      $g = 1;
-
       $time_slider_arr = $_GET['time_slider'];
       $time_slider_from = $_GET['time_slider']['value'];
       $time_slider_to = $_GET['time_slider']['value2'];
 
       $teacher_lesson_date = strtotime($_GET['teacher_date_dates']['date']);
-
-      $t_d = date('Y-m-d H:i', $teacher_lesson_date);
-
+      //$t_d = date('Y-m-d H:i', $teacher_lesson_date);
 
       $right_filter = $query->createFilter('AND');
 
       $time_min = $teacher_lesson_date + $time_slider_from * 3600;
       $time_max = $teacher_lesson_date + $time_slider_to * 3600;
 
-      $t_d_min = date('Y-m-d H:i', $time_min);
-      $t_d_max = date('Y-m-d H:i', $time_max);
-
-      //1586401200
-
-      $t  =1;
+      //$t_d_min = date('Y-m-d H:i', $time_min);
+      //$t_d_max = date('Y-m-d H:i', $time_max);
 
       $right_filter->condition('teacher_lessons_dates', $time_min, '>=');
       $right_filter->condition('teacher_lessons_dates', $time_max, '<=');
@@ -168,7 +207,6 @@ function education_common_preprocess_user_profile(&$variables) {
   //unset($variables['user_profile']);
 }
 
-
 /**
  * Helper to rendered block().
  */
@@ -184,18 +222,7 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
-
-  $usr = user_load(3);
-
-  $us_wr = entity_metadata_wrapper('user', $usr);
-
-  //$teacher_lessons = $us_wr->teacher_lessons->value();
-  $teacher_lessons_dates = $us_wr->teacher_lessons_dates->value();
-
-  $t = 1;
-
-
-  if (strstr(current_path(), 'user/')) {
+  if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/') ) {
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
     $variables['quick_order_form'] = $block_quick_order;
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
@@ -236,11 +263,9 @@ function education_common_block_view($delta = '') {
  */
 function education_common_quick_order($form, &$form_state) {
   global $user;
-
   //if ($user->uid) {
   $user_profile = user_load($user->uid);
   //}
-
   $form['info'] = array(
     '#type' => 'markup',
     '#markup' => '<div class="form__desc">For quick booking fill the form.<br /> Our manager will get in touch with you.<br /></div>',
@@ -345,13 +370,15 @@ function education_common_quick_order($form, &$form_state) {
   );
   */
 
+  /*
   $form['terms_of_use'] = array(
     '#theme_wrappers' => array(),
     '#type' => 'checkbox',
-    '#title' => 'Настоящим подтверждаю, что я ознакомлен и согласен с условиями политики конфиденциальности.',
+    '#title' => 'Terms of use agree.',
     '#required' => TRUE,
     '#suffix' => '<a class="term_of_use" href="/terms-of-use">Learn more</a>',
   );
+  */
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -402,10 +429,15 @@ function education_common_quick_order_submit(&$form, &$form_state) {
         $order_type_title = 'оптовый заказ';
       }
 
+      $order_mail_data = education_common_get_order_mail_data($order);
+
       /*
       rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
         $form_state['values']['user_phone'], $order_id, $order_mail_data, $order_mail_data_admin, $order_type_title);
       */
+
+      rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
+        $form_state['values']['user_phone'], $form_state['values']['skype'], $order_id, $order_mail_data);
 
     }
   }
@@ -561,9 +593,12 @@ function education_common_create_quick_order_user($name, $pass, $mail, $phone, $
 
   ));
 
+  $one_time_login_url = user_pass_reset_url($new_user);
+  rules_invoke_event('education_common_send_new_user_account_data', $mail, $name,
+    $phone, $one_time_login_url);
+
   return $new_user;
 }
-
 
 /**
  * Создание "быстрого заказа"
@@ -573,25 +608,19 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
   global $user;
 
   //$user_phone = hb_user_clear_phone($user_phone);
-
   // for anonymous
   if (!$user->uid) {
     // TODO check by email
-
     $user_account = user_load_by_mail($email);
     if ($user_account) {
       $new_user = $user_account;
     }
-
-    //}
     else {
       $new_user = education_common_create_quick_order_user($name, 0, $email, $user_phone, $skype);
     }
-
   }
 
   //$new_user = TRUE;
-
   // Create order
   if ($new_user) {
     $order = commerce_order_new($new_user->uid, 'pending');
