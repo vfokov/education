@@ -15,14 +15,19 @@ function education_base_default_rules_configuration() {
       "PLUGIN" : "reaction rule",
       "OWNER" : "rules",
       "TAGS" : [ "Booking" ],
-      "REQUIRES" : [ "rules", "education_common" ],
+      "REQUIRES" : [ "rules", "mimemail", "education_common" ],
       "ON" : { "education_common_send_message_to_user" : [] },
       "DO" : [
-        { "mail" : {
-            "to" : "[email:value]",
-            "subject" : "Booking a lesson",
-            "message" : "Booking \\u2116 [order-id:value] \\u003Cbr \\/\\u003E\\r\\nUser name: [name:value] \\u003Cbr \\/\\u003E\\r\\nPhone: [phone:value] \\u003Cbr \\/\\u003E\\r\\nSkype: [skype:value] \\u003Cbr \\/\\u003E\\r\\n\\r\\n[order-mail-data:value]",
-            "language" : [ "" ]
+        { "mimemail" : {
+            "USING" : {
+              "key" : "booking_email_to_user",
+              "to" : "[email:value]",
+              "from_name" : "[site:mail]",
+              "subject" : "Booking a lesson",
+              "body" : "Booking \\u2116 [order-id:value] \\u003Cbr \\/\\u003E\\r\\nUser name: [name:value] \\u003Cbr \\/\\u003E\\r\\nPhone: [phone:value] \\u003Cbr \\/\\u003E\\r\\nSkype: [skype:value] \\u003Cbr \\/\\u003E\\r\\n\\r\\n[order-mail-data:value]",
+              "language" : [ "" ]
+            },
+            "PROVIDE" : { "send_status" : { "send_status" : "Send status" } }
           }
         }
       ]
