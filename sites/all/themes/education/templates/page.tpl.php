@@ -247,7 +247,11 @@
 
     <!--------------------------------------->
     <?php if (isset($quick_order_form)): ?>
-    <?php print $quick_order_form; ?>
+      <?php print $quick_order_form; ?>
+    <?php endif; ?>
+
+    <?php if (isset($lesson_date_close_form)): ?>
+      <?php print $lesson_date_close_form; ?>
     <?php endif; ?>
     <!--------------------------------------->
 

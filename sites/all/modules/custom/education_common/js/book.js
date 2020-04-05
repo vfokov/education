@@ -326,11 +326,37 @@ function getOffsetRect(elem) {
         $('input[name="lesson_date"]').val(date);
       });
 
+      $('.btn.lesson_date_close').bind('click', function(){
+        $('#popup__overlay').addClass('popup_show');
+        var product_id = $(this).attr('data-product-id');
+        //<a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="2020-04-08 23:00:00" data-teacher-uid="3">Book a lesson</a>
+        var teacher_uid = $(this).attr('data-teacher-uid');
+        var date = $(this).attr('data-date');
+        var lesson_nid = $(this).attr('data-lesson-nid');
+        $('input[name="close_product_id"]').val(product_id);
+        $('input[name="close_teacher_uid"]').val(teacher_uid);
+        $('input[name="close_lesson_date"]').val(date);
+        $('input[name="close_lesson_nid"]').val(lesson_nid);
+      });
+
 
       $('.popup__close').click(function(){
         $('.popup_show').removeClass('popup_show');
         $('#popup__overlay').removeClass('mlpopup__show');
-      })
+
+        window.setTimeout(
+          function() {
+            window.location.reload();
+          }, 500);
+
+      });
+
+      $('.form__submit.cancel').click(function(e){
+        e.preventDefault();
+        $('.popup_show').removeClass('popup_show');
+        $('#popup__overlay').removeClass('mlpopup__show');
+        $('#popup__overlay').hide();
+      });
 
     }
 
