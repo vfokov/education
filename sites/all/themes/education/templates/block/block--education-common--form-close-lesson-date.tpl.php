@@ -7,7 +7,7 @@
  */
 ?>
 
-<div id="fast_cart" class="popup" style="display: none;">
+<div id="lesson_date_close" class="popup" style="display: none;">
   <button class="popup__close"></button>
 
   <?php print render($title_prefix); ?>
@@ -15,6 +15,7 @@
     <div class="popup__title" style="text-align:center;"><?php print $block->subject ?></div>
   <?php endif; ?>
   <?php print render($title_suffix); ?>
+
   <?php print $content ?>
 
 </div>

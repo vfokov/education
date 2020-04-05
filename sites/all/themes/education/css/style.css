@@ -1984,5 +1984,8 @@ button.popup__close {
     cursor: pointer;
     outline: none;
     /*transition: border .2s, background .2s, color .2s;*/
+}
 
+.close_lesson_button {
+    float: left;
 }
