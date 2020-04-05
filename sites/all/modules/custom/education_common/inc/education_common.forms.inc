@@ -101,8 +101,8 @@ function education_common_close_lesson_date_ajax_callback(&$form, &$form_state) 
   $message = "<p>";
   $path_to_return = l($current_path_text, $current_path);
 
-  $message .= '<div class="form__block"><div class="form__desc">Thanks for booking!<br />
-  You have removed date form this lesson.<br />
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have removed date from this lesson.<br />
       <br />' . $path_to_return . '</div></div>';
 
   $message .= "</p>";
