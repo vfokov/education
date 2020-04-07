@@ -1,5 +1,324 @@
 <?php
 
+///////Enable lesson date form
+
+function education_common_enable_lesson_date($form, &$form_state) {
+  global $user;
+
+  $form['enable_info'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="form__desc">Do you want to enable this lesson date?<br /><br /></div>',
+    '#theme_wrappers' => array(),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['enable_product_id'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['enable_teacher_uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  /*
+  $form['enable_lesson_date'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+  */
+
+  $form['enabled_date'] = array(
+    '#type' => 'container',
+  );
+
+  $form['enabled_date']['enable_lesson_date'] = array(
+    '#title' => 'Lesson date',
+    //'#type' => 'textfield',
+    '#type' => 'date_popup',
+    '#default_value' =>'',
+    '#date_format' => 'Y-m-d',
+    '#date_year_range' => '-3:+3',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['enabled_date']['enable_time'] = array(
+    '#type' => 'date_popup',
+    '#title' => '',
+    '#size' => 20,
+    /*
+    '#date_date_element' => 'none', // hide date element
+    '#date_time_element' => 'time', // you can use text element here as well
+    '#date_time_format' => 'H:i'
+    */
+    '#date_format' => 'H:i',
+    //'#default_value' => date('H:i', time()),
+    //'#value' => date('H:i', time()),
+    //'#value' => '00:00',
+    '#default_value' => '00:00',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  // TODO get lessons_products_nids of current user
+  $type = 'lesson';
+  $uid = $user->uid;
+  $query = new EntityFieldQuery;
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', $type)
+    ->propertyCondition('uid', $uid)
+    ->execute();
+
+  if (!empty($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+    $options = array();
+    foreach ($nodes as $node) {
+      $options[$node->nid] = $node->title;
+    }
+    $form['enable_lesson_nid'] = array(
+      '#type' => 'select',
+      '#title' => 'Select lesson to assign date',
+      '#options' => $options,
+      '#default_value' => '',
+    );
+  }
+
+  //TODO time field
+  // maybe https://www.drupal.org/project/timefield ?
+
+  /*
+  $form['enable_time'] = array(
+    '#title' => 'Time',
+    '#type' => 'timefield_default',
+    '#default_value' => '',
+  );
+  */
+
+  $form['current_path'] = array(
+    '#type' => 'hidden',
+    '#default_value' => current_path(),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Yes'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit enable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'education_common_enable_lesson_date_ajax_callback',
+    ),
+  );
+
+  $form['no_enable'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit cancel enable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  //honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  return $form;
+}
+
+
+// !!!!! TODO CHANGE this
+function education_common_enable_lesson_date_submit(&$form, &$form_state) {
+
+  $enable_product_id = $form_state['values']['enable_product_id'];
+  $enable_teacher_uid = $form_state['values']['enable_teacher_uid'];
+  $enable_lesson_date = $form_state['values']['enable_lesson_date'];
+  $enable_lesson_time = $form_state['values']['enable_time'];
+  $enable_lesson_nid = $form_state['values']['enable_lesson_nid'];
+
+  $e = 1;
+
+  $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
+
+  $lesson_node = node_load($enable_lesson_nid);
+  $l_n = 1;
+
+  $new_date_item = array (
+    'value' => $enable_lesson_date,
+    // TODO change
+    'timezone' => 'Asia/Yekaterinburg',
+    'timezone_db' => 'Asia/Yekaterinburg',
+    'date_type' => 'datetime',
+  );
+
+  if ($lesson_node->field_lesson_date['und']) {
+    array_unshift($lesson_node->field_lesson_date['und'], $new_date_item);
+  }
+
+  node_save($lesson_node); //break;
+
+}
+
+function education_common_enable_lesson_date_ajax_callback(&$form, &$form_state) {
+
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have enabled date for this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+///// END enable lesson date
+
+
+
+
+
+
+
+///////Disable lesson date form
+
+function education_common_disable_lesson_date($form, &$form_state) {
+
+  $form['disable_info'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="form__desc">Do you want to disable this lesson date?<br /><br /></div>',
+    '#theme_wrappers' => array(),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['disable_product_id'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['disable_teacher_uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['disable_lesson_date'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+  $form['disable_lesson_nid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['current_path'] = array(
+    '#type' => 'hidden',
+    '#default_value' => current_path(),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Yes'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit disable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'education_common_disable_lesson_date_ajax_callback',
+    ),
+  );
+
+  $form['no_disable'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit cancel disable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  //honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  return $form;
+}
+
+function education_common_disable_lesson_date_submit(&$form, &$form_state) {
+
+  $disable_product_id = $form_state['values']['disable_product_id'];
+  $disable_teacher_uid = $form_state['values']['disable_teacher_uid'];
+  $disable_lesson_date = $form_state['values']['disable_lesson_date'];
+  $disable_lesson_nid = $form_state['values']['disable_lesson_nid'];
+
+  $d = 1;
+
+  $lesson_node = node_load($disable_lesson_nid);
+
+  if (isset($lesson_node->field_lesson_date['und'])) {
+    foreach($lesson_node->field_lesson_date['und'] as $key => $lesson_date_item ) {
+      if ($lesson_date_item['value'] == $disable_lesson_date) {
+        //unset($lesson_node->field_lesson_date['und'][$key]);
+        $lesson_node->field_lesson_date['und'][$key] = null;
+        node_save($lesson_node); break;
+      }
+    }
+  }
+
+}
+
+function education_common_disable_lesson_date_ajax_callback(&$form, &$form_state) {
+
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have disabled date from this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+///// END disable lesson date
+
+
+
+
+
 ///////Close date form
 
 function education_common_close_lesson_date($form, &$form_state) {
@@ -170,10 +489,43 @@ function education_common_quick_order($form, &$form_state) {
     '#default_value' => current_path(),
   );
 
+
+
+  $type = 'lesson';
+  $uid = $user->uid;
+  $query = new EntityFieldQuery;
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', $type)
+    ->propertyCondition('uid', $uid)
+    ->execute();
+
+  if (!empty($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+    $options = array();
+    foreach ($nodes as $node) {
+
+      //echo '<pre>'; print_r($node->field_product_reference[LANGUAGE_NONE]); echo '</pre>'; die();
+
+      $p_nid = $node->field_product_reference[LANGUAGE_NONE][0]['product_id'];
+      $options[$p_nid] = $node->title;
+    }
+    $form['product_id'] = array(
+      '#type' => 'select',
+      '#title' => 'Select lesson to assign date',
+      '#options' => $options,
+      '#default_value' => '',
+    );
+  }
+
+  /* // TODO видимо нужно селект как выше
   $form['product_id'] = array(
     '#type' => 'hidden',
     '#default_value' =>'',
   );
+  */
 
   $form['teacher_uid'] = array(
     '#type' => 'hidden',

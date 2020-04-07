@@ -6,6 +6,44 @@ include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 
 
+function education_common_preprocess_calendar_month_row($variables) {
+
+  if ($variables['class'] == 'single-day') {
+    $a = 1;
+  }
+}
+
+
+function education_common_preprocess_calendar_month_col(&$variables) {
+  global $user;
+  $teacher_uid = $user->uid;
+  $lesson_uid = arg(1);
+
+  if (strstr($variables['item']['class'], 'empty')) {
+  //if ($variables['class'] == 'single-day') {
+    $a = 1;
+  }
+
+  if ($lesson_uid == $teacher_uid) {
+    if (strstr($variables['item']['class'], 'no-entry')) {
+      //if ($variables['class'] == 'single-day') {
+      $current_date = time();
+      $date = $variables['item']['date'];
+      $col_date = strtotime($date);
+
+      $output = '';
+      if ($col_date >= $current_date) {
+        $output = '<a href="#" class="btn lesson_date_enable popup__link"
+        data-popup="lesson_date_enable" data-date="' . $date . '" data-teacher-uid="' . $teacher_uid . '">
+enable this position</a>';
+      }
+      $variables['item']['entry'] = $output;
+    }
+  }
+
+  //$variables['item']['class'] = 'date-box past empty testttttttt';
+}
+
 /**
  * Implements hook_theme()
  */
@@ -190,12 +228,16 @@ function education_common_preprocess_page(&$variables) {
     global $user;
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
     $block_lesson_date_close = education_common_get_rendered_block('education_common', 'form-close-lesson-date');
+    $block_lesson_date_disable = education_common_get_rendered_block('education_common', 'form-disable-lesson-date');
+    $block_lesson_date_enable = education_common_get_rendered_block('education_common', 'form-enable-lesson-date');
     $variables['quick_order_form'] = $block_quick_order;
 
     if (strstr(current_path(), 'user')) {
       $current_path_uid = arg(1);
       if ($current_path_uid == $user->uid) {
         $variables['lesson_date_close_form'] = $block_lesson_date_close;
+        $variables['lesson_date_disable_form'] = $block_lesson_date_disable;
+        $variables['lesson_date_enable_form'] = $block_lesson_date_enable;
       }
     }
 
@@ -212,6 +254,14 @@ function education_common_block_info() {
   );
   $blocks['form-close-lesson-date'] = array(
     'info' => 'Close lesson date form',
+  );
+
+  $blocks['form-disable-lesson-date'] = array(
+    'info' => 'Disable lesson date form',
+  );
+
+  $blocks['form-enable-lesson-date'] = array(
+    'info' => 'Disable lesson date form',
   );
   return $blocks;
 }
@@ -233,6 +283,16 @@ function education_common_block_view($delta = '') {
     case 'form-close-lesson-date':
       $block['subject'] = t('Close lesson date');
       $block['content'] = drupal_get_form('education_common_close_lesson_date');
+      break;
+
+    case 'form-disable-lesson-date':
+      $block['subject'] = t('Disable lesson date');
+      $block['content'] = drupal_get_form('education_common_disable_lesson_date');
+      break;
+
+    case 'form-enable-lesson-date':
+      $block['subject'] = t('Enable lesson date');
+      $block['content'] = drupal_get_form('education_common_enable_lesson_date');
       break;
   }
   return $block;

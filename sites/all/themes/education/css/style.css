@@ -1986,6 +1986,17 @@ button.popup__close {
     /*transition: border .2s, background .2s, color .2s;*/
 }
 
-.close_lesson_button {
+.close_lesson_button, .disable_lesson_button,
+.enable_lesson_button {
     float: left;
 }
+
+.btn.lesson_date_enable.popup__link {
+    color: #ccc;
+}
+
+.calendar-calendar .week-view div.single-day .half-hour {
+    font-size: 14px;
+}
+
+
