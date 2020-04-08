@@ -27,7 +27,7 @@ if (!empty($result['node'])) {
 
 <span class="box" data-tooltip='{"showOn":"click", "orientation":"bottom",
 
-      "text": "<ul><?php foreach($users as $user):?><li> <?php  print $user->name; ?></li><?php endforeach; ?></ul>"
+      "text": "<ul><?php foreach($users as $user):?><li><a href=\"/user/<?php print $user->uid;?>\"> <?php  print $user->name; ?></a></li><?php endforeach; ?></ul>"
 
       }' ><?php print count($users); ?> teachers</span><br/>
 
