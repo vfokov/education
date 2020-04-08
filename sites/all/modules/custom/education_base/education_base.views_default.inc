@@ -30,14 +30,18 @@ function education_base_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '0';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'calendar_style';
   $handler->display->display_options['style_options']['name_size'] = '3';
   $handler->display->display_options['style_options']['mini'] = '0';
   $handler->display->display_options['style_options']['with_weekno'] = '0';
   $handler->display->display_options['style_options']['multiday_theme'] = '1';
-  $handler->display->display_options['style_options']['theme_style'] = '1';
+  $handler->display->display_options['style_options']['theme_style'] = '0';
   $handler->display->display_options['style_options']['max_items'] = '0';
+  $handler->display->display_options['style_options']['groupby_times'] = '';
   $handler->display->display_options['row_plugin'] = 'calendar_entity';
   $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
     'article' => '#ffffff',
@@ -146,6 +150,124 @@ function education_base_views_default_views() {
 
   /* Display: Block */
   $handler = $view->new_display('block', 'Block', 'block_1');
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    4 => '4',
+  );
+
+  /* Display: Week Block */
+  $handler = $view->new_display('block', 'Week Block', 'calendar_week');
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'calendar_style';
+  $handler->display->display_options['style_options']['calendar_type'] = 'week';
+  $handler->display->display_options['style_options']['name_size'] = '3';
+  $handler->display->display_options['style_options']['mini'] = '0';
+  $handler->display->display_options['style_options']['with_weekno'] = '0';
+  $handler->display->display_options['style_options']['multiday_theme'] = '1';
+  $handler->display->display_options['style_options']['theme_style'] = '2';
+  $handler->display->display_options['style_options']['max_items'] = '0';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'calendar_entity';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'article' => '#ffffff',
+    'page' => '#ffffff',
+    'lesson' => '#ffffff',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+
+  /* Display: Calendar Week Page */
+  $handler = $view->new_display('page', 'Calendar Week Page', 'page_1');
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'date_views_pager';
+  $handler->display->display_options['pager']['options']['skip_empty_pages'] = 0;
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'calendar_style';
+  $handler->display->display_options['style_options']['calendar_type'] = 'week';
+  $handler->display->display_options['style_options']['name_size'] = '3';
+  $handler->display->display_options['style_options']['mini'] = '0';
+  $handler->display->display_options['style_options']['with_weekno'] = '0';
+  $handler->display->display_options['style_options']['multiday_theme'] = '1';
+  $handler->display->display_options['style_options']['theme_style'] = '2';
+  $handler->display->display_options['style_options']['max_items'] = '0';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'calendar_entity';
+  $handler->display->display_options['row_options']['colors']['calendar_colors_type'] = array(
+    'article' => '#ffffff',
+    'page' => '#ffffff',
+    'lesson' => '#ffffff',
+  );
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['relationships'] = FALSE;
+  /* Relationship: Content: Referenced products */
+  $handler->display->display_options['relationships']['field_product_reference_product_id']['id'] = 'field_product_reference_product_id';
+  $handler->display->display_options['relationships']['field_product_reference_product_id']['table'] = 'field_data_field_product_reference';
+  $handler->display->display_options['relationships']['field_product_reference_product_id']['field'] = 'field_product_reference_product_id';
+  /* Relationship: Content: Content author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['required'] = TRUE;
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Contextual filter: Content: Lesson date (field_lesson_date) */
+  $handler->display->display_options['arguments']['field_lesson_date_value']['id'] = 'field_lesson_date_value';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['table'] = 'field_data_field_lesson_date';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['field'] = 'field_lesson_date_value';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['default_argument_type'] = 'date';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['granularity'] = 'week';
+  $handler->display->display_options['arguments']['field_lesson_date_value']['granularity_reset'] = 0;
+  $handler->display->display_options['arguments']['field_lesson_date_value']['add_delta'] = 'yes';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published status */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'lesson' => 'lesson',
+  );
+  /* Filter criterion: Content: Author uid */
+  $handler->display->display_options['filters']['uid']['id'] = 'uid';
+  $handler->display->display_options['filters']['uid']['table'] = 'node';
+  $handler->display->display_options['filters']['uid']['field'] = 'uid';
+  $handler->display->display_options['filters']['uid']['value'] = '';
+  $handler->display->display_options['filters']['uid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Author uid';
+  $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
+  $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
+  $handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
+    2 => '2',
+  );
+  /* Filter criterion: User: Grade and subject (field_grade_subject) */
+  $handler->display->display_options['filters']['field_grade_subject_tid']['id'] = 'field_grade_subject_tid';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['table'] = 'field_data_field_grade_subject';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['field'] = 'field_grade_subject_tid';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['relationship'] = 'uid';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['operator_id'] = 'field_grade_subject_tid_op';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['label'] = 'Grade and subject';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['operator'] = 'field_grade_subject_tid_op';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['identifier'] = 'field_grade_subject_tid';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+  );
+  $handler->display->display_options['filters']['field_grade_subject_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_grade_subject_tid']['vocabulary'] = 'grades';
+  $handler->display->display_options['path'] = 'lesson-calendar-week';
   $export['lesson_calendar'] = $view;
 
   $view = new view();
