@@ -112,7 +112,7 @@ if (!empty($result['node'])) {
   foreach ($nodes as $lesson_node) {
     if (isset($lesson_node->field_lesson_date['und'])) {
       foreach($lesson_node->field_lesson_date['und'] as $key => $lesson_date_item ) {
-       $teacher_dates[] = $lesson_date_item['value'];
+        $teacher_dates[] = $lesson_date_item['value'];
       }
     }
   }
@@ -128,7 +128,7 @@ if (!empty($result['node'])) {
       <table class="full">
         <tbody>
         <tr class="holder"><td class="calendar-time-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td><td class="calendar-day-holder"></td>
-          </tr>
+        </tr>
         <tr>
           <th class="calendar-agenda-hour">&nbsp;</th>
           <?php foreach ($day_names as $cell): ?>
@@ -249,3 +249,5 @@ if (!empty($result['node'])) {
     }
   </script>
 <?php endif; ?>
+
+<script type="text/javascript" src="/sites/all/modules/custom/education_common/js/tooltip.js"></script>

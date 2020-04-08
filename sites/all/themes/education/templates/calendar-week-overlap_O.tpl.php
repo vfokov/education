@@ -113,6 +113,7 @@ $week_days = array(
         </tbody>
       </table>
     </div>
+
     <div id="multi-day-container">
       <table class="full">
         <tbody>

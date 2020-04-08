@@ -46,6 +46,7 @@ function education_common_enable_lesson_date($form, &$form_state) {
   );
 
   $form['enabled_date']['enable_time'] = array(
+    //'#type' => 'datetime',
     '#type' => 'date_popup',
     '#title' => '',
     '#size' => 20,
@@ -58,6 +59,7 @@ function education_common_enable_lesson_date($form, &$form_state) {
     //'#default_value' => date('H:i', time()),
     //'#value' => date('H:i', time()),
     //'#value' => '00:00',
+    '#date_increment' => 30,
     '#default_value' => '00:00',
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -439,7 +441,7 @@ function education_common_quick_order($form, &$form_state) {
   $user_profile = user_load($user->uid);
   $form['info'] = array(
     '#type' => 'markup',
-    '#markup' => '<div class="form__desc">For quick booking fill the form.<br /> Our manager will get in touch with you.<br /></div>',
+    '#markup' => '<div class="form__desc">For quick booking fill the form.<br /></div>',
     '#theme_wrappers' => array(),
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -492,7 +494,7 @@ function education_common_quick_order($form, &$form_state) {
 
 
   $type = 'lesson';
-  $uid = $user->uid;
+  $uid = arg(1);
   $query = new EntityFieldQuery;
   $result = $query
     ->entityCondition('entity_type', 'node')
@@ -614,8 +616,10 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       $teacher_uid = $form_state['values']['teacher_uid'];
       $date = $form_state['values']['lesson_date'];
 
+      $is_cart = FALSE;
+      //$form_state['values']['is_cart']
       $order_id = education_common_create_quick_order($user, $product_id, $form_state['values']['product_quantity'], $date, $teacher_uid,
-        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $form_state['values']['is_cart']);
+        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $is_cart);
 
       $form_state['values']['order_id'] = $order_id;
 
@@ -685,7 +689,7 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
   }
 
   else {
-    if ($form_state['values']['is_cart']) {
+    if (isset($form_state['values']['is_cart'])) {
       $commands[] = array('command' => 'reloadPage');
     }
 
@@ -706,8 +710,8 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
 
     else {
       $message .= '<div class="form__block"><div class="form__desc">Thanks for booking!<br />
-    Details of the booking were send to email.<br />
-        Our manager will get in touch with you soon<br /><br />' . $path_to_return . '</div></div>';
+    Details of the booking were send to email.
+        <br />' . $path_to_return . '</div></div>';
     }
 
     $message .= "</p>";

@@ -6,6 +6,13 @@ include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 
 
+function education_common_preprocess_mimemail_message(&$variables) {
+  $variables['body'] = html_entity_decode($variables['body']);
+
+  $v = 1;
+}
+
+
 function education_common_preprocess_calendar_month_row($variables) {
 
   if ($variables['class'] == 'single-day') {
@@ -38,6 +45,25 @@ function education_common_preprocess_calendar_month_col(&$variables) {
 enable this position</a>';
       }
       $variables['item']['entry'] = $output;
+    }
+    else {
+      $current_date = time();
+      $date = $variables['item']['date'];
+      $col_date = strtotime($date);
+
+      $time_to_compare = time() - 3600 * 12;
+      //$variables['item']['entry'] = $col_date . '>' . $time_to_compare;
+
+      if ($col_date >= $current_date - 3600 * 22) {
+        $o = 1;
+
+        if ( strstr($variables['item']['entry'], 'lesson_date_disable')) {
+          $variables['item']['entry'] .= '<br><a href="#" class="btn lesson_date_enable popup__link add_more"
+        data-popup="lesson_date_enable" data-date="' . $date . '" data-teacher-uid="' . $teacher_uid . '">
+Add more schedule position</a>';
+        }
+        //
+      }
     }
   }
 
@@ -224,6 +250,29 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
+
+  /*
+  $query = new EntityFieldQuery;
+  $type = 'lesson';
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', $type)
+    ->fieldCondition('field_lesson_date', 'value',  '2020-04-08 15:30:00', '=')
+    //->propertyCondition('uid', $uid)
+    ->execute();
+  if (!empty($result['node'])) {
+    //echo '<pre>'; print_r($result['node']); echo '</pre>'; die();
+
+    $users  = array();
+    foreach($result['node'] as $n_obj) {
+      $node = node_load($n_obj->nid);
+
+      $users[] = user_load($node->uid);
+  }
+    */
+
+
   if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/') ) {
     global $user;
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
@@ -243,6 +292,10 @@ function education_common_preprocess_page(&$variables) {
 
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
   }
+
+  //drupal_add_js(drupal_get_path('module', 'education_common') . '/js/tooltip.js');
+  drupal_add_css(drupal_get_path('module', 'education_common') . '/css/tooltip.css');
+  drupal_add_js(drupal_get_path('module', 'education_common') . '/js/all-teachers.js');
 }
 
 /**

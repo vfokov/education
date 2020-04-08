@@ -35,6 +35,10 @@ function template_preprocess_mimemail_message(&$variables) {
   $theme = mailsystem_get_mail_theme();
   $themepath = drupal_get_path('theme', $theme);
 
+  $v = 1;
+
+  //$variables['body'] = html_entity_decode($variables['body']);
+
   $sitestyle = variable_get('mimemail_sitestyle', 1);
   $mailstyles = file_scan_directory($themepath, '#^mail(-.+)?\.(c|le|sc|sa)ss$#');
 

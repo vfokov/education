@@ -393,6 +393,18 @@ function getOffsetRect(elem) {
     console.log('bokk sdafaf');
     //btn product__card-fast popup__link
 
+    /*
+    $('nav.teachers-nav li').hover(
+      function() {
+        $('ul', this).stop().slideDown(200);
+      },
+      function() {
+        $('ul', this).stop().slideUp(200);
+      }
+    );
+    */
+
+
   });
 
 })(jQuery);
