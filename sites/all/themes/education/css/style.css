@@ -2009,7 +2009,7 @@ button.popup__close {
 
 .calendar-calendar .week-view .full div.calendar-agenda-items,
 .calendar-calendar .week-view .full div.calendar-agenda-hour{
-    height: 66px;
+    height: 68px;
 }
 
 .calendar-calendar td .btn.product__card-fast.popup__link {
@@ -2096,7 +2096,7 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
 
 /*yet*/
 .calendar-calendar div.single-day .o_2 .view-item {
-    top: -2px;
+    top: -10px;
 }
 
 .calendar-calendar .week-view .full div.single-day div.weekview {
@@ -2116,8 +2116,25 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     z-index: 9 !important;
     background: #fff !important;
     color: #000;
-    padding: 20px !important;
+    padding: 15px 20px 15px 15px !important;
     box-shadow: 1px 4px 7px 4px #ccc;
+    text-align: left;
+    width: 250px;
+}
+
+.tooltip-bottom.tooltip.darkgrey ul {
+    list-style: none;
+    padding-left: 5px;
+    margin: 0;
+}
+
+.tooltip-bottom.tooltip.darkgrey ul li{
+    line-height: 17px;
+}
+
+.tooltip-bottom.tooltip.darkgrey ul li a {
+    font-size: 13px;
+    font-weight: normal;
 }
 
 .calendar-agenda-items.single-day {
@@ -2127,4 +2144,13 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
 
 .tooltip-close.icon.icon_cross {
     color: #ccc;
+}
+
+.calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar {
+    background: #8cc63f;
+    border-radius: 0;
+    text-align: center;
+    font-size: 14px;
+    height: 33px;
+    line-height: 34px;
 }

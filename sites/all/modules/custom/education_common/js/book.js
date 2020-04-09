@@ -385,24 +385,20 @@ function getOffsetRect(elem) {
         $('#popup__overlay').removeClass('mlpopup__show');
         $('#popup__overlay').hide();
       });
+
+
+      $('#views-exposed-form-lesson-calendar-page-1 .form-item select').bind('change', function(){
+        console.log('selected');
+        $('.views-submit-button input').trigger('click');
+      })
+
     }
 
   };
 
   $(document).ready(function($) {
     console.log('bokk sdafaf');
-    //btn product__card-fast popup__link
 
-    /*
-    $('nav.teachers-nav li').hover(
-      function() {
-        $('ul', this).stop().slideDown(200);
-      },
-      function() {
-        $('ul', this).stop().slideUp(200);
-      }
-    );
-    */
 
 
   });

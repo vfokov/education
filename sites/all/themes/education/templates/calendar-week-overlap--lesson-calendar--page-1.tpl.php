@@ -75,8 +75,6 @@ for($i = -1; $i <=5; $i++) {
   $date = date("Y-m-d",$next_day);
 
   $week_array[$week_day] = $date;
-  // echo $date;
-  // echo '<br>';
 }
 
 $week_days = array(
@@ -91,19 +89,28 @@ $week_days = array(
 
 //print '--------------------------------';
 
-//echo '<pre>'; print_r($week_array); echo '</pre>'; die();
-
-
 $teacher_dates = array();
 $type = 'lesson';
 $uid = arg(1);
+
+if (!empty($_GET['uid'])) {
+  $user_by_name = user_load_by_name($_GET['uid']);
+  $uid = $user_by_name->uid;
+}
+
 $query = new EntityFieldQuery;
-$result = $query
+$query
   ->entityCondition('entity_type', 'node')
   ->propertyCondition('status', 1)
   ->propertyCondition('type', $type)
   ->propertyCondition('uid', $uid)
   ->execute();
+
+if (!empty($_GET['field_lesson_subject_tid']) && $_GET['field_lesson_subject_tid'] != 'All') {
+  $query->fieldCondition('field_lesson_subject', 'tid',  $_GET['field_lesson_subject_tid'], '=');
+}
+
+$result = $query->execute();
 
 if (!empty($result['node'])) {
   $nids = array_keys($result['node']);
@@ -117,9 +124,6 @@ if (!empty($result['node'])) {
     }
   }
 }
-
-//echo '<pre>'; print_r($teacher_dates); echo '</pre>'; die();
-
 
 ?>
 
@@ -141,8 +145,6 @@ if (!empty($result['node'])) {
         </tbody>
       </table>
     </div>
-
-
 
     <div class="header-body-divider">&nbsp;</div>
     <div id="single-day-container">
@@ -209,22 +211,25 @@ if (!empty($result['node'])) {
                 <a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="<?php print $with_half_date_time; ?>" data-teacher-uid="<?php print $uid; ?>">Available</a>
               <?php endif; ?>
             </div>
-            <div class="calendar item-wrapper">
-              <div class="inner">
-                <?php if(!empty($items[$start_time]['values'][$index - 1])) :?>
-                <?php foreach($items[$start_time]['values'][$index - 1] as $item) :?>
-                <?php if (isset($item['is_first']) && $item['is_first']) :?>
-                <div class="item <?php print $item['class']?> first_item">
-                  <?php else : ?>
-                  <div class="item <?php print $item['class']?>">
+
+            <?php if (empty($_GET['uid'])): ?>
+              <div class="calendar item-wrapper">
+                <div class="inner">
+                  <?php if(!empty($items[$start_time]['values'][$index - 1])) :?>
+                  <?php foreach($items[$start_time]['values'][$index - 1] as $item) :?>
+                  <?php if (isset($item['is_first']) && $item['is_first']) :?>
+                  <div class="item <?php print $item['class']?> first_item">
+                    <?php else : ?>
+                    <div class="item <?php print $item['class']?>">
+                      <?php endif; ?>
+                      <?php print $item['entry'] ?>
+                    </div>
+                    <?php endforeach; ?>
                     <?php endif; ?>
-                    <?php print $item['entry'] ?>
                   </div>
-                  <?php endforeach; ?>
-                  <?php endif; ?>
                 </div>
               </div>
-            </div>
+            <?php endif; ?>
             <?php endif; ?>
           <?php endforeach;?>
             </td>

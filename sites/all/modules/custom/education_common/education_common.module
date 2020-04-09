@@ -141,6 +141,32 @@ function education_common_preprocess_views_view(&$vars) {
  * Implements hook_form_alter
  */
 function education_common_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#id'] == 'views-exposed-form-lesson-calendar-page-1') {
+    $role = user_role_load_by_name('Teacher');
+    $uids = db_select('users_roles', 'ur')
+      ->fields('ur', array('uid'))
+      ->condition('ur.rid', $role->rid, '=')
+      ->execute()
+      ->fetchCol();
+    $users = user_load_multiple($uids);
+    if (!empty($users)) {
+      $options = array(
+        '' => '- Any -',
+      );
+      foreach ($users as $user) {
+        $options[$user->name] = $user->name;
+      }
+
+      $form['uid'] = array(
+        '#type' => 'select',
+        //'#title' => 'Select teacher',
+        '#title' => '',
+        '#options' => $options,
+        '#default_value' => '',
+      );
+    }
+  }
+
 
   if ($form['#id'] == 'views-exposed-form-teachers-index-page') {
     ///////////////////////////////////////////////////
@@ -273,7 +299,8 @@ function education_common_preprocess_page(&$variables) {
     */
 
 
-  if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/') ) {
+  if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/')
+    || strstr(current_path(), 'lesson-calendar-week') || strstr(current_path(), 'pupil/schedule') ) {
     global $user;
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
     $block_lesson_date_close = education_common_get_rendered_block('education_common', 'form-close-lesson-date');
