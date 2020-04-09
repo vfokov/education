@@ -2153,4 +2153,5 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     font-size: 14px;
     height: 33px;
     line-height: 34px;
+    cursor: pointer;
 }

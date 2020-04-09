@@ -491,8 +491,6 @@ function education_common_quick_order($form, &$form_state) {
     '#default_value' => current_path(),
   );
 
-
-
   $type = 'lesson';
   $uid = arg(1);
   $query = new EntityFieldQuery;
@@ -516,7 +514,7 @@ function education_common_quick_order($form, &$form_state) {
     }
     $form['product_id'] = array(
       '#type' => 'select',
-      '#title' => 'Select lesson to assign date',
+      '#title' => 'Select lesson',
       '#options' => $options,
       '#default_value' => '',
     );
