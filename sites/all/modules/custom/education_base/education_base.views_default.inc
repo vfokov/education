@@ -205,11 +205,6 @@ function education_base_views_default_views() {
   $handler->display->display_options['relationships']['field_product_reference_product_id']['id'] = 'field_product_reference_product_id';
   $handler->display->display_options['relationships']['field_product_reference_product_id']['table'] = 'field_data_field_product_reference';
   $handler->display->display_options['relationships']['field_product_reference_product_id']['field'] = 'field_product_reference_product_id';
-  /* Relationship: Content: Content author */
-  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['table'] = 'node';
-  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
-  $handler->display->display_options['relationships']['uid']['required'] = TRUE;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Lesson date (field_lesson_date) */
   $handler->display->display_options['arguments']['field_lesson_date_value']['id'] = 'field_lesson_date_value';
@@ -239,35 +234,43 @@ function education_base_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'lesson' => 'lesson',
   );
+  $handler->display->display_options['filters']['type']['group'] = 1;
   /* Filter criterion: Content: Author uid */
   $handler->display->display_options['filters']['uid']['id'] = 'uid';
   $handler->display->display_options['filters']['uid']['table'] = 'node';
   $handler->display->display_options['filters']['uid']['field'] = 'uid';
   $handler->display->display_options['filters']['uid']['value'] = '';
+  $handler->display->display_options['filters']['uid']['group'] = 1;
   $handler->display->display_options['filters']['uid']['exposed'] = TRUE;
   $handler->display->display_options['filters']['uid']['expose']['operator_id'] = 'uid_op';
-  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Author uid';
+  $handler->display->display_options['filters']['uid']['expose']['label'] = 'Select teacher';
   $handler->display->display_options['filters']['uid']['expose']['operator'] = 'uid_op';
   $handler->display->display_options['filters']['uid']['expose']['identifier'] = 'uid';
   $handler->display->display_options['filters']['uid']['expose']['remember_roles'] = array(
     2 => '2',
   );
-  /* Filter criterion: User: Grade and subject (field_grade_subject) */
-  $handler->display->display_options['filters']['field_grade_subject_tid']['id'] = 'field_grade_subject_tid';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['table'] = 'field_data_field_grade_subject';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['field'] = 'field_grade_subject_tid';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['relationship'] = 'uid';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['exposed'] = TRUE;
-  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['operator_id'] = 'field_grade_subject_tid_op';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['label'] = 'Grade and subject';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['operator'] = 'field_grade_subject_tid_op';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['identifier'] = 'field_grade_subject_tid';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['expose']['remember_roles'] = array(
+  /* Filter criterion: Content: Lesson subject (field_lesson_subject) */
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['id'] = 'field_lesson_subject_tid';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['table'] = 'field_data_field_lesson_subject';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['field'] = 'field_lesson_subject_tid';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['expose']['operator_id'] = 'field_lesson_subject_tid_op';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['expose']['label'] = 'Subject';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['expose']['operator'] = 'field_lesson_subject_tid_op';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['expose']['identifier'] = 'field_lesson_subject_tid';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['expose']['remember_roles'] = array(
     2 => '2',
   );
-  $handler->display->display_options['filters']['field_grade_subject_tid']['type'] = 'select';
-  $handler->display->display_options['filters']['field_grade_subject_tid']['vocabulary'] = 'grades';
-  $handler->display->display_options['path'] = 'lesson-calendar-week';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_lesson_subject_tid']['vocabulary'] = 'lesson_subject';
+  $handler->display->display_options['path'] = 'pupil/schedule';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Schedule';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'main-menu';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['lesson_calendar'] = $view;
 
   $view = new view();

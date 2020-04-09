@@ -2037,6 +2037,8 @@ button.popup__close {
 
 .calendar-agenda-hour span.calendar-hour {
     font-size: 12px !important;
+    margin-top: 9px;
+    display: inline-block;
 }
 
 .calendar-calendar td .btn.product__card-fast.popup__link:hover {

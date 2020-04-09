@@ -61,6 +61,32 @@ function education_base_field_default_field_bases() {
     'type' => 'datetime',
   );
 
+  // Exported field_base: 'field_lesson_subject'.
+  $field_bases['field_lesson_subject'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_lesson_subject',
+    'indexes' => array(
+      'tid' => array(
+        0 => 'tid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'taxonomy',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => array(
+          'vocabulary' => 'lesson_subject',
+          'parent' => 0,
+        ),
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'taxonomy_term_reference',
+  );
+
   // Exported field_base: 'field_phone'.
   $field_bases['field_phone'] = array(
     'active' => 1,
