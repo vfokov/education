@@ -29,9 +29,10 @@ body,
   margin: 1em 5px 1.5em;
 }
 #secondary-menu {
-  margin: 0 auto;
-  overflow: hidden;
-  width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    width: auto;
+    float: right;
 }
 #main-wrapper {
   min-height: 300px;

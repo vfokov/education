@@ -6,10 +6,43 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function education_base_ctools_plugin_api($module = NULL, $api = NULL) {
+  if ($module == "context" && $api == "context") {
+    return array("version" => "3");
+  }
+}
+
+/**
  * Implements hook_views_api().
  */
 function education_base_views_api($module = NULL, $api = NULL) {
   return array("api" => "3.0");
+}
+
+/**
+ * Implements hook_image_default_styles().
+ */
+function education_base_image_default_styles() {
+  $styles = array();
+
+  // Exported image style: teacher_list.
+  $styles['teacher_list'] = array(
+    'label' => 'Teacher list',
+    'effects' => array(
+      2 => array(
+        'name' => 'image_scale_and_crop',
+        'data' => array(
+          'width' => 150,
+          'height' => 150,
+        ),
+        'weight' => 1,
+      ),
+    ),
+  );
+
+  return $styles;
 }
 
 /**

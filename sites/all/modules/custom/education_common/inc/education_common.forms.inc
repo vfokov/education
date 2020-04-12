@@ -1,5 +1,412 @@
 <?php
 
+///////Enable lesson date form
+
+function education_common_enable_lesson_date($form, &$form_state) {
+  global $user;
+
+  $form['enable_info'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="form__desc">Do you want to enable this lesson date?<br /><br /></div>',
+    '#theme_wrappers' => array(),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['enable_product_id'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['enable_teacher_uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  /*
+  $form['enable_lesson_date'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+  */
+
+  $form['enabled_date'] = array(
+    '#type' => 'container',
+  );
+
+  $form['enabled_date']['enable_lesson_date'] = array(
+    //'#title' => 'Lesson date',
+    '#title' => '',
+    //'#type' => 'textfield',
+    '#type' => 'date_popup',
+    '#default_value' =>'',
+    '#date_format' => 'Y-m-d',
+    '#date_year_range' => '-3:+3',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['enabled_date']['enable_time'] = array(
+    //'#type' => 'datetime',
+    '#type' => 'date_popup',
+    '#title' => 'Select time for one position',
+    '#size' => 20,
+    '#date_format' => 'H:i',
+    '#date_increment' => 30,
+    '#default_value' => '00:00',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_time_range"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+  // Uncheck anonymous field when the name field is filled.
+  $form['enabled_enable_time_range'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Or select time range'),
+    /*
+    '#states' => array(
+      'unchecked' => array(
+        ':input[name="name"]' => array('filled' => TRUE),
+        ':input[name="enable_time[time]"]' => array('filled' => TRUE),
+      ),
+    ),
+    */
+  );
+
+  $form['enabled_time_range'] = array(
+    '#input_title' => NULL,
+    '#input2_title' => NULL,
+    '#type' => 'slider',
+    '#default_value' => array('value' => 0.00, 'value2' => 24.00),
+    '#range' => TRUE,
+    '#min' => 0.00,
+    '#max' => 24.00,
+    '#step' => 1.00,
+    '#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+    '#display_values_format' => '%{value}%.00',
+    //'#weight' => 29,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_time_range"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+
+
+  // TODO get lessons_products_nids of current user
+  $type = 'lesson';
+  $uid = $user->uid;
+  $query = new EntityFieldQuery;
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', $type)
+    ->propertyCondition('uid', $uid)
+    ->execute();
+
+  if (!empty($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+    $options = array();
+    foreach ($nodes as $node) {
+      $options[$node->nid] = $node->title;
+    }
+    $form['enable_lesson_nid'] = array(
+      '#type' => 'select',
+      '#title' => 'Select lesson to assign date',
+      '#options' => $options,
+      '#default_value' => '',
+    );
+  }
+
+  //TODO time field
+  // maybe https://www.drupal.org/project/timefield ?
+
+  /*
+  $form['enable_time'] = array(
+    '#title' => 'Time',
+    '#type' => 'timefield_default',
+    '#default_value' => '',
+  );
+  */
+
+  $form['current_path'] = array(
+    '#type' => 'hidden',
+    '#default_value' => current_path(),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Yes'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit enable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'education_common_enable_lesson_date_ajax_callback',
+    ),
+  );
+
+  $form['no_enable'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit cancel enable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  //honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  return $form;
+}
+
+
+// !!!!! TODO CHANGE this
+function education_common_enable_lesson_date_submit(&$form, &$form_state) {
+
+  $enable_product_id = $form_state['values']['enable_product_id'];
+  $enable_teacher_uid = $form_state['values']['enable_teacher_uid'];
+  $enable_lesson_date = $form_state['values']['enable_lesson_date'];
+  $enable_lesson_time = $form_state['values']['enable_time'];
+  $enable_lesson_nid = $form_state['values']['enable_lesson_nid'];
+
+  $lesson_node = node_load($enable_lesson_nid);
+
+  // if time range selected
+  if (!empty($form_state['values']['enabled_enable_time_range'])) {
+    $z = 1;
+    $new_date_items = array();
+    $time_ranges = $form_state['values']['enabled_time_range'];
+    $range_to = $time_ranges['value2'];
+    $range_from = $time_ranges['value'];
+
+    for ($i = $range_from; $i <= $range_to; $i++) {
+
+      $hour_value = $i < 10 ? '0' . $i : $i;
+      $enable_lesson_time_item = $hour_value . ':' . '00';
+      $enable_lesson_time_item_half = $hour_value . ':' . '30';
+      $enable_lesson_date_time = $enable_lesson_date . ' ' . $enable_lesson_time_item;
+      if ($i != $range_to) {
+        $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
+      }
+
+      //$new_date_items[] = array (
+      $new_date_items_hour = array (
+        'value' => $enable_lesson_date_time,
+        // TODO change
+        'timezone' => 'Asia/Yekaterinburg',
+        'timezone_db' => 'Asia/Yekaterinburg',
+        'date_type' => 'datetime',
+      );
+
+      if (isset($enable_lesson_date_time_half)) {
+        $new_date_items_hour_half = array(
+          'value' => $enable_lesson_date_time_half,
+          // TODO change
+          'timezone' => 'Asia/Yekaterinburg',
+          'timezone_db' => 'Asia/Yekaterinburg',
+          'date_type' => 'datetime',
+        );
+      }
+
+      if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+        //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+        array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour);
+        if (isset($enable_lesson_date_time_half)) {
+          array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour_half);
+        }
+      }
+    }
+    /*
+    if ($lesson_node->field_lesson_date['und']) {
+      array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+    }
+    */
+  }
+
+  else { // ADD one position
+    $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
+    $new_date_item = array(
+      'value' => $enable_lesson_date,
+      // TODO change
+      'timezone' => 'Asia/Yekaterinburg',
+      'timezone_db' => 'Asia/Yekaterinburg',
+      'date_type' => 'datetime',
+    );
+
+    if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+      array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_item);
+    }
+  }
+
+  node_save($lesson_node); //break;
+
+}
+
+function education_common_enable_lesson_date_ajax_callback(&$form, &$form_state) {
+
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have enabled date for this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+///// END enable lesson date
+
+
+
+
+
+
+
+///////Disable lesson date form
+
+function education_common_disable_lesson_date($form, &$form_state) {
+
+  $form['disable_info'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="form__desc">Do you want to disable this lesson date?<br /><br /></div>',
+    '#theme_wrappers' => array(),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['disable_product_id'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['disable_teacher_uid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['disable_lesson_date'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+  $form['disable_lesson_nid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['current_path'] = array(
+    '#type' => 'hidden',
+    '#default_value' => current_path(),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Yes'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit disable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'education_common_disable_lesson_date_ajax_callback',
+    ),
+  );
+
+  $form['no_disable'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit cancel disable_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  //honeypot_add_form_protection($form, $form_state, array('honeypot', 'time_restriction'));
+  return $form;
+}
+
+function education_common_disable_lesson_date_submit(&$form, &$form_state) {
+
+  $disable_product_id = $form_state['values']['disable_product_id'];
+  $disable_teacher_uid = $form_state['values']['disable_teacher_uid'];
+  $disable_lesson_date = $form_state['values']['disable_lesson_date'];
+  $disable_lesson_nid = $form_state['values']['disable_lesson_nid'];
+
+  $d = 1;
+
+  $lesson_node = node_load($disable_lesson_nid);
+
+  if (isset($lesson_node->field_lesson_date[LANGUAGE_NONE])) {
+    foreach($lesson_node->field_lesson_date[LANGUAGE_NONE] as $key => $lesson_date_item ) {
+      if ($lesson_date_item['value'] == $disable_lesson_date) {
+        //unset($lesson_node->field_lesson_date['und'][$key]);
+        $lesson_node->field_lesson_date[LANGUAGE_NONE][$key] = null;
+        node_save($lesson_node); break;
+      }
+    }
+  }
+
+}
+
+function education_common_disable_lesson_date_ajax_callback(&$form, &$form_state) {
+
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have disabled date from this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+///// END disable lesson date
+
+
+
+
+
 ///////Close date form
 
 function education_common_close_lesson_date($form, &$form_state) {
@@ -76,10 +483,10 @@ function education_common_close_lesson_date_submit(&$form, &$form_state) {
 
   $lesson_node = node_load($close_lesson_nid);
 
-  if (isset($lesson_node->field_lesson_date['und'])) {
-    foreach($lesson_node->field_lesson_date['und'] as $key => $lesson_date_item ) {
+  if (isset($lesson_node->field_lesson_date[LANGUAGE_NONE])) {
+    foreach($lesson_node->field_lesson_date[LANGUAGE_NONE] as $key => $lesson_date_item ) {
       if ($lesson_date_item['value'] == $close_lesson_date) {
-        unset($lesson_node->field_lesson_date['und'][$key]);
+        unset($lesson_node->field_lesson_date[LANGUAGE_NONE][$key]);
         node_save($lesson_node); break;
       }
     }
@@ -101,12 +508,13 @@ function education_common_close_lesson_date_ajax_callback(&$form, &$form_state) 
   $message = "<p>";
   $path_to_return = l($current_path_text, $current_path);
 
-  $message .= '<div class="form__block"><div class="form__desc">Thanks for booking!<br />
-  You have removed date form this lesson.<br />
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have removed date from this lesson.<br />
       <br />' . $path_to_return . '</div></div>';
 
   $message .= "</p>";
   $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
@@ -120,7 +528,7 @@ function education_common_quick_order($form, &$form_state) {
   $user_profile = user_load($user->uid);
   $form['info'] = array(
     '#type' => 'markup',
-    '#markup' => '<div class="form__desc">For quick booking fill the form.<br /> Our manager will get in touch with you.<br /></div>',
+    '#markup' => '<div class="form__desc">For quick booking fill the form.<br /></div>',
     '#theme_wrappers' => array(),
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -146,7 +554,7 @@ function education_common_quick_order($form, &$form_state) {
       'placeholder' => t('Phone'),
     ),
     //'#theme_wrappers' => array(),
-    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
+    '#default_value' =>  isset($user_profile->field_phone[LANGUAGE_NONE]) ? $user_profile->field_phone[LANGUAGE_NONE][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -170,10 +578,41 @@ function education_common_quick_order($form, &$form_state) {
     '#default_value' => current_path(),
   );
 
+  $type = 'lesson';
+  $uid = arg(1);
+  $query = new EntityFieldQuery;
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', $type)
+    ->propertyCondition('uid', $uid)
+    ->execute();
+
+  if (!empty($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+    $options = array();
+    foreach ($nodes as $node) {
+
+      //echo '<pre>'; print_r($node->field_product_reference[LANGUAGE_NONE]); echo '</pre>'; die();
+
+      $p_nid = $node->field_product_reference[LANGUAGE_NONE][0]['product_id'];
+      $options[$p_nid] = $node->title;
+    }
+    $form['product_id'] = array(
+      '#type' => 'select',
+      '#title' => 'Select lesson',
+      '#options' => $options,
+      '#default_value' => '',
+    );
+  }
+
+  /* // TODO видимо нужно селект как выше
   $form['product_id'] = array(
     '#type' => 'hidden',
     '#default_value' =>'',
   );
+  */
 
   $form['teacher_uid'] = array(
     '#type' => 'hidden',
@@ -191,7 +630,7 @@ function education_common_quick_order($form, &$form_state) {
       'placeholder' => t('Lesson date'),
     ),
     //'#theme_wrappers' => array(),
-    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
+    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone[LANGUAGE_NONE][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -204,7 +643,7 @@ function education_common_quick_order($form, &$form_state) {
       'placeholder' => t('Skype login'),
     ),
     //'#theme_wrappers' => array(),
-    '#default_value' =>  isset($user_profile->field_skype['und']) ? $user_profile->field_skype['und'][0]['value'] :  '',
+    '#default_value' =>  isset($user_profile->field_skype[LANGUAGE_NONE]) ? $user_profile->field_skype[LANGUAGE_NONE][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -262,8 +701,10 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       $teacher_uid = $form_state['values']['teacher_uid'];
       $date = $form_state['values']['lesson_date'];
 
+      $is_cart = FALSE;
+      //$form_state['values']['is_cart']
       $order_id = education_common_create_quick_order($user, $product_id, $form_state['values']['product_quantity'], $date, $teacher_uid,
-        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $form_state['values']['is_cart']);
+        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $is_cart);
 
       $form_state['values']['order_id'] = $order_id;
 
@@ -333,7 +774,7 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
   }
 
   else {
-    if ($form_state['values']['is_cart']) {
+    if (isset($form_state['values']['is_cart'])) {
       $commands[] = array('command' => 'reloadPage');
     }
 
@@ -354,12 +795,13 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
 
     else {
       $message .= '<div class="form__block"><div class="form__desc">Thanks for booking!<br />
-    Details of the booking were send to email.<br />
-        Our manager will get in touch with you soon<br /><br />' . $path_to_return . '</div></div>';
+    Details of the booking were send to email.
+        <br />' . $path_to_return . '</div></div>';
     }
 
     $message .= "</p>";
     $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+    $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
   }
 
   return array('#type' => 'ajax', '#commands' => $commands);

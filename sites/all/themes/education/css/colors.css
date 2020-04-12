@@ -14,6 +14,12 @@ body.overlay {
 #main-menu-links li.active-trail a {
   background: #ffffff;
 }
+
+#main-menu-links li.active-trail a {
+    background: none;
+    text-decoration: underline;
+}
+
 .tabs ul.primary li a.active {
   background-color: #ffffff;
 }
@@ -22,9 +28,12 @@ body.overlay {
   border-bottom: 1px solid #ffffff;
 }
 #header {
-  background-color: #1d84c3;
+  /*background-color: #1d84c3;*/
+  background-color: #0093c9;
+    /*
   background-image: -webkit-linear-gradient(top, #055a8e 0%, #1d84c3 100%);
   background-image: linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
+  */
 }
 a {
   color: #0071B3;

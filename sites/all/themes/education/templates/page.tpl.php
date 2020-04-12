@@ -253,6 +253,14 @@
     <?php if (isset($lesson_date_close_form)): ?>
       <?php print $lesson_date_close_form; ?>
     <?php endif; ?>
+
+    <?php if (isset($lesson_date_disable_form)): ?>
+      <?php print $lesson_date_disable_form; ?>
+    <?php endif; ?>
+
+    <?php if (isset($lesson_date_enable_form)): ?>
+      <?php print $lesson_date_enable_form; ?>
+    <?php endif; ?>
     <!--------------------------------------->
 
   </div></div> <!-- /#page, /#page-wrapper -->

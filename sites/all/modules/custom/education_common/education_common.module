@@ -1,10 +1,95 @@
 <?php
 
+define('TEACHER_ROLE', 4);
+define('STUDENT_ROLE', 5);
+
 
 include_once 'inc/education_common.properties.inc';
 include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 
+function education_common_user_insert(&$edit, $account, $category) {
+
+  //echo '<pre>'; print_r($edit); echo '</pre>'; die();
+
+  ////$u = 1;
+
+  //$role = user_role_load_by_name("editor");
+
+  if (isset($edit['field_is_a_teacher'][LANGUAGE_NONE]) && $edit['field_is_a_teacher'][LANGUAGE_NONE]['0']['value'] ) {
+    $role = TEACHER_ROLE;
+  }
+  else {
+    $role = STUDENT_ROLE;
+  }
+
+  user_multiple_role_edit(array($account->uid), 'add_role', $role);
+}
+
+
+function education_common_preprocess_mimemail_message(&$variables) {
+  $variables['body'] = html_entity_decode($variables['body']);
+
+  $v = 1;
+}
+
+
+function education_common_preprocess_calendar_month_row($variables) {
+
+  if ($variables['class'] == 'single-day') {
+    $a = 1;
+  }
+}
+
+
+function education_common_preprocess_calendar_month_col(&$variables) {
+  global $user;
+  $teacher_uid = $user->uid;
+  $lesson_uid = arg(1);
+
+  if (strstr($variables['item']['class'], 'empty')) {
+  //if ($variables['class'] == 'single-day') {
+    $a = 1;
+  }
+
+  if ($lesson_uid == $teacher_uid) {
+    if (strstr($variables['item']['class'], 'no-entry')) {
+      //if ($variables['class'] == 'single-day') {
+      $current_date = time();
+      $date = $variables['item']['date'];
+      $col_date = strtotime($date);
+
+      $output = '';
+      if ($col_date >= $current_date) {
+        $output = '<a href="#" class="btn lesson_date_enable popup__link"
+        data-popup="lesson_date_enable" data-date="' . $date . '" data-teacher-uid="' . $teacher_uid . '">
+Enable this position</a>';
+      }
+      $variables['item']['entry'] = $output;
+    }
+    else {
+      $current_date = time();
+      $date = $variables['item']['date'];
+      $col_date = strtotime($date);
+
+      $time_to_compare = time() - 3600 * 12;
+      //$variables['item']['entry'] = $col_date . '>' . $time_to_compare;
+
+      if ($col_date >= $current_date - 3600 * 22) {
+        $o = 1;
+
+        if ( strstr($variables['item']['entry'], 'lesson_date_disable')) {
+          $variables['item']['entry'] .= '<br><a href="#" class="btn lesson_date_enable popup__link add_more"
+        data-popup="lesson_date_enable" data-date="' . $date . '" data-teacher-uid="' . $teacher_uid . '">
+Add more schedule position</a>';
+        }
+        //
+      }
+    }
+  }
+
+  //$variables['item']['class'] = 'date-box past empty testttttttt';
+}
 
 /**
  * Implements hook_theme()
@@ -77,6 +162,32 @@ function education_common_preprocess_views_view(&$vars) {
  * Implements hook_form_alter
  */
 function education_common_form_views_exposed_form_alter(&$form, &$form_state, $form_id) {
+  if ($form['#id'] == 'views-exposed-form-lesson-calendar-page-1') {
+    $role = user_role_load_by_name('Teacher');
+    $uids = db_select('users_roles', 'ur')
+      ->fields('ur', array('uid'))
+      ->condition('ur.rid', $role->rid, '=')
+      ->execute()
+      ->fetchCol();
+    $users = user_load_multiple($uids);
+    if (!empty($users)) {
+      $options = array(
+        '' => '- Any -',
+      );
+      foreach ($users as $user) {
+        $options[$user->name] = $user->name;
+      }
+
+      $form['uid'] = array(
+        '#type' => 'select',
+        //'#title' => 'Select teacher',
+        '#title' => '',
+        '#options' => $options,
+        '#default_value' => '',
+      );
+    }
+  }
+
 
   if ($form['#id'] == 'views-exposed-form-teachers-index-page') {
     ///////////////////////////////////////////////////
@@ -186,21 +297,54 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
-  if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/') ) {
+
+  /*
+  $query = new EntityFieldQuery;
+  $type = 'lesson';
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->propertyCondition('type', $type)
+    ->fieldCondition('field_lesson_date', 'value',  '2020-04-08 15:30:00', '=')
+    //->propertyCondition('uid', $uid)
+    ->execute();
+  if (!empty($result['node'])) {
+    //echo '<pre>'; print_r($result['node']); echo '</pre>'; die();
+
+    $users  = array();
+    foreach($result['node'] as $n_obj) {
+      $node = node_load($n_obj->nid);
+
+      $users[] = user_load($node->uid);
+  }
+    */
+
+
+  if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/')
+    || strstr(current_path(), 'lesson-calendar-week') || strstr(current_path(), 'pupil/schedule') ) {
     global $user;
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
     $block_lesson_date_close = education_common_get_rendered_block('education_common', 'form-close-lesson-date');
+    $block_lesson_date_disable = education_common_get_rendered_block('education_common', 'form-disable-lesson-date');
+    $block_lesson_date_enable = education_common_get_rendered_block('education_common', 'form-enable-lesson-date');
     $variables['quick_order_form'] = $block_quick_order;
 
     if (strstr(current_path(), 'user')) {
       $current_path_uid = arg(1);
       if ($current_path_uid == $user->uid) {
         $variables['lesson_date_close_form'] = $block_lesson_date_close;
+        $variables['lesson_date_disable_form'] = $block_lesson_date_disable;
+        $variables['lesson_date_enable_form'] = $block_lesson_date_enable;
+        drupal_set_title('My Account');
       }
     }
 
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
   }
+
+  //drupal_add_js(drupal_get_path('module', 'education_common') . '/js/tooltip.js');
+  drupal_add_css(drupal_get_path('module', 'education_common') . '/css/tooltip.css');
+  drupal_add_js(drupal_get_path('module', 'education_common') . '/js/all-teachers.js');
 }
 
 /**
@@ -212,6 +356,14 @@ function education_common_block_info() {
   );
   $blocks['form-close-lesson-date'] = array(
     'info' => 'Close lesson date form',
+  );
+
+  $blocks['form-disable-lesson-date'] = array(
+    'info' => 'Disable lesson date form',
+  );
+
+  $blocks['form-enable-lesson-date'] = array(
+    'info' => 'Disable lesson date form',
   );
   return $blocks;
 }
@@ -233,6 +385,16 @@ function education_common_block_view($delta = '') {
     case 'form-close-lesson-date':
       $block['subject'] = t('Close lesson date');
       $block['content'] = drupal_get_form('education_common_close_lesson_date');
+      break;
+
+    case 'form-disable-lesson-date':
+      $block['subject'] = t('Disable lesson date');
+      $block['content'] = drupal_get_form('education_common_disable_lesson_date');
+      break;
+
+    case 'form-enable-lesson-date':
+      $block['subject'] = t('Enable lesson date');
+      $block['content'] = drupal_get_form('education_common_enable_lesson_date');
       break;
   }
   return $block;
@@ -258,7 +420,7 @@ function education_common_create_quick_order_user($name, $pass, $mail, $phone, $
     'roles' => $roles,  //
 
     'field_phone' => array(
-      'und' => array(
+      LANGUAGE_NONE => array(
         0 => array(
           'value' => $phone,
         )
@@ -266,7 +428,7 @@ function education_common_create_quick_order_user($name, $pass, $mail, $phone, $
     ),
 
     'field_skype' => array(
-      'und' => array(
+      LANGUAGE_NONE => array(
         0 => array(
           'value' => $skype,
         )
@@ -358,11 +520,11 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
   commerce_line_item_save($line_item);
 
   // Attach line item to order
-  $order->commerce_line_items['und'][] = (array)$line_item;
+  $order->commerce_line_items[LANGUAGE_NONE][] = (array)$line_item;
   // TODO - для order NEED to ADD fields lesson_date и teacher
-  $order->field_order_lesson_date['und'][0]['value'] = $date;
-  $order->field_lesson_teacher_uid['und'][0]['uid'] = $teacher_uid;
-  $order->field_skype['und'][0]['value'] = $skype;
+  $order->field_order_lesson_date[LANGUAGE_NONE][0]['value'] = $date;
+  $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid'] = $teacher_uid;
+  $order->field_skype[LANGUAGE_NONE][0]['value'] = $skype;
 
   /*
   $profile_wrapper = entity_metadata_wrapper('commerce_customer_profile', $profile);

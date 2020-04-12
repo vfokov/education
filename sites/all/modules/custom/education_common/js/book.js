@@ -308,8 +308,6 @@ function getOffsetRect(elem) {
 })();
 
 
-
-
 (function ($) {
 
   //
@@ -339,15 +337,47 @@ function getOffsetRect(elem) {
         $('input[name="close_lesson_nid"]').val(lesson_nid);
       });
 
+      // Disable popup form
+      $('.btn.lesson_date_disable').bind('click', function(){
+        $('#popup__overlay').addClass('popup_show');
+        var product_id = $(this).attr('data-product-id');
+        //<a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="2020-04-08 23:00:00" data-teacher-uid="3">Book a lesson</a>
+        var teacher_uid = $(this).attr('data-teacher-uid');
+        var date = $(this).attr('data-date');
+        var lesson_nid = $(this).attr('data-lesson-nid');
+        $('input[name="disable_product_id"]').val(product_id);
+        $('input[name="disable_teacher_uid"]').val(teacher_uid);
+        $('input[name="disable_lesson_date"]').val(date);
+        $('input[name="disable_lesson_nid"]').val(lesson_nid);
+      });
+      // Enable popup form
+      // TODO
+      $('.btn.lesson_date_enable').bind('click', function(){
+        $('#popup__overlay').addClass('popup_show');
+        //var product_id = $(this).attr('data-product-id');
+        //<a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="2020-04-08 23:00:00" data-teacher-uid="3">Book a lesson</a>
+        var teacher_uid = $(this).attr('data-teacher-uid');
+        var date = $(this).attr('data-date');
+        //var lesson_nid = $(this).attr('data-lesson-nid');
+        //$('input[name="enable_product_id"]').val(product_id);
+        $('input[name="enable_teacher_uid"]').val(teacher_uid);
+        //$('input[name="enable_lesson_date"]').val(date);
+        $('input[name="enable_lesson_date[date]"]').val(date);
+        //$('input[name="enable_time[time]"]').val('00:00');
+        //$('input[name="enable_lesson_nid"]').val(lesson_nid);
+      });
+
 
       $('.popup__close').click(function(){
         $('.popup_show').removeClass('popup_show');
         $('#popup__overlay').removeClass('mlpopup__show');
 
-        window.setTimeout(
-          function() {
-            window.location.reload();
-          }, 500);
+        if ($(this).hasClass('close_reload')) {
+          window.setTimeout(
+            function () {
+              window.location.reload();
+            }, 500);
+        }
 
       });
 
@@ -358,14 +388,20 @@ function getOffsetRect(elem) {
         $('#popup__overlay').hide();
       });
 
+
+      $('#views-exposed-form-lesson-calendar-page-1 .form-item select').bind('change', function(){
+        console.log('selected');
+        $('.views-submit-button input').trigger('click');
+      })
+
     }
 
   };
 
-
   $(document).ready(function($) {
     console.log('bokk sdafaf');
-    //btn product__card-fast popup__link
+
+
 
   });
 
