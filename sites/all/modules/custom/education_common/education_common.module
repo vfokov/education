@@ -1,9 +1,30 @@
 <?php
 
+define('TEACHER_ROLE', 4);
+define('STUDENT_ROLE', 5);
+
 
 include_once 'inc/education_common.properties.inc';
 include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
+
+function education_common_user_insert(&$edit, $account, $category) {
+
+  //echo '<pre>'; print_r($edit); echo '</pre>'; die();
+
+  ////$u = 1;
+
+  //$role = user_role_load_by_name("editor");
+
+  if (isset($edit['field_is_a_teacher']['und']) && $edit['field_is_a_teacher']['und']['0']['value'] ) {
+    $role = TEACHER_ROLE;
+  }
+  else {
+    $role = STUDENT_ROLE;
+  }
+
+  user_multiple_role_edit(array($account->uid), 'add_role', $role);
+}
 
 
 function education_common_preprocess_mimemail_message(&$variables) {
@@ -42,7 +63,7 @@ function education_common_preprocess_calendar_month_col(&$variables) {
       if ($col_date >= $current_date) {
         $output = '<a href="#" class="btn lesson_date_enable popup__link"
         data-popup="lesson_date_enable" data-date="' . $date . '" data-teacher-uid="' . $teacher_uid . '">
-enable this position</a>';
+Enable this position</a>';
       }
       $variables['item']['entry'] = $output;
     }
@@ -314,6 +335,7 @@ function education_common_preprocess_page(&$variables) {
         $variables['lesson_date_close_form'] = $block_lesson_date_close;
         $variables['lesson_date_disable_form'] = $block_lesson_date_disable;
         $variables['lesson_date_enable_form'] = $block_lesson_date_enable;
+        drupal_set_title('My Account');
       }
     }
 

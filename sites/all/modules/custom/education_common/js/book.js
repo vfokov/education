@@ -372,10 +372,12 @@ function getOffsetRect(elem) {
         $('.popup_show').removeClass('popup_show');
         $('#popup__overlay').removeClass('mlpopup__show');
 
-        window.setTimeout(
-          function() {
-            window.location.reload();
-          }, 500);
+        if ($(this).hasClass('close_reload')) {
+          window.setTimeout(
+            function () {
+              window.location.reload();
+            }, 500);
+        }
 
       });
 

@@ -479,7 +479,9 @@ h1#site-name {
 
 /* ------------------- Main Menu -------------------------- */
 #main-menu {
-    clear: both;
+    /* clear: both; */
+    float: left;
+    margin-top: 15px;
 }
 #main-menu-links {
     font-size: 0.929em;
@@ -495,25 +497,28 @@ h1#site-name {
     width: 100%;
 }
 #main-menu-links a {
-    color: #333;
+    color: #fff;
     background: #ccc;
-    background: rgba(255, 255, 255, 0.7);
+    background: no-repeat;
     float: none;
     display: block;
     text-decoration: none;
-    text-shadow: 0 1px #eee;
+    text-shadow: none;
     border-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
     margin-bottom: 4px;
     padding: 0.9em 0 0.9em 10px;
+    font-size: 20px;
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
-    background: #f6f6f2;
-    background: rgba(255, 255, 255, 0.95);
+    background: none;
+    background: none;
 }
 #main-menu-links a:active {
-    background: #b3b3b3;
-    background: rgba(255, 255, 255, 1);
+    background: none;
+    background: none;
 }
 #main-menu-links li a.active {
     border-bottom: none;
@@ -1679,11 +1684,18 @@ a#menu-toggle:after {
     /* ----------------- Menu on Small Resolutions ---------- */
     a#menu-toggle {
         display:block;
+        background: #0093c9;
+        text-indent: -9999px;
     }
 
     #main-menu-links {
         display: none;
         height: auto;
+        position: fixed;
+        top: 41px;
+        background: #0093c9;
+        width: 100%;
+        margin: 0;
     }
 
     /* ----------------- Forms on Small Screens ------------- */
@@ -1752,7 +1764,7 @@ a#menu-toggle:after {
         margin: 1em 5px 1.5em;
     }
     #logo {
-        padding: 15px 15px 15px 10px; /* LTR */
+        padding: 0; /* LTR */
     }
     #name-and-slogan {
         padding: 26px 0 0;
@@ -1965,7 +1977,7 @@ a#menu-toggle:after {
     height: 39px;
     line-height: 39px;
     vertical-align: middle;
-    padding-left: 20px;
+    padding-left: 10px;
     font-size: 14px;
     outline: none;
     box-sizing: border-box;
@@ -1992,12 +2004,30 @@ button.popup__close {
 }
 
 .btn.lesson_date_enable.popup__link {
-    color: #ccc;
+    font-size: 12px;
+    color: #fff;
+    margin: 10px;
+    display: inline-block;
+    background: #0ab50a;
+    padding: 10px;
+    box-shadow: 1px 2px 5px 3px #ccc;
+    text-align: left;
+    line-height: 20px;
 }
 
 .btn.lesson_date_enable.popup__link.add_more {
-    font-size: 11px;
-    color: #aaa;
+    font-size: 12px;
+    color: #fff;
+    margin: 10px;
+    display: inline-block;
+    background: #0093c9;
+    padding: 10px;
+    box-shadow: 1px 2px 5px 3px #ccc;
+    text-align: left;
+}
+
+.btn.lesson_date_disable.popup__link {
+    color: #aa1414;
 }
 
 .calendar-calendar .week-view div.single-day .half-hour {
@@ -2033,6 +2063,10 @@ button.popup__close {
     vertical-align: middle;
     font-size: 19px;
     font-weight: normal;
+}
+
+#main-menu #main-menu-links li a.active {
+    background: none;
 }
 
 .calendar-agenda-hour span.calendar-hour {
@@ -2203,4 +2237,89 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
 
 .container-inline-date .form-item input {
     width: 150px;
+}
+
+.calendar-calendar .month-view .full td.single-day .inner div {
+    margin-bottom: 6px;
+    font-size: 13px;
+    padding-left: 3px;
+}
+
+.calendar-calendar .month-view .full td .inner div.day {
+    font-size: 14px;
+}
+
+#quicktabs-container-teacher_tabs .calendar.monthview {
+    box-shadow: 1px 1px 6px 2px #ccc;
+}
+
+
+
+.view-id-lesson_calendar.view-display-id-block_1 .views-field-title {
+    font-size: 16px !important;
+}
+
+
+/*TODO temp*/
+#name-and-slogan {
+    display: none;
+}
+
+#logo img {
+    width: 70%;
+}
+
+#header {
+    padding: 10px 0;
+}
+
+.form-item-enabled-enable-time-range label {
+    font-weight: bold;
+}
+
+.form-item-enable-time-time label {
+    display: none;
+}
+
+.not-logged-in.page-user #content .section {
+    width: 50%;
+    margin: 0 auto;
+}
+
+@media all and (max-width: 768px) {
+    .quicktabs-tabs.quicktabs-style-nostyle li {
+        padding: 10px;
+        display: inline-block;
+    }
+    #main-menu {
+        clear: both;
+        float: left;
+        margin-top: 0;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        z-index: 9;
+    }
+
+    #main-menu-links li {
+        /*padding: 10px 0 0 20px;*/
+    }
+
+    #main-menu-links li.last {
+        padding-bottom: 10px;
+    }
+
+    #main-menu-links a {
+        padding: 0;
+        width: 90%;
+        padding: 10px 0 0 20px;
+    }
+
+    #main-menu #main-menu-links li a.active, #main-menu-links li.active-trail a {
+        background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+    }
+
+    #logo, #secondary-menu{
+        display: none;
+    }
 }

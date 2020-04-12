@@ -35,7 +35,8 @@ function education_common_enable_lesson_date($form, &$form_state) {
   );
 
   $form['enabled_date']['enable_lesson_date'] = array(
-    '#title' => 'Lesson date',
+    //'#title' => 'Lesson date',
+    '#title' => '',
     //'#type' => 'textfield',
     '#type' => 'date_popup',
     '#default_value' =>'',
@@ -48,13 +49,18 @@ function education_common_enable_lesson_date($form, &$form_state) {
   $form['enabled_date']['enable_time'] = array(
     //'#type' => 'datetime',
     '#type' => 'date_popup',
-    '#title' => '',
+    '#title' => 'Select time for one position',
     '#size' => 20,
     '#date_format' => 'H:i',
     '#date_increment' => 30,
     '#default_value' => '00:00',
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_time_range"]' => array('checked' => FALSE),
+      ),
+    ),
   );
 
   // Uncheck anonymous field when the name field is filled.
@@ -65,6 +71,7 @@ function education_common_enable_lesson_date($form, &$form_state) {
     '#states' => array(
       'unchecked' => array(
         ':input[name="name"]' => array('filled' => TRUE),
+        ':input[name="enable_time[time]"]' => array('filled' => TRUE),
       ),
     ),
     */
@@ -75,16 +82,10 @@ function education_common_enable_lesson_date($form, &$form_state) {
     '#input2_title' => NULL,
     '#type' => 'slider',
     '#default_value' => array('value' => 0.00, 'value2' => 24.00),
-    //'#orientation' => 'vertical',
-    // '#slider_style' => 'orange',
     '#range' => TRUE,
     '#min' => 0.00,
     '#max' => 24.00,
     '#step' => 1.00,
-    // '#display_bubble' => TRUE,
-    //'#display_bubble_format' => '$%{value}%MIN||$%{value}%MAX',
-    //'#required' => 1,
-    //'#disabled' => TRUE,
     '#display_inputs' => FALSE,
     '#display_values' => TRUE,
     '#display_values_format' => '%{value}%.00',
@@ -191,13 +192,15 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
     $range_to = $time_ranges['value2'];
     $range_from = $time_ranges['value'];
 
-    for ($i = $range_from; $i < $range_to; $i++) {
+    for ($i = $range_from; $i <= $range_to; $i++) {
 
       $hour_value = $i < 10 ? '0' . $i : $i;
       $enable_lesson_time_item = $hour_value . ':' . '00';
       $enable_lesson_time_item_half = $hour_value . ':' . '30';
       $enable_lesson_date_time = $enable_lesson_date . ' ' . $enable_lesson_time_item;
-      $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
+      if ($i != $range_to) {
+        $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
+      }
 
       //$new_date_items[] = array (
       $new_date_items_hour = array (
@@ -207,18 +210,23 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
         'timezone_db' => 'Asia/Yekaterinburg',
         'date_type' => 'datetime',
       );
-      $new_date_items_hour_half = array (
-        'value' => $enable_lesson_date_time_half,
-        // TODO change
-        'timezone' => 'Asia/Yekaterinburg',
-        'timezone_db' => 'Asia/Yekaterinburg',
-        'date_type' => 'datetime',
-      );
+
+      if (isset($enable_lesson_date_time_half)) {
+        $new_date_items_hour_half = array(
+          'value' => $enable_lesson_date_time_half,
+          // TODO change
+          'timezone' => 'Asia/Yekaterinburg',
+          'timezone_db' => 'Asia/Yekaterinburg',
+          'date_type' => 'datetime',
+        );
+      }
 
       if ($lesson_node->field_lesson_date['und']) {
         //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
         array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour);
-        array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour_half);
+        if (isset($enable_lesson_date_time_half)) {
+          array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour_half);
+        }
       }
     }
     /*
@@ -267,6 +275,7 @@ function education_common_enable_lesson_date_ajax_callback(&$form, &$form_state)
 
   $message .= "</p>";
   $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
@@ -388,6 +397,7 @@ function education_common_disable_lesson_date_ajax_callback(&$form, &$form_state
 
   $message .= "</p>";
   $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
@@ -504,6 +514,7 @@ function education_common_close_lesson_date_ajax_callback(&$form, &$form_state) 
 
   $message .= "</p>";
   $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
@@ -790,6 +801,7 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
 
     $message .= "</p>";
     $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+    $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
   }
 
   return array('#type' => 'ajax', '#commands' => $commands);

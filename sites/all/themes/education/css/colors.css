@@ -14,6 +14,12 @@ body.overlay {
 #main-menu-links li.active-trail a {
   background: #ffffff;
 }
+
+#main-menu-links li.active-trail a {
+    background: none;
+    text-decoration: underline;
+}
+
 .tabs ul.primary li a.active {
   background-color: #ffffff;
 }
