@@ -158,6 +158,11 @@ function education_base_views_default_views() {
 
   /* Display: Week Block */
   $handler = $view->new_display('block', 'Week Block', 'calendar_week');
+  $handler->display->display_options['defaults']['access'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    5 => '5',
+  );
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'calendar_style';
   $handler->display->display_options['style_options']['calendar_type'] = 'week';
@@ -205,6 +210,10 @@ function education_base_views_default_views() {
   $handler->display->display_options['relationships']['field_product_reference_product_id']['id'] = 'field_product_reference_product_id';
   $handler->display->display_options['relationships']['field_product_reference_product_id']['table'] = 'field_data_field_product_reference';
   $handler->display->display_options['relationships']['field_product_reference_product_id']['field'] = 'field_product_reference_product_id';
+  /* Relationship: Content: Content author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   $handler->display->display_options['defaults']['arguments'] = FALSE;
   /* Contextual filter: Content: Lesson date (field_lesson_date) */
   $handler->display->display_options['arguments']['field_lesson_date_value']['id'] = 'field_lesson_date_value';
@@ -235,6 +244,21 @@ function education_base_views_default_views() {
     'lesson' => 'lesson',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
+  /* Filter criterion: Field: Age category (field_age_category) */
+  $handler->display->display_options['filters']['field_age_category_tid']['id'] = 'field_age_category_tid';
+  $handler->display->display_options['filters']['field_age_category_tid']['table'] = 'field_data_field_age_category';
+  $handler->display->display_options['filters']['field_age_category_tid']['field'] = 'field_age_category_tid';
+  $handler->display->display_options['filters']['field_age_category_tid']['group'] = 1;
+  $handler->display->display_options['filters']['field_age_category_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_age_category_tid']['expose']['operator_id'] = 'field_age_category_tid_op';
+  $handler->display->display_options['filters']['field_age_category_tid']['expose']['label'] = 'Age category';
+  $handler->display->display_options['filters']['field_age_category_tid']['expose']['operator'] = 'field_age_category_tid_op';
+  $handler->display->display_options['filters']['field_age_category_tid']['expose']['identifier'] = 'field_age_category_tid';
+  $handler->display->display_options['filters']['field_age_category_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+  );
+  $handler->display->display_options['filters']['field_age_category_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_age_category_tid']['vocabulary'] = 'age_category';
   /* Filter criterion: Content: Author uid */
   $handler->display->display_options['filters']['uid']['id'] = 'uid';
   $handler->display->display_options['filters']['uid']['table'] = 'node';
@@ -272,6 +296,78 @@ function education_base_views_default_views() {
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['lesson_calendar'] = $view;
+
+  $view = new view();
+  $view->name = 'teacher_lessons';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'node';
+  $view->human_name = 'Teacher lessons';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Teacher lessons';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'role';
+  $handler->display->display_options['access']['role'] = array(
+    4 => '4',
+  );
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '5';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Footer: Global: Unfiltered text */
+  $handler->display->display_options['footer']['area_text_custom']['id'] = 'area_text_custom';
+  $handler->display->display_options['footer']['area_text_custom']['table'] = 'views';
+  $handler->display->display_options['footer']['area_text_custom']['field'] = 'area_text_custom';
+  $handler->display->display_options['footer']['area_text_custom']['empty'] = TRUE;
+  $handler->display->display_options['footer']['area_text_custom']['content'] = '<div class="teacher-lessons"><a href="/node/add/lesson">Add new lesson</a></div>';
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Content: Author uid */
+  $handler->display->display_options['arguments']['uid']['id'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['table'] = 'node';
+  $handler->display->display_options['arguments']['uid']['field'] = 'uid';
+  $handler->display->display_options['arguments']['uid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['uid']['default_argument_type'] = 'user';
+  $handler->display->display_options['arguments']['uid']['default_argument_options']['user'] = FALSE;
+  $handler->display->display_options['arguments']['uid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['uid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['uid']['summary_options']['items_per_page'] = '25';
+  /* Filter criterion: Content: Published status */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'lesson' => 'lesson',
+  );
+
+  /* Display: Teacher lessons */
+  $handler = $view->new_display('block', 'Teacher lessons', 'block');
+  $export['teacher_lessons'] = $view;
 
   $view = new view();
   $view->name = 'teachers_index';
@@ -415,6 +511,107 @@ function education_base_views_default_views() {
   $handler->display->display_options['menu']['context'] = 0;
   $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['teachers_index'] = $view;
+
+  $view = new view();
+  $view->name = 'teachers_schedule_right_block';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'users';
+  $view->human_name = 'Teachers schedule right block';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'Teachers schedule right block';
+  $handler->display->display_options['css_class'] = 'pupils_calendar';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'access user profiles';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'some';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '1';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* Field: User: Teachecr photo */
+  $handler->display->display_options['fields']['field_teachecr_pic']['id'] = 'field_teachecr_pic';
+  $handler->display->display_options['fields']['field_teachecr_pic']['table'] = 'field_data_field_teachecr_pic';
+  $handler->display->display_options['fields']['field_teachecr_pic']['field'] = 'field_teachecr_pic';
+  $handler->display->display_options['fields']['field_teachecr_pic']['label'] = '';
+  $handler->display->display_options['fields']['field_teachecr_pic']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_teachecr_pic']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_teachecr_pic']['settings'] = array(
+    'image_style' => 'teacher_list',
+    'image_link' => '',
+  );
+  /* Field: User: Teacher Last Name */
+  $handler->display->display_options['fields']['field_teacher_last_name']['id'] = 'field_teacher_last_name';
+  $handler->display->display_options['fields']['field_teacher_last_name']['table'] = 'field_data_field_teacher_last_name';
+  $handler->display->display_options['fields']['field_teacher_last_name']['field'] = 'field_teacher_last_name';
+  $handler->display->display_options['fields']['field_teacher_last_name']['label'] = '';
+  $handler->display->display_options['fields']['field_teacher_last_name']['element_label_colon'] = FALSE;
+  /* Field: User: First Name */
+  $handler->display->display_options['fields']['field_first_name']['id'] = 'field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['table'] = 'field_data_field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['field'] = 'field_first_name';
+  $handler->display->display_options['fields']['field_first_name']['label'] = '';
+  $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
+  /* Field: User: Grade and subject */
+  $handler->display->display_options['fields']['field_grade_subject']['id'] = 'field_grade_subject';
+  $handler->display->display_options['fields']['field_grade_subject']['table'] = 'field_data_field_grade_subject';
+  $handler->display->display_options['fields']['field_grade_subject']['field'] = 'field_grade_subject';
+  $handler->display->display_options['fields']['field_grade_subject']['label'] = 'Specialization';
+  $handler->display->display_options['fields']['field_grade_subject']['type'] = 'taxonomy_term_reference_plain';
+  $handler->display->display_options['fields']['field_grade_subject']['delta_offset'] = '0';
+  /* Field: User: Resume  */
+  $handler->display->display_options['fields']['field_resume_']['id'] = 'field_resume_';
+  $handler->display->display_options['fields']['field_resume_']['table'] = 'field_data_field_resume_';
+  $handler->display->display_options['fields']['field_resume_']['field'] = 'field_resume_';
+  $handler->display->display_options['fields']['field_resume_']['label'] = 'Resume';
+  $handler->display->display_options['fields']['field_resume_']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_resume_']['type'] = 'text_trimmed';
+  $handler->display->display_options['fields']['field_resume_']['settings'] = array(
+    'trim_length' => '400',
+  );
+  /* Field: User: Name */
+  $handler->display->display_options['fields']['name']['id'] = 'name';
+  $handler->display->display_options['fields']['name']['table'] = 'users';
+  $handler->display->display_options['fields']['name']['field'] = 'name';
+  $handler->display->display_options['fields']['name']['label'] = '';
+  $handler->display->display_options['fields']['name']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['name']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['name']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
+  /* Sort criterion: User: Created date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'users';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: User: Name */
+  $handler->display->display_options['arguments']['name']['id'] = 'name';
+  $handler->display->display_options['arguments']['name']['table'] = 'users';
+  $handler->display->display_options['arguments']['name']['field'] = 'name';
+  $handler->display->display_options['arguments']['name']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['name']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['name']['default_argument_options']['code'] = 'return $_GET[\'uid\'];';
+  $handler->display->display_options['arguments']['name']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['name']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['name']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['name']['limit'] = '0';
+  /* Filter criterion: User: Active status */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'users';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = '1';
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+
+  /* Display: Block */
+  $handler = $view->new_display('block', 'Block', 'block');
+  $export['teachers_schedule_right_block'] = $view;
 
   return $export;
 }

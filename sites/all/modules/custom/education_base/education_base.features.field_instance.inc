@@ -55,6 +55,43 @@ function education_base_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-lesson-field_age_category'.
+  $field_instances['node-lesson-field_age_category'] = array(
+    'bundle' => 'lesson',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_age_category',
+    'label' => 'Age category',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 1,
+    ),
+  );
+
   // Exported field_instance: 'node-lesson-field_lesson_date'.
   $field_instances['node-lesson-field_lesson_date'] = array(
     'bundle' => 'lesson',
@@ -169,8 +206,8 @@ function education_base_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_product_reference',
-    'label' => 'Product reference',
-    'required' => 0,
+    'label' => 'Lesson commerce_product reference',
+    'required' => 1,
     'settings' => array(
       'field_injection' => 1,
       'referenceable_types' => array(
@@ -193,10 +230,11 @@ function education_base_field_default_field_instances() {
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Age category');
   t('Body');
+  t('Lesson commerce_product reference');
   t('Lesson date');
   t('Lesson subject');
-  t('Product reference');
 
   return $field_instances;
 }

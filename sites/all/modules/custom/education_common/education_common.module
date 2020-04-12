@@ -16,7 +16,7 @@ function education_common_user_insert(&$edit, $account, $category) {
 
   //$role = user_role_load_by_name("editor");
 
-  if (isset($edit['field_is_a_teacher']['und']) && $edit['field_is_a_teacher']['und']['0']['value'] ) {
+  if (isset($edit['field_is_a_teacher'][LANGUAGE_NONE]) && $edit['field_is_a_teacher'][LANGUAGE_NONE]['0']['value'] ) {
     $role = TEACHER_ROLE;
   }
   else {
@@ -420,7 +420,7 @@ function education_common_create_quick_order_user($name, $pass, $mail, $phone, $
     'roles' => $roles,  //
 
     'field_phone' => array(
-      'und' => array(
+      LANGUAGE_NONE => array(
         0 => array(
           'value' => $phone,
         )
@@ -428,7 +428,7 @@ function education_common_create_quick_order_user($name, $pass, $mail, $phone, $
     ),
 
     'field_skype' => array(
-      'und' => array(
+      LANGUAGE_NONE => array(
         0 => array(
           'value' => $skype,
         )
@@ -520,11 +520,11 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
   commerce_line_item_save($line_item);
 
   // Attach line item to order
-  $order->commerce_line_items['und'][] = (array)$line_item;
+  $order->commerce_line_items[LANGUAGE_NONE][] = (array)$line_item;
   // TODO - для order NEED to ADD fields lesson_date и teacher
-  $order->field_order_lesson_date['und'][0]['value'] = $date;
-  $order->field_lesson_teacher_uid['und'][0]['uid'] = $teacher_uid;
-  $order->field_skype['und'][0]['value'] = $skype;
+  $order->field_order_lesson_date[LANGUAGE_NONE][0]['value'] = $date;
+  $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid'] = $teacher_uid;
+  $order->field_skype[LANGUAGE_NONE][0]['value'] = $skype;
 
   /*
   $profile_wrapper = entity_metadata_wrapper('commerce_customer_profile', $profile);

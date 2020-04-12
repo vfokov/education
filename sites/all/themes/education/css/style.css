@@ -2286,6 +2286,10 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     margin: 0 auto;
 }
 
+.view-teacher-lessons .view-footer {
+    margin-top: 20px;
+}
+
 @media all and (max-width: 768px) {
     .quicktabs-tabs.quicktabs-style-nostyle li {
         padding: 10px;

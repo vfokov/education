@@ -221,11 +221,11 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
         );
       }
 
-      if ($lesson_node->field_lesson_date['und']) {
+      if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
         //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
-        array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour);
+        array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour);
         if (isset($enable_lesson_date_time_half)) {
-          array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour_half);
+          array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour_half);
         }
       }
     }
@@ -246,8 +246,8 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
       'date_type' => 'datetime',
     );
 
-    if ($lesson_node->field_lesson_date['und']) {
-      array_unshift($lesson_node->field_lesson_date['und'], $new_date_item);
+    if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+      array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_item);
     }
   }
 
@@ -365,11 +365,11 @@ function education_common_disable_lesson_date_submit(&$form, &$form_state) {
 
   $lesson_node = node_load($disable_lesson_nid);
 
-  if (isset($lesson_node->field_lesson_date['und'])) {
-    foreach($lesson_node->field_lesson_date['und'] as $key => $lesson_date_item ) {
+  if (isset($lesson_node->field_lesson_date[LANGUAGE_NONE])) {
+    foreach($lesson_node->field_lesson_date[LANGUAGE_NONE] as $key => $lesson_date_item ) {
       if ($lesson_date_item['value'] == $disable_lesson_date) {
         //unset($lesson_node->field_lesson_date['und'][$key]);
-        $lesson_node->field_lesson_date['und'][$key] = null;
+        $lesson_node->field_lesson_date[LANGUAGE_NONE][$key] = null;
         node_save($lesson_node); break;
       }
     }
@@ -483,10 +483,10 @@ function education_common_close_lesson_date_submit(&$form, &$form_state) {
 
   $lesson_node = node_load($close_lesson_nid);
 
-  if (isset($lesson_node->field_lesson_date['und'])) {
-    foreach($lesson_node->field_lesson_date['und'] as $key => $lesson_date_item ) {
+  if (isset($lesson_node->field_lesson_date[LANGUAGE_NONE])) {
+    foreach($lesson_node->field_lesson_date[LANGUAGE_NONE] as $key => $lesson_date_item ) {
       if ($lesson_date_item['value'] == $close_lesson_date) {
-        unset($lesson_node->field_lesson_date['und'][$key]);
+        unset($lesson_node->field_lesson_date[LANGUAGE_NONE][$key]);
         node_save($lesson_node); break;
       }
     }
@@ -554,7 +554,7 @@ function education_common_quick_order($form, &$form_state) {
       'placeholder' => t('Phone'),
     ),
     //'#theme_wrappers' => array(),
-    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
+    '#default_value' =>  isset($user_profile->field_phone[LANGUAGE_NONE]) ? $user_profile->field_phone[LANGUAGE_NONE][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -630,7 +630,7 @@ function education_common_quick_order($form, &$form_state) {
       'placeholder' => t('Lesson date'),
     ),
     //'#theme_wrappers' => array(),
-    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone['und'][0]['value'] :  '',
+    '#default_value' =>  isset($user_profile->field_phone['und']) ? $user_profile->field_phone[LANGUAGE_NONE][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
@@ -643,7 +643,7 @@ function education_common_quick_order($form, &$form_state) {
       'placeholder' => t('Skype login'),
     ),
     //'#theme_wrappers' => array(),
-    '#default_value' =>  isset($user_profile->field_skype['und']) ? $user_profile->field_skype['und'][0]['value'] :  '',
+    '#default_value' =>  isset($user_profile->field_skype[LANGUAGE_NONE]) ? $user_profile->field_skype[LANGUAGE_NONE][0]['value'] :  '',
     '#required' => TRUE,
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
