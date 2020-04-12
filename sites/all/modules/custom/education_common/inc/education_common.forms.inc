@@ -50,20 +50,53 @@ function education_common_enable_lesson_date($form, &$form_state) {
     '#type' => 'date_popup',
     '#title' => '',
     '#size' => 20,
-    /*
-    '#date_date_element' => 'none', // hide date element
-    '#date_time_element' => 'time', // you can use text element here as well
-    '#date_time_format' => 'H:i'
-    */
     '#date_format' => 'H:i',
-    //'#default_value' => date('H:i', time()),
-    //'#value' => date('H:i', time()),
-    //'#value' => '00:00',
     '#date_increment' => 30,
     '#default_value' => '00:00',
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
   );
+
+  // Uncheck anonymous field when the name field is filled.
+  $form['enabled_enable_time_range'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Or select time range'),
+    /*
+    '#states' => array(
+      'unchecked' => array(
+        ':input[name="name"]' => array('filled' => TRUE),
+      ),
+    ),
+    */
+  );
+
+  $form['enabled_time_range'] = array(
+    '#input_title' => NULL,
+    '#input2_title' => NULL,
+    '#type' => 'slider',
+    '#default_value' => array('value' => 0.00, 'value2' => 24.00),
+    //'#orientation' => 'vertical',
+    // '#slider_style' => 'orange',
+    '#range' => TRUE,
+    '#min' => 0.00,
+    '#max' => 24.00,
+    '#step' => 1.00,
+    // '#display_bubble' => TRUE,
+    //'#display_bubble_format' => '$%{value}%MIN||$%{value}%MAX',
+    //'#required' => 1,
+    //'#disabled' => TRUE,
+    '#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+    '#display_values_format' => '%{value}%.00',
+    //'#weight' => 29,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_time_range"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+
 
   // TODO get lessons_products_nids of current user
   $type = 'lesson';
@@ -148,23 +181,66 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
   $enable_lesson_time = $form_state['values']['enable_time'];
   $enable_lesson_nid = $form_state['values']['enable_lesson_nid'];
 
-  $e = 1;
-
-  $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
-
   $lesson_node = node_load($enable_lesson_nid);
-  $l_n = 1;
 
-  $new_date_item = array (
-    'value' => $enable_lesson_date,
-    // TODO change
-    'timezone' => 'Asia/Yekaterinburg',
-    'timezone_db' => 'Asia/Yekaterinburg',
-    'date_type' => 'datetime',
-  );
+  // if time range selected
+  if (!empty($form_state['values']['enabled_enable_time_range'])) {
+    $z = 1;
+    $new_date_items = array();
+    $time_ranges = $form_state['values']['enabled_time_range'];
+    $range_to = $time_ranges['value2'];
+    $range_from = $time_ranges['value'];
 
-  if ($lesson_node->field_lesson_date['und']) {
-    array_unshift($lesson_node->field_lesson_date['und'], $new_date_item);
+    for ($i = $range_from; $i < $range_to; $i++) {
+
+      $hour_value = $i < 10 ? '0' . $i : $i;
+      $enable_lesson_time_item = $hour_value . ':' . '00';
+      $enable_lesson_time_item_half = $hour_value . ':' . '30';
+      $enable_lesson_date_time = $enable_lesson_date . ' ' . $enable_lesson_time_item;
+      $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
+
+      //$new_date_items[] = array (
+      $new_date_items_hour = array (
+        'value' => $enable_lesson_date_time,
+        // TODO change
+        'timezone' => 'Asia/Yekaterinburg',
+        'timezone_db' => 'Asia/Yekaterinburg',
+        'date_type' => 'datetime',
+      );
+      $new_date_items_hour_half = array (
+        'value' => $enable_lesson_date_time_half,
+        // TODO change
+        'timezone' => 'Asia/Yekaterinburg',
+        'timezone_db' => 'Asia/Yekaterinburg',
+        'date_type' => 'datetime',
+      );
+
+      if ($lesson_node->field_lesson_date['und']) {
+        //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+        array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour);
+        array_unshift($lesson_node->field_lesson_date['und'], $new_date_items_hour_half);
+      }
+    }
+    /*
+    if ($lesson_node->field_lesson_date['und']) {
+      array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+    }
+    */
+  }
+
+  else { // ADD one position
+    $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
+    $new_date_item = array(
+      'value' => $enable_lesson_date,
+      // TODO change
+      'timezone' => 'Asia/Yekaterinburg',
+      'timezone_db' => 'Asia/Yekaterinburg',
+      'date_type' => 'datetime',
+    );
+
+    if ($lesson_node->field_lesson_date['und']) {
+      array_unshift($lesson_node->field_lesson_date['und'], $new_date_item);
+    }
   }
 
   node_save($lesson_node); //break;

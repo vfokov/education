@@ -109,7 +109,7 @@ body,
 #site-slogan,
 .ui-widget,
 .comment-form label {
-    font-family: Georgia, "Times New Roman", Times, serif;
+    font-family: helvetica,sans-serif;
 }
 #header,
 #footer-wrapper,
@@ -2156,4 +2156,51 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     height: 33px;
     line-height: 34px;
     cursor: pointer;
+}
+
+.view-teachers-schedule-right-block .views-label {
+    font-weight: bold;
+}
+
+.view-teachers-schedule-right-block img {
+    margin-bottom: 20px;
+}
+
+.view-teachers-schedule-right-block .views-field-field-first-name,
+.view-teachers-schedule-right-block .views-field-field-teacher-last-name {
+    display:inline-block;
+}
+
+.view-teachers-schedule-right-block .views-field-field-grade-subject {
+    margin: 15px 0;
+}
+
+.view-lesson-calendar .pager {
+    display: none;
+}
+
+#block-views-22e1ee23f9fc34a485eb1b89a49690b9 {
+    margin-top: 40px;
+}
+
+.views-exposed-widget.views-submit-button .container-inline-date {
+    float: left;
+}
+
+.form-type-slider.form-item-time-slider {
+    float: left;
+    margin: 0 20px;
+}
+
+.views-exposed-widget.views-submit-button {
+    float: left;
+}
+
+#views-exposed-form-teachers-index-page .container-inline-date > .form-item {
+    display: block;
+}
+
+
+.container-inline-date .form-item input {
+    width: 150px;
 }

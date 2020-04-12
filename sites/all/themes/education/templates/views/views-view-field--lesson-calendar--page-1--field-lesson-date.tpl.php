@@ -15,6 +15,10 @@ $query
     $query->fieldCondition('field_lesson_subject', 'tid',  $_GET['field_lesson_subject_tid'], '=');
   }
 
+  if (!empty($_GET['field_age_category_tid']) && $_GET['field_age_category_tid'] != 'All') {
+    $query->fieldCondition('field_age_category_tid', 'tid',  $_GET['field_age_category_tid'], '=');
+  }
+
 if (!empty($_GET['uid'])) {
   $less_user = user_load_by_name($_GET['uid']);
   $query->propertyCondition('uid', $less_user->uid);
