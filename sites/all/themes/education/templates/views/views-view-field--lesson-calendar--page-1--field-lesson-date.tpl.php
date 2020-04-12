@@ -29,7 +29,7 @@ if (!empty($result['node'])) {
   $users = array();
   foreach ($result['node'] as $n_obj) {
     $node = node_load($n_obj->nid);
-    $users[] = user_load($node->uid);
+    $users[$node->uid] = user_load($node->uid);
   }
 }
 
