@@ -7,6 +7,7 @@ define('STUDENT_ROLE', 5);
 include_once 'inc/education_common.properties.inc';
 include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
+include_once 'inc/education_common.variable.inc';
 
 function education_common_user_insert(&$edit, $account, $category) {
 
@@ -109,7 +110,15 @@ function education_common_theme() {
       'path' => drupal_get_path('module', 'education_common') . '/templates',
       'template' => 'education-common-mail-body',
     ),
+
+    'user_register_form' => array(
+      'render element'=>'form',
+      'path' => drupal_get_path('module', 'education_common') . '/templates',
+      'template' => 'user-register',
+    ),
   );
+
+
 }
 
 
@@ -365,6 +374,10 @@ function education_common_block_info() {
   $blocks['form-enable-lesson-date'] = array(
     'info' => 'Disable lesson date form',
   );
+
+  $blocks['form-pupil-registation'] = array(
+    'info' => 'Pupil registration form',
+  );
   return $blocks;
 }
 
@@ -395,6 +408,11 @@ function education_common_block_view($delta = '') {
     case 'form-enable-lesson-date':
       $block['subject'] = t('Enable lesson date');
       $block['content'] = drupal_get_form('education_common_enable_lesson_date');
+      break;
+
+    case 'form-pupil-registation':
+      $block['subject'] = t('Pupil registration');
+      $block['content'] = drupal_get_form('user_register_form');
       break;
   }
   return $block;

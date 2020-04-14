@@ -808,3 +808,59 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
 
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user register
+ */
+function education_common_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/pupil-registration') {
+
+    $form['field_is_a_teacher']['#access'] = FALSE;
+
+    $form['account']['name']['#description'] = '';
+    $form['account']['mail']['#description'] = '';
+
+    $pupil_role_options = $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'];
+    unset($pupil_role_options['_none']);
+    $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'] = $pupil_role_options;
+
+    $student_age_category_options = $form['field_student_age_category'][LANGUAGE_NONE]['#options'];
+    unset($student_age_category_options['_none']);
+    $form['field_student_age_category'][LANGUAGE_NONE]['#options'] = $student_age_category_options;
+
+    $form['field_select_pupil_role']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_student_age_category[und]"]' => array('value' => 'schoolboy'),
+      ),
+    );
+
+    //field-student-age-category
+    //$pupil_role_options = $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'];
+
+    //echo '<pre>'; print_r($student_age_category_options); echo '</pre>'; die();
+
+    $options_with_img = array();
+    foreach ($student_age_category_options as $val => $student_age_category_option) {
+      $img_var_fid = variable_get('pupil_registration_image_' . $val);
+      $file = file_load($img_var_fid);
+
+      $op_img = theme('image_style', array(
+        'style_name' => 'teacher_list',
+        'path' => $file->uri,
+        //'alt' => $file->alt,
+        //'title' => $file->title,
+        'attributes' => array(),
+      )) . '<br>' . $student_age_category_option;
+
+      $options_with_img[$val] = $op_img;
+
+      //echo '<pre>'; print_r($op_img); echo '</pre>'; die();
+    }
+    $form['field_student_age_category'][LANGUAGE_NONE]['#options'] = $options_with_img;
+
+  }
+  else {
+    $form['field_age_category']['#access'] = FALSE;
+  }
+}

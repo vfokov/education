@@ -1,7 +1,123 @@
 <?php
 
-function education_preprocess_html(&$variables)
-{
+
+
+function education_form_element($variables) {
+  $element = $variables['element'];
+  // Disable radio button N/A
+  if ($element['#type'] == 'radio' /*&& $element['#return_value'] === '_none'*/) {
+    //$variables['element']['#attributes']['disabled'] = TRUE;
+    $e  = 1;
+
+
+    $element =& $variables['element'];
+
+    // This function is invoked as theme wrapper, but the rendered form element
+    // may not necessarily have been processed by form_builder().
+    $element += array(
+      '#title_display' => 'before',
+    );
+
+    // Add element #id for #type 'item'.
+    if (isset($element['#markup']) && !empty($element['#id'])) {
+      $attributes['id'] = $element['#id'];
+    }
+
+    // Add element's #type and #name as class to aid with JS/CSS selectors.
+    $attributes['class'] = array(
+      'form-item',
+    );
+    if (!empty($element['#type'])) {
+      $attributes['class'][] = 'form-type-' . strtr($element['#type'], '_', '-');
+    }
+    if (!empty($element['#name'])) {
+      $attributes['class'][] = 'form-item-' . strtr($element['#name'], array(
+          ' ' => '-',
+          '_' => '-',
+          '[' => '-',
+          ']' => '',
+        ));
+    }
+
+    // Add a class for disabled elements to facilitate cross-browser styling.
+    if (!empty($element['#attributes']['disabled'])) {
+      $attributes['class'][] = 'form-disabled';
+    }
+    $output = '<div' . drupal_attributes($attributes) . '>' . "\n";
+
+    // If #title is not set, we don't display any label or required marker.
+    if (!isset($element['#title'])) {
+      $element['#title_display'] = 'none';
+    }
+    $prefix = isset($element['#field_prefix']) ? '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ' : '';
+    $suffix = isset($element['#field_suffix']) ? ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>' : '';
+    switch ($element['#title_display']) {
+      case 'before':
+      case 'invisible':
+        $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
+        $output .= ' ' . theme('form_element_label', $variables);
+
+        break;
+      case 'after':
+        $i = 1;
+
+        if (strstr($element['#id'], 'edit-field-student-age-category-und')) {
+          $output .= ' ' . theme('form_element_label', $variables) . "\n";
+          $output .= ' ' . $prefix . $element['#children'] . $suffix;
+        }
+        else {
+          $output .= ' ' . $prefix . $element['#children'] . $suffix;
+          $output .= ' ' . theme('form_element_label', $variables) . "\n";
+
+        }
+
+
+
+        break;
+      case 'none':
+      case 'attribute':
+
+        // Output no label and no required marker, only the children.
+        $output .= ' ' . $prefix . $element['#children'] . $suffix . "\n";
+        break;
+    }
+    if (!empty($element['#description'])) {
+      $output .= '<div class="description">' . $element['#description'] . "</div>\n";
+    }
+    $output .= "</div>\n";
+    return $output;
+
+
+  }
+  return theme_form_element($variables);
+}
+
+/**
+ * use  hook_theme_registry_alter().
+ */
+function education_theme_registry_alter(&$theme_registry) {
+  $theme_path = path_to_theme();
+
+  // Checkboxes.
+  /*
+  if (isset($theme_registry['checkbox'])) {
+    $theme_registry['checkbox']['type'] = 'theme';
+    $theme_registry['checkbox']['theme path'] = $theme_path;
+    $theme_registry['checkbox']['template'] = $theme_path. '/templates/fields/field--type-checkbox';
+    unset($theme_registry['checkbox']['function']);
+  }
+  */
+
+  // Radios.
+  if (isset($theme_registry['radio'])) {
+    $theme_registry['radio']['type'] = 'theme';
+    $theme_registry['radio']['theme path'] = $theme_path;
+    $theme_registry['radio']['template'] = $theme_path . '/templates/fields/field--type-radio';
+    unset($theme_registry['radio']['function']);
+  }
+}
+
+function education_preprocess_html(&$variables) {
   // Add variables for path to theme.
   $variables['base_path'] = base_path();
   $variables['path_to_resbartik'] = drupal_get_path('theme', 'education');

@@ -2290,6 +2290,118 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     margin-top: 20px;
 }
 
+
+/* Прячем наш дефолтный инпут */
+input[type="radio"].dls-radio {
+    display: none;
+}
+/* Стилизуем нашу кнопку */
+.dls-radio-wrapper {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 30px;
+    border: 1px solid #a0a0a0;
+    box-shadow: none;
+    background: rgb(252,252,252);
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmMGYwZjAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(240,240,240,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(240,240,240,1)));
+    background: -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    background: -o-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    background: -ms-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    background: linear-gradient(to bottom, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#f0f0f0',GradientType=0 );
+    transition: all 0.17s ease 0s;
+}
+
+
+.form-item-field-select-pupil-role-und .dls-radio-wrapper .dls-radio-mark {
+    width: 8px;
+    height: 7px;
+    border-radius: 10px;
+    background: none repeat scroll 0% 0% #0093c9;
+    margin: 3px auto;
+}
+
+.dls-radio-wrapper:hover {
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.11);
+    transition: all 0.17s ease 0s;
+}
+.dls-radio-wrapper .dls-radio-mark {
+    width: 6px;
+    height: 6px;
+    border-radius: 10px;
+    background: none repeat scroll 0% 0% #0093c9;
+    margin: 4px auto;
+    opacity: 0;
+    transition: all 0.17s ease 0s;
+}
+/* Стиль, когда наш инпут отмечен */
+input[type="radio"].dls-radio:checked ~ .dls-radio-wrapper {
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.22) inset;
+    transition: all 0.17s ease 0s;
+}
+input[type="radio"].dls-radio:checked ~ .dls-radio-wrapper .dls-radio-mark {
+    opacity: 1;
+    transition: all 0.17s ease 0s;
+}
+/* Стиль, когда наш инпут выключен */
+input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
+    opacity: .5
+}
+
+.form-item-field-student-age-category-und {
+    display: inline-block;
+    margin: 10px 30px;
+    text-align: center;
+}
+
+.form-item-field-student-age-category-und .dls-radio-wrapper .dls-radio-mark {
+    width: 10px;
+    height: 10px;
+}
+
+/* Стилизуем нашу кнопку */
+.form-item-field-student-age-category-und .dls-radio-wrapper {
+    position: relative;
+    width: 18px;
+    height: 18px;
+}
+
+.form-item-field-student-age-category-und label.option {
+    display: block;
+}
+
+#block-education-common-form-pupil-registation {
+    margin: 0 auto;
+    width: 80%;
+    padding: 20px 30px 10px;
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+}
+
+
+#block-education-common-form-pupil-registation #edit-account .form-item,
+#block-education-common-form-pupil-registation .field-name-field-phone .form-item,
+#block-education-common-form-pupil-registation .field-name-field-student-promocode .form-item {
+    width: 40%;
+    float: left;
+    margin-left: 20px;
+}
+
+#block-education-common-form-pupil-registation .field-name-field-ready-to-get-news {
+    clear: both;
+}
+
+#block-education-common-form-pupil-registation input.form-text {
+    width: 100%;
+}
+
+
 @media all and (max-width: 768px) {
     .quicktabs-tabs.quicktabs-style-nostyle li {
         padding: 10px;
