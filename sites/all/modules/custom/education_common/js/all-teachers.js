@@ -31,6 +31,7 @@
     });
     */
 
+    /*
     $('#header .tooltip-bottom.tooltip.darkgrey').mouseover(function() {
     //$('#header .tooltip-bottom.tooltip.darkgrey').mouseout(function() {
     //$('#header .tooltip-bottom.tooltip.darkgrey').click(function() {
@@ -53,13 +54,15 @@
 
       console.log($(this).find('.tooltip-close'));
 
-      /*
-      $('.tooltip-close').on('body', 'mousedown', function(){
-        console.log('vdsdvvsd');
-      })
-      */
+
+
 
     });
+    */
+
+    $('span.box').bind('click', function(){
+      $('.tooltip-bottom.tooltip.darkgrey .tooltip-close').click();
+    })
 
   });
 

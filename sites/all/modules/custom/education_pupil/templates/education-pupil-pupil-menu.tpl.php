@@ -7,7 +7,7 @@
       } elseif ($key == count($menu_items) - 1) {
         $class = 'last';
       }else {$class = 'item';} ?>
-    <a class="<?php print $class; ?>" href="<?php print $menu_item['href']; ?>"><?php print $menu_item['title']; ?></a>
+    <a class="<?php print $class; ?>" href="/<?php print drupal_get_path_alias($menu_item['href']); ?>"><?php print $menu_item['title']; ?></a>
     <?php endforeach; ?>
   </div>
 </div>

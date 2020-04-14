@@ -4,7 +4,7 @@
   <span class="dropbtn">&nbsp;</span>
   <div class="dropdown-content">
     <?php foreach($menu_items as $menu_item):?>
-    <a href="<?php print $menu_item['href']; ?>"><?php print $menu_item['title']; ?></a>
+    <a href="/<?php print $menu_item['href']; ?>"><?php print $menu_item['title']; ?></a>
 
     <?php endforeach; ?>
   </div>
