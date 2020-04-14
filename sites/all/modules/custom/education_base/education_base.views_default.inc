@@ -473,7 +473,7 @@ function education_base_views_default_views() {
     2 => '2',
   );
   $handler->display->display_options['filters']['field_languages_can_teach']['expose']['reduce'] = 0;
-  /* Filter criterion: Indexed User: Age category */
+  /* Filter criterion: Indexed User: Teacher age category */
   $handler->display->display_options['filters']['field_age_category']['id'] = 'field_age_category';
   $handler->display->display_options['filters']['field_age_category']['table'] = 'search_api_index_teachers';
   $handler->display->display_options['filters']['field_age_category']['field'] = 'field_age_category';
