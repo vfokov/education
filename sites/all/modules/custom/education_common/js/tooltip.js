@@ -3,7 +3,7 @@
  * @author javier.rocamora@gmail.com
  * Attaches a tooltip to an element.
  */
- 
+
 // UMD standard code
 (function (root, factory) {
 	if (typeof define === "function" && define.amd) {
@@ -120,6 +120,9 @@
 			close.href = '#';
 			// close.textContent = "✖";
 			close.addEventListener('click', function (evt) {
+
+        console.log('can be clicked');
+
 				evt.preventDefault();
 				evt.stopPropagation();
 				self.hide();
@@ -359,7 +362,7 @@
 
 	/* TooltipClass.prototype.destroyEvents = function () {
 		 var config = this.config;
-	
+
 		 if (config.showOn === "hover") {
 			 this.element.removeEventListener('mouseover', this.listenerShow, false);
 			 this.element.removeEventListener('mouseout', this.listenerHide, false);
@@ -569,7 +572,7 @@
 			}
 		});
 	}
-	
+
 	/**
 	 * Creates a debounced function that delays invoking func until after wait milliseconds have
 	 * elapsed since the last time the debounced function was invoked.

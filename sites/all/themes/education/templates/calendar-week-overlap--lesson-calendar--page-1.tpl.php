@@ -255,4 +255,4 @@ if (!empty($result['node'])) {
   </script>
 <?php endif; ?>
 
-<script type="text/javascript" src="/sites/all/modules/custom/education_common/js/tooltip.js"></script>
+

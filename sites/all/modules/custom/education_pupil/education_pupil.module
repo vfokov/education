@@ -1,0 +1,47 @@
+<?php
+
+//define('STUDENT_ROLE', 5);
+
+/**
+ * Implements hook_theme()
+ */
+function education_pupil_theme() {
+  return array(
+    'education_pupil_pupil_menu' => array(
+      'variables' => array(
+        'menu_items' => NULL,
+      ),
+      'path' => drupal_get_path('module', 'education_pupil') . '/templates',
+      'template' => 'education-pupil-pupil-menu',
+    ),
+  );
+
+}
+
+/**
+ * Override or insert variables into the node template.
+ */
+function education_pupil_preprocess_page(&$variables) {
+  global $user;
+  //$variables['show_user_menu'] = FALSE;
+  $variables['show_user_menu'] = TRUE;
+  if (user_has_role(STUDENT_ROLE)) {
+    $variables['show_user_menu']= TRUE;
+  }
+
+  $pupils_menu = menu_tree('menu-pupils-menu');
+
+  $menu_items = array();
+  foreach ($pupils_menu as $key => $pupils_menu_item) {
+    if (is_numeric($key)) {
+      $menu_items[] = array(
+        'href' => $pupils_menu_item['#href'] == '<front>' ? '/' : $pupils_menu_item['#href'],
+        'title' =>  $pupils_menu_item['#title'],
+      );
+    }
+  }
+
+  $variables['education_pupil_pupil_menu'] = theme('education_pupil_pupil_menu', array('menu_items' => $menu_items));
+
+  $p = 1;
+}

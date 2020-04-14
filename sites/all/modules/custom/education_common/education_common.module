@@ -10,13 +10,6 @@ include_once 'inc/education_common.forms.inc';
 include_once 'inc/education_common.variable.inc';
 
 function education_common_user_insert(&$edit, $account, $category) {
-
-  //echo '<pre>'; print_r($edit); echo '</pre>'; die();
-
-  ////$u = 1;
-
-  //$role = user_role_load_by_name("editor");
-
   if (isset($edit['field_is_a_teacher'][LANGUAGE_NONE]) && $edit['field_is_a_teacher'][LANGUAGE_NONE]['0']['value'] ) {
     $role = TEACHER_ROLE;
   }
@@ -30,8 +23,6 @@ function education_common_user_insert(&$edit, $account, $category) {
 
 function education_common_preprocess_mimemail_message(&$variables) {
   $variables['body'] = html_entity_decode($variables['body']);
-
-  $v = 1;
 }
 
 
