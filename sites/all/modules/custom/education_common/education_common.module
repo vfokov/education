@@ -107,6 +107,12 @@ function education_common_theme() {
       'path' => drupal_get_path('module', 'education_common') . '/templates',
       'template' => 'user-register',
     ),
+
+    'user_profile_form' => array(
+      'render element'=>'form',
+      'path' => drupal_get_path('module', 'education_common') . '/templates',
+      'template' => 'user-profile',
+    ),
   );
 
 
@@ -345,6 +351,12 @@ function education_common_preprocess_page(&$variables) {
   //drupal_add_js(drupal_get_path('module', 'education_common') . '/js/tooltip.js');
   drupal_add_css(drupal_get_path('module', 'education_common') . '/css/tooltip.css');
   drupal_add_js(drupal_get_path('module', 'education_common') . '/js/all-teachers.js');
+
+  if (request_uri() == '/pupil/profile') {
+    drupal_add_library('system', 'ui.accordion');
+    drupal_add_js('jQuery(document).ready(function(){jQuery("#pupils-accordion").accordion({collapsible: true});});', 'inline');
+  }
+
 }
 
 /**
@@ -368,6 +380,10 @@ function education_common_block_info() {
 
   $blocks['form-pupil-registation'] = array(
     'info' => 'Pupil registration form',
+  );
+
+  $blocks['form-pupil-profile'] = array(
+    'info' => 'Pupil profile form',
   );
   return $blocks;
 }
@@ -404,6 +420,12 @@ function education_common_block_view($delta = '') {
     case 'form-pupil-registation':
       $block['subject'] = t('Pupil registration');
       $block['content'] = drupal_get_form('user_register_form');
+      break;
+    case 'form-pupil-profile':
+      module_load_include('inc', 'user', 'user.pages');
+      global $user;
+      $block['subject'] = t('Pupil profile');
+      $block['content'] = drupal_get_form('user_profile_form', user_load($user->uid));
       break;
   }
   return $block;

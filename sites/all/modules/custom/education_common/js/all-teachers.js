@@ -62,7 +62,9 @@
 
     $('span.box').bind('click', function(){
       $('.tooltip-bottom.tooltip.darkgrey .tooltip-close').click();
-    })
+    });
+
+    //$( "#accordion" ).accordion();
 
   });
 

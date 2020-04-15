@@ -837,9 +837,6 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
 
     //field-student-age-category
     //$pupil_role_options = $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'];
-
-    //echo '<pre>'; print_r($student_age_category_options); echo '</pre>'; die();
-
     $options_with_img = array();
     foreach ($student_age_category_options as $val => $student_age_category_option) {
       $img_var_fid = variable_get('pupil_registration_image_' . $val);
@@ -854,13 +851,36 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
       )) . '<br>' . $student_age_category_option;
 
       $options_with_img[$val] = $op_img;
-
-      //echo '<pre>'; print_r($op_img); echo '</pre>'; die();
     }
     $form['field_student_age_category'][LANGUAGE_NONE]['#options'] = $options_with_img;
 
   }
   else {
     $form['field_age_category']['#access'] = FALSE;
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user profile
+ */
+function education_common_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/pupil/profile') {
+    $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_ready_to_get_news']['#access'] = FALSE;
+    $form['field_terms_of_service']['#access'] = FALSE;
+    $form['field_student_age_category']['#access'] = FALSE;
+    $form['field_age_category']['#access'] = FALSE;
+    $form['field_select_pupil_role']['#access'] = FALSE;
+    $form['field_not_available_dates']['#access'] = FALSE;
+    $form['field_languages_can_teach']['#access'] = FALSE;
+    $form['field_hourly_rate_']['#access'] = FALSE;
+    $form['field_resume_']['#access'] = FALSE;
+    $form['field_grade_subject']['#access'] = FALSE;
+    $form['field_documents']['#access'] = FALSE;
+    $form['mimemail']['#access'] = FALSE;
+
   }
 }

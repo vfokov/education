@@ -2411,6 +2411,7 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     cursor: pointer;
     position: absolute;
     right: 79px;
+    top: 20px;
 }
 
 .b-topnav__icon>span {
@@ -2482,6 +2483,24 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {/*background-color: #3e8e41;*/}
 
+
+/*pupils profile*/
+
+#pupils-accordion .ui-state-default,
+#pupils-accordion .ui-state-active {
+    border: 1px solid #d3d3d3;
+    background: none;
+    font-weight: normal;
+    color: #555555;
+    padding: 30px;
+}
+
+#pupils-accordion .field-name-field-teacher-last-name {
+    margin-left: 0;
+    display: block;
+}
+
+/*pupils profile*/
 
 @media all and (max-width: 768px) {
     .quicktabs-tabs.quicktabs-style-nostyle li {
