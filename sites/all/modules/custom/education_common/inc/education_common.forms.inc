@@ -817,6 +817,7 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
   if (request_uri() == '/pupil-registration') {
 
     $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_teaching_format']['#access'] = FALSE;
 
     $form['account']['name']['#description'] = '';
     $form['account']['mail']['#description'] = '';

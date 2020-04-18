@@ -13,6 +13,7 @@
   hide($form['mimemail']);
   hide($form['field_student_promocode']);
   hide($form['actions']);
+  hide($form['field_teaching_format']);
 ?>
 
 

@@ -2500,7 +2500,83 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     display: block;
 }
 
-/*pupils profile*/
+/* END pupils profile*/
+
+
+/*Tutot register form*/
+
+#block-education-tutor-form-tutor-registation {
+    color: #fff;
+    overflow: hidden;
+    background: #292929;
+    padding: 30px 30px 40px 125px;
+}
+
+#block-education-tutor-form-tutor-registation #edit-account {
+    width: 50%;
+    float: left;
+}
+
+#block-education-tutor-form-tutor-registation h2 {
+    margin-bottom: 15px;
+}
+
+#block-education-tutor-form-tutor-registation .form-actions,
+#block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und {
+    float:left;
+    margin: 0 0 0 10px;
+    padding: 0;
+}
+
+#block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und {
+    margin: 0;
+    width: 23%;
+}
+
+#block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und select {
+    padding: 9px 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#block-education-tutor-form-tutor-registation #edit-account input {
+    width: 48.5%;
+    margin-right: 10px;
+    padding: 12px 14px 11px 14px;
+    box-sizing: border-box;
+    margin-top: 0px;
+    border: none;
+}
+
+.tutor-agree {
+    clear: both;
+}
+
+#block-education-tutor-form-tutor-registation .mark {
+    font-size: smaller;
+    display: inline-block;
+    margin-top:-5px;
+    margin-right: 5px;
+}
+
+#block-education-tutor-form-tutor-registation #edit-account input#edit-mail {
+    margin-right: 0;
+}
+
+#block-education-tutor-form-tutor-registation input.form-submit {
+    background: #f17c1e;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.929em;
+    font-weight: normal;
+    text-align: center;
+    padding: 11px 53px 12px;
+    border-radius: 1px;
+    margin-top: 0;
+}
+
+
 
 @media all and (max-width: 768px) {
     .quicktabs-tabs.quicktabs-style-nostyle li {
