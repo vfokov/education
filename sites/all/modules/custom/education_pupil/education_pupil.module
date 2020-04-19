@@ -42,6 +42,5 @@ function education_pupil_preprocess_page(&$variables) {
   }
 
   $variables['education_pupil_pupil_menu'] = theme('education_pupil_pupil_menu', array('menu_items' => $menu_items));
-
-  $p = 1;
 }
+

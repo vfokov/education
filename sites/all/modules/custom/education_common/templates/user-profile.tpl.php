@@ -1,5 +1,6 @@
 <?php
 
+if (request_uri() != '/tutor-setup') {
   hide($form['account']['mail']);
   hide($form['field_teacher_last_name']);
   hide($form['field_first_name']);
@@ -10,20 +11,20 @@
   hide($form['account']['current_pass']);
   hide($form['account']['pass']);
   hide($form['field_teachecr_pic']);
-  hide($form['mimemail']);
   hide($form['field_student_promocode']);
   hide($form['actions']);
   hide($form['field_teaching_format']);
+}
+
+hide($form['mimemail']);
+
 ?>
-
-
 
 <?php
   print drupal_render_children($form);
 ?>
 
-
-
+<?php if (request_uri() != '/tutor-setup') { ?>
 <div id="pupils-accordion">
   <h3>Identification data</h3>
   <div>
@@ -91,3 +92,5 @@
 <div class="profile-actions">
   <?php print render($form['actions']); ?>
 </div>
+
+<?php } ?>

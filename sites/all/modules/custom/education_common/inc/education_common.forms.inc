@@ -864,7 +864,7 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
 
 /**
  * Implements hook_form_FORM_ID_alter()
- * user profile
+ * user profile (student)
  */
 function education_common_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   // if form for pupil registartion
@@ -882,6 +882,5 @@ function education_common_form_user_profile_form_alter(&$form, &$form_state, $fo
     $form['field_grade_subject']['#access'] = FALSE;
     $form['field_documents']['#access'] = FALSE;
     $form['mimemail']['#access'] = FALSE;
-
   }
 }

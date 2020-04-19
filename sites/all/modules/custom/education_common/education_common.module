@@ -18,6 +18,9 @@ function education_common_user_insert(&$edit, $account, $category) {
   }
 
   user_multiple_role_edit(array($account->uid), 'add_role', $role);
+  if ($role == TEACHER_ROLE) {
+    drupal_goto('tutor-setup');
+  }
 }
 
 

@@ -98,6 +98,123 @@ function education_tutor_form_user_register_form_alter(&$form, &$form_state, $fo
 }
 
 
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user profile (student)
+ */
+function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/tutor-setup') {
+    //echo 'dfsf'; die();
+
+    $form['vertical_tabs_personal_data'] = array(
+      '#type' => 'vertical_tabs'
+    );
+
+    /*
+    $form['vertical_tabs_tutor_place'] = array(
+      '#type' => 'vertical_tabs'
+    );
+
+    $form['vertical_tabs_tutor_subjects'] = array(
+      '#type' => 'vertical_tabs'
+    );
+    */
+
+    $form['personal_data'] = array(
+      '#title' => 'Personal data',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['tutor_place'] = array(
+      '#title' => 'Tutor place',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['subjects'] = array(
+      '#title' => 'Subjects',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['education_and_documents'] = array(
+      '#title' => 'Education and documents',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['profile'] = array(
+      '#title' => 'Profile',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['personal_data']['account']['name'] = $form['account']['name'];
+    $form['personal_data']['account']['mail'] = $form['account']['mail'];
+    $form['personal_data']['account']['current_pass'] = $form['account']['current_pass'];
+    $form['personal_data']['account']['pass'] = $form['account']['pass'];
+    //$form['personal_data']['account']['name']['#group'] = 'vertical_tabs_personal_data';
+    $form['personal_data']['field_phone'] = $form['field_phone'];
+    $form['personal_data']['field_first_name'] = $form['field_first_name'];
+    $form['personal_data']['field_teacher_last_name'] = $form['field_teacher_last_name'];
+    //unset($form['account']['mail']);
+    unset($form['account']['name']);
+    unset($form['account']['mail']);
+    unset($form['account']['current_pass']);
+    unset($form['account']['pass']);
+    unset($form['field_phone']);
+    unset($form['field_first_name']);
+    unset($form['field_teacher_last_name']);
+
+    $form['tutor_place']['skype'] = $form['field_skype'];
+    unset($form['field_skype']);
+
+    $form['subjects']['field_languages_can_teach'] = $form['field_languages_can_teach'];
+    unset($form['field_languages_can_teach']);
+    $form['subjects']['field_grade_subject'] = $form['field_grade_subject'];
+    unset($form['field_grade_subject']);
+    $form['subjects']['field_age_category'] = $form['field_age_category'];
+    unset($form['field_age_category']);
+
+    $form['subjects']['field_hourly_rate_'] = $form['field_hourly_rate_'];
+    unset($form['field_hourly_rate_']);
+
+    $form['education_and_documents']['field_documents'] = $form['field_documents'];
+    unset($form['field_documents']);
+
+    $form['profile']['field_teachecr_pic'] = $form['field_teachecr_pic'];
+    unset($form['field_teachecr_pic']);
+
+    $form['profile']['field_resume_'] = $form['field_resume_'];
+    unset($form['field_resume_']);
+
+    $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_ready_to_get_news']['#access'] = FALSE;
+    $form['field_terms_of_service']['#access'] = FALSE;
+    $form['field_student_age_category']['#access'] = FALSE;
+    $form['field_select_pupil_role']['#access'] = FALSE;
+    $form['field_not_available_dates']['#access'] = FALSE;
+    $form['field_student_promocode']['#access'] = FALSE;
+    $form['field_teaching_format']['#access'] = FALSE; // Hide yet
+    $form['field_city']['#access'] = FALSE; // Hide yet
+    $form['mimemail']['#access'] = FALSE;
+
+  }
+}
+
+
 
 /**
  * Implements hook_user_insert().
