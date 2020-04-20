@@ -14,6 +14,7 @@ if (request_uri() != '/tutor-setup') {
   hide($form['field_student_promocode']);
   hide($form['actions']);
   hide($form['field_teaching_format']);
+  hide($form['field_gender']);
 }
 
 hide($form['mimemail']);

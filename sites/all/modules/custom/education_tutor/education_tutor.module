@@ -135,6 +135,11 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#group' => 'vertical_tabs_personal_data',
+
+      '#attributes' => array(
+        'class' => array('container-inline'),
+        'style' => array('foo: bar;')
+      ),
     );
 
     $form['subjects'] = array(
@@ -169,6 +174,8 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     $form['personal_data']['field_phone'] = $form['field_phone'];
     $form['personal_data']['field_first_name'] = $form['field_first_name'];
     $form['personal_data']['field_teacher_last_name'] = $form['field_teacher_last_name'];
+    unset($form['field_gender'][LANGUAGE_NONE]['#options']['_none']);
+    $form['personal_data']['field_gender'] = $form['field_gender'];
     //unset($form['account']['mail']);
     unset($form['account']['name']);
     unset($form['account']['mail']);
@@ -177,6 +184,7 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     unset($form['field_phone']);
     unset($form['field_first_name']);
     unset($form['field_teacher_last_name']);
+    unset($form['field_gender']);
 
     $form['tutor_place']['skype'] = $form['field_skype'];
     unset($form['field_skype']);

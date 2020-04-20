@@ -2576,6 +2576,80 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     margin-top: 0;
 }
 
+.vertical-tabs ul.vertical-tabs-list li {
+    background: none;
+    border: none;
+    /*width: 18em;*/
+}
+
+div.vertical-tabs {
+    margin: 1em 0 1em 20em;
+}
+
+.vertical-tabs ul.vertical-tabs-list li.selected {
+  border: 1px solid #ccc;
+  border-right: none;
+}
+
+.vertical-tabs ul.vertical-tabs-list li a {
+    color: #000;
+    padding: 1.9em 1.2em;
+    position: relative;
+}
+
+.vertical-tabs ul.vertical-tabs-list li a::before {
+    content: '';
+    min-width: 40px;
+    height: 40px;
+    background: url(reg_steps_2.svg);
+    background-color: #95c11f;
+    border-color: #95c11f;
+    width: 40px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(2) a::before {
+    background-position: -40px,center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(3) a::before {
+    background-position: -80px center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(4) a::before {
+    background-position: -120px center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(5) a::before {
+    background-position: -160px,center;
+}
+
+
+.vertical-tabs ul.vertical-tabs-list strong {
+    padding-left: 50px;
+}
+
+.vertical-tabs ul.vertical-tabs-list {
+    width: 20em;
+    margin: -1px 0 -1px -20em;
+}
+
+#block-education-tutor-form-tutor-profile input.form-submit {
+    background: #f17c1e;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.929em;
+    font-weight: normal;
+    text-align: center;
+    padding: 11px 53px 12px;
+    border-radius: 1px;
+    margin-top: 0;
+}
 
 
 @media all and (max-width: 768px) {
