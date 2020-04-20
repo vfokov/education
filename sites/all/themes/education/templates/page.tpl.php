@@ -161,8 +161,12 @@
 
         <?php if ($show_user_menu): ?>
           <!--<div class="b-topnav__icon"><span>&nbsp;</span></div>-->
-
           <?php print $education_pupil_pupil_menu; ?>
+        <?php endif; ?>
+
+        <?php if ($show_tutor_menu): ?>
+          <!--<div class="b-topnav__icon"><span>&nbsp;</span></div>-->
+          <?php print $education_tutor_tutor_menu; ?>
         <?php endif; ?>
 
       </div></header> <!-- /.section, /#header -->

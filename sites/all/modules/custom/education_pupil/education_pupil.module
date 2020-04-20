@@ -24,7 +24,7 @@ function education_pupil_theme() {
 function education_pupil_preprocess_page(&$variables) {
   global $user;
   //$variables['show_user_menu'] = FALSE;
-  $variables['show_user_menu'] = TRUE;
+  $variables['show_user_menu'] = FALSE;
   if (user_has_role(STUDENT_ROLE)) {
     $variables['show_user_menu']= TRUE;
   }
