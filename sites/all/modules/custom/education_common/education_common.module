@@ -9,6 +9,27 @@ include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 include_once 'inc/education_common.variable.inc';
 
+
+/**
+ * Implements hook_user_init
+ */
+function education_common_init() {
+  if (request_uri() == '/pupil/profile' ) {
+    if (user_has_role(TEACHER_ROLE)) {
+      drupal_goto('tutor-setup');
+    }
+  }
+
+  if (request_uri() == '/tutor-setup' ) {
+    if (user_has_role(STUDENT_ROLE)) {
+      drupal_goto('pupil/profile');
+    }
+  }
+}
+
+/**
+ * Implements hook_user_insert()
+ */
 function education_common_user_insert(&$edit, $account, $category) {
   if (isset($edit['field_is_a_teacher'][LANGUAGE_NONE]) && $edit['field_is_a_teacher'][LANGUAGE_NONE]['0']['value'] ) {
     $role = TEACHER_ROLE;
