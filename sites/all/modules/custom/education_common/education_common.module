@@ -558,6 +558,10 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
       $new_user = education_common_create_quick_order_user($name, 0, $email, $user_phone, $skype);
     }
   }
+  else {
+    $new_user = $user;
+  }
+
 
   //$new_user = TRUE;
   // Create order

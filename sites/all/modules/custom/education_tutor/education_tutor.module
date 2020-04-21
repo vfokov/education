@@ -203,6 +203,7 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
       '#group' => 'vertical_tabs_personal_data',
     );
 
+    $form['account']['mail']['#description'] = '';
     $form['personal_data']['account']['name'] = $form['account']['name'];
     $form['personal_data']['account']['mail'] = $form['account']['mail'];
     $form['personal_data']['account']['current_pass'] = $form['account']['current_pass'];
@@ -239,6 +240,18 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     $form['education_and_documents']['field_documents'] = $form['field_documents'];
     unset($form['field_documents']);
 
+    $form['education_and_documents']['field_university'] = $form['field_university'];
+    unset($form['field_university']);
+    $form['education_and_documents']['field_speciality'] = $form['field_speciality'];
+    unset($form['field_speciality']);
+
+    unset($form['field_graduation_year'][LANGUAGE_NONE]['#options']['_none']);
+    $form['education_and_documents']['field_graduation_year'] = $form['field_graduation_year'];
+    unset($form['field_graduation_year']);
+
+    $form['education_and_documents']['field_academic_degree'] = $form['field_academic_degree'];
+    unset($form['field_academic_degree']);
+
     $form['profile']['field_teachecr_pic'] = $form['field_teachecr_pic'];
     unset($form['field_teachecr_pic']);
 
@@ -255,7 +268,7 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     $form['field_teaching_format']['#access'] = FALSE; // Hide yet
     $form['field_city']['#access'] = FALSE; // Hide yet
     $form['mimemail']['#access'] = FALSE;
-    
+
     // Because of set fields in fieldset we need to change validatioj callback
     unset($form['#validate'][0]);
     array_unshift($form['#validate'], 'education_tutor_form_validate');

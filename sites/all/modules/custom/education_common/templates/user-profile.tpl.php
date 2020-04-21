@@ -15,6 +15,10 @@ if (request_uri() != '/tutor-setup') {
   hide($form['actions']);
   hide($form['field_teaching_format']);
   hide($form['field_gender']);
+  hide($form['field_university']);
+  hide($form['field_speciality']);
+  hide($form['field_graduation_year']);
+  hide($form['field_academic_degree']);
 }
 
 hide($form['mimemail']);

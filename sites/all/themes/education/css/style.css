@@ -2618,6 +2618,7 @@ div.vertical-tabs {
 
 .vertical-tabs ul.vertical-tabs-list li:nth-child(3) a::before {
     background-position: -80px center;
+    /*background-color: #f7931e;*/
 }
 
 .vertical-tabs ul.vertical-tabs-list li:nth-child(4) a::before {
@@ -2626,6 +2627,10 @@ div.vertical-tabs {
 
 .vertical-tabs ul.vertical-tabs-list li:nth-child(5) a::before {
     background-position: -160px,center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li.selected a::before {
+    background-color: #f7931e;
 }
 
 
@@ -2649,6 +2654,10 @@ div.vertical-tabs {
     padding: 11px 53px 12px;
     border-radius: 1px;
     margin-top: 0;
+}
+
+.vertical-tabs .form-type-textfield input {
+    width: 50%;
 }
 
 

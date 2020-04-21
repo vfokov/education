@@ -580,6 +580,14 @@ function education_common_quick_order($form, &$form_state) {
 
   $type = 'lesson';
   $uid = arg(1);
+
+  // check uid
+  if ($uid == 'schedule') {
+    $user_name = $_GET['uid'];
+    $t_user = user_load_by_name($user_name);
+    $uid = $t_user->uid;
+  }
+
   $query = new EntityFieldQuery;
   $result = $query
     ->entityCondition('entity_type', 'node')
@@ -606,6 +614,7 @@ function education_common_quick_order($form, &$form_state) {
       '#default_value' => '',
     );
   }
+  //else {}
 
   /* // TODO видимо нужно селект как выше
   $form['product_id'] = array(
