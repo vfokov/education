@@ -2412,7 +2412,7 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     cursor: pointer;
     position: absolute;
     right: 79px;
-    top: 20px;
+    top: 10px;
 }
 
 .b-topnav__icon>span {
