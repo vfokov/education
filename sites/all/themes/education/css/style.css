@@ -2182,7 +2182,8 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     color: #ccc;
 }
 
-.calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar {
+.calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar,
+.calendar-calendar .week-view .full div.single-day div.weekview {
     background: #8cc63f;
     border-radius: 0;
     text-align: center;

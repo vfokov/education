@@ -4,6 +4,13 @@ global $user;
 
 if (strstr(current_path(), 'user')) {
   $current_path_uid = arg(1);
+}
+else {
+  if (request_uri() == '/teacher-schedule') {
+    $current_path_uid =  $user->uid;
+  }
+}
+
 
   if ($current_path_uid == $user->uid ) {
     $product_id = $row->commerce_product_field_data_field_product_reference_product_;
@@ -27,6 +34,6 @@ Disable this position</a>';
 enable this position</a>';
     */
   }
-}
+//}
 ?>
 <?php print $output; ?>

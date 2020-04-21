@@ -57,6 +57,10 @@ function education_tutor_block_info() {
   $blocks['form-tutor-profile'] = array(
     'info' => 'Tutor profile form',
   );
+
+  $blocks['tutor-schedule'] = array(
+    'info' => 'Tutor schedule',
+  );
   return $blocks;
 }
 
@@ -79,6 +83,17 @@ function education_tutor_block_view($delta = '') {
       global $user;
       $block['subject'] = t('Tutor profile');
       $block['content'] = drupal_get_form('user_profile_form', user_load($user->uid));
+      break;
+
+    case 'tutor-schedule':
+      //module_load_include('inc', 'user', 'user.pages');
+      global $user;
+     // $block['subject'] = t('Tutor profile');
+      $block['subject'] = '';
+
+      $date = date('Y-m', time());
+      $uid = $user->uid;
+      $block['content'] = views_embed_view('lesson_calendar', 'block_1', $date, $uid);
       break;
   }
   return $block;
@@ -328,6 +343,13 @@ function education_tutor_form_validate($form, &$form_state) {
   }
 }
 
+
+function education_tutor_views_query_alter(&$view, &$query) {
+
+  if ($view->name == 'lesson_calendar') {
+    $v = 1;
+  }
+}
 
 
 /**

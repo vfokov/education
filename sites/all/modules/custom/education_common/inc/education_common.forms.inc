@@ -583,9 +583,11 @@ function education_common_quick_order($form, &$form_state) {
 
   // check uid
   if ($uid == 'schedule') {
-    $user_name = $_GET['uid'];
-    $t_user = user_load_by_name($user_name);
-    $uid = $t_user->uid;
+    if (!empty($_GET['uid'])) {
+      $user_name = $_GET['uid'];
+      $t_user = user_load_by_name($user_name);
+      $uid = $t_user->uid;
+    }
   }
 
   $query = new EntityFieldQuery;

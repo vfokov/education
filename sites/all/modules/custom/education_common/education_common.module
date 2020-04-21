@@ -62,6 +62,10 @@ function education_common_preprocess_calendar_month_col(&$variables) {
   global $user;
   $teacher_uid = $user->uid;
   $lesson_uid = arg(1);
+  //echo arg(1); die();
+  if (request_uri() == '/teacher-schedule') {
+    $lesson_uid =  $teacher_uid;
+  }
 
   if (strstr($variables['item']['class'], 'empty')) {
   //if ($variables['class'] == 'single-day') {
@@ -351,7 +355,7 @@ function education_common_preprocess_page(&$variables) {
 
 
   if (strstr(current_path(), 'user/') && !strstr(current_path(), 'admin/')
-    || strstr(current_path(), 'lesson-calendar-week') || strstr(current_path(), 'pupil/schedule') ) {
+    || strstr(current_path(), 'lesson-calendar-week') || strstr(current_path(), 'pupil/schedule') || request_uri() == '/teacher-schedule' ) {
     global $user;
     $block_quick_order = education_common_get_rendered_block('education_common', 'form-quick-order');
     $block_lesson_date_close = education_common_get_rendered_block('education_common', 'form-close-lesson-date');
@@ -361,13 +365,19 @@ function education_common_preprocess_page(&$variables) {
 
     if (strstr(current_path(), 'user')) {
       $current_path_uid = arg(1);
-      if ($current_path_uid == $user->uid) {
-        $variables['lesson_date_close_form'] = $block_lesson_date_close;
-        $variables['lesson_date_disable_form'] = $block_lesson_date_disable;
-        $variables['lesson_date_enable_form'] = $block_lesson_date_enable;
-        drupal_set_title('My Account');
+    }
+    else {
+      if (request_uri() == '/teacher-schedule') {
+        $current_path_uid =  $user->uid;
       }
     }
+    if (isset($current_path_uid) && $current_path_uid == $user->uid) {
+      $variables['lesson_date_close_form'] = $block_lesson_date_close;
+      $variables['lesson_date_disable_form'] = $block_lesson_date_disable;
+      $variables['lesson_date_enable_form'] = $block_lesson_date_enable;
+      drupal_set_title('My Account');
+    }
+
 
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
   }
