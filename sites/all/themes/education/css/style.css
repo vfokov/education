@@ -2182,7 +2182,8 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     color: #ccc;
 }
 
-.calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar {
+.calendar-calendar .week-view div.single-day .i_0.md_0 .view-item .calendar,
+.calendar-calendar .week-view .full div.single-day div.weekview {
     background: #8cc63f;
     border-radius: 0;
     text-align: center;
@@ -2289,6 +2290,377 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
 .view-teacher-lessons .view-footer {
     margin-top: 20px;
 }
+
+
+/* Прячем наш дефолтный инпут */
+input[type="radio"].dls-radio {
+    display: none;
+}
+/* Стилизуем нашу кнопку */
+.dls-radio-wrapper {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 30px;
+    border: 1px solid #a0a0a0;
+    box-shadow: none;
+    background: rgb(252,252,252);
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmMGYwZjAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, rgba(252,252,252,1) 0%, rgba(240,240,240,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(240,240,240,1)));
+    background: -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    background: -o-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    background: -ms-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    background: linear-gradient(to bottom, rgba(252,252,252,1) 0%,rgba(240,240,240,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#f0f0f0',GradientType=0 );
+    transition: all 0.17s ease 0s;
+}
+
+
+.form-item-field-select-pupil-role-und .dls-radio-wrapper .dls-radio-mark {
+    width: 8px;
+    height: 7px;
+    border-radius: 10px;
+    background: none repeat scroll 0% 0% #0093c9;
+    margin: 3px auto;
+}
+
+.dls-radio-wrapper:hover {
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.11);
+    transition: all 0.17s ease 0s;
+}
+.dls-radio-wrapper .dls-radio-mark {
+    width: 6px;
+    height: 6px;
+    border-radius: 10px;
+    background: none repeat scroll 0% 0% #0093c9;
+    margin: 4px auto;
+    opacity: 0;
+    transition: all 0.17s ease 0s;
+}
+/* Стиль, когда наш инпут отмечен */
+input[type="radio"].dls-radio:checked ~ .dls-radio-wrapper {
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.22) inset;
+    transition: all 0.17s ease 0s;
+}
+input[type="radio"].dls-radio:checked ~ .dls-radio-wrapper .dls-radio-mark {
+    opacity: 1;
+    transition: all 0.17s ease 0s;
+}
+/* Стиль, когда наш инпут выключен */
+input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
+    opacity: .5
+}
+
+.form-item-field-student-age-category-und {
+    display: inline-block;
+    margin: 10px 30px;
+    text-align: center;
+}
+
+.form-item-field-student-age-category-und .dls-radio-wrapper .dls-radio-mark {
+    width: 10px;
+    height: 10px;
+}
+
+/* Стилизуем нашу кнопку */
+.form-item-field-student-age-category-und .dls-radio-wrapper {
+    position: relative;
+    width: 18px;
+    height: 18px;
+}
+
+.form-item-field-student-age-category-und label.option {
+    display: block;
+}
+
+#block-education-common-form-pupil-registation {
+    margin: 0 auto;
+    width: 80%;
+    padding: 20px 30px 10px;
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+}
+
+
+#block-education-common-form-pupil-registation #edit-account .form-item,
+#block-education-common-form-pupil-registation .field-name-field-phone .form-item,
+#block-education-common-form-pupil-registation .field-name-field-student-promocode .form-item {
+    width: 40%;
+    float: left;
+    margin-left: 20px;
+}
+
+#block-education-common-form-pupil-registation .field-name-field-ready-to-get-news {
+    clear: both;
+}
+
+#block-education-common-form-pupil-registation input.form-text {
+    width: 100%;
+}
+
+.b-topnav__icon {
+    position: relative;
+    display: inline-block;
+    float: right;
+    height: 62px;
+    width: 86px;
+    background-color: #cecece;
+    cursor: pointer;
+    position: absolute;
+    right: 79px;
+    top: 10px;
+}
+
+.b-topnav__icon>span {
+    background: url(menu-button-of-three-lines.svg) no-repeat 50% 50%;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+#header .tooltip-bottom.tooltip.darkgrey {
+    top: 61px !important;
+}
+
+.b-topnav__dropdown-menu li {
+    display: block!important;
+    float: none!important;
+    cursor: pointer;
+    background: #2a2a2b;
+    opacity: .9;
+    margin-left: 0!important;
+}
+
+.b-topnav__dropdown-menu a {
+    color: #fff;
+    padding: 1em;
+    display: block;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    /*padding: 16px;*/
+    font-size: 16px;
+    border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+   /* position: relative;*/
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #2a2a2b;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    opacity: 0.8;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: #fff;
+    padding: 12px 16px 5px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {/*opacity: .8*/}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {/*background-color: #3e8e41;*/}
+
+
+/*pupils profile*/
+
+#pupils-accordion .ui-state-default,
+#pupils-accordion .ui-state-active {
+    border: 1px solid #d3d3d3;
+    background: none;
+    font-weight: normal;
+    color: #555555;
+    padding: 30px;
+}
+
+#pupils-accordion .field-name-field-teacher-last-name {
+    margin-left: 0;
+    display: block;
+}
+
+/* END pupils profile*/
+
+
+/*Tutot register form*/
+
+#block-education-tutor-form-tutor-registation {
+    color: #fff;
+    overflow: hidden;
+    background: #292929;
+    padding: 30px 30px 40px 125px;
+}
+
+#block-education-tutor-form-tutor-registation #edit-account {
+    width: 50%;
+    float: left;
+}
+
+#block-education-tutor-form-tutor-registation h2 {
+    margin-bottom: 15px;
+}
+
+#block-education-tutor-form-tutor-registation .form-actions,
+#block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und {
+    float:left;
+    margin: 0 0 0 10px;
+    padding: 0;
+}
+
+#block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und {
+    margin: 0;
+    width: 23%;
+}
+
+#block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und select {
+    padding: 9px 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+#block-education-tutor-form-tutor-registation #edit-account input {
+    width: 48.5%;
+    margin-right: 10px;
+    padding: 12px 14px 11px 14px;
+    box-sizing: border-box;
+    margin-top: 0px;
+    border: none;
+}
+
+.tutor-agree {
+    clear: both;
+}
+
+#block-education-tutor-form-tutor-registation .mark {
+    font-size: smaller;
+    display: inline-block;
+    margin-top:-5px;
+    margin-right: 5px;
+}
+
+#block-education-tutor-form-tutor-registation #edit-account input#edit-mail {
+    margin-right: 0;
+}
+
+#block-education-tutor-form-tutor-registation input.form-submit {
+    background: #f17c1e;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.929em;
+    font-weight: normal;
+    text-align: center;
+    padding: 11px 53px 12px;
+    border-radius: 1px;
+    margin-top: 0;
+}
+
+.vertical-tabs ul.vertical-tabs-list li {
+    background: none;
+    border: none;
+    /*width: 18em;*/
+}
+
+div.vertical-tabs {
+    margin: 1em 0 1em 20em;
+}
+
+.vertical-tabs ul.vertical-tabs-list li.selected {
+  border: 1px solid #ccc;
+  border-right: none;
+}
+
+.vertical-tabs ul.vertical-tabs-list li a {
+    color: #000;
+    padding: 1.9em 1.2em;
+    position: relative;
+}
+
+.vertical-tabs ul.vertical-tabs-list li a::before {
+    content: '';
+    min-width: 40px;
+    height: 40px;
+    background: url(reg_steps_2.svg);
+    background-color: #95c11f;
+    border-color: #95c11f;
+    width: 40px;
+    display: block;
+    border-radius: 50%;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(2) a::before {
+    background-position: -40px,center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(3) a::before {
+    background-position: -80px center;
+    /*background-color: #f7931e;*/
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(4) a::before {
+    background-position: -120px center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li:nth-child(5) a::before {
+    background-position: -160px,center;
+}
+
+.vertical-tabs ul.vertical-tabs-list li.selected a::before {
+    background-color: #f7931e;
+}
+
+
+.vertical-tabs ul.vertical-tabs-list strong {
+    padding-left: 50px;
+}
+
+.vertical-tabs ul.vertical-tabs-list {
+    width: 20em;
+    margin: -1px 0 -1px -20em;
+}
+
+#block-education-tutor-form-tutor-profile input.form-submit {
+    background: #f17c1e;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.929em;
+    font-weight: normal;
+    text-align: center;
+    padding: 11px 53px 12px;
+    border-radius: 1px;
+    margin-top: 0;
+}
+
+.vertical-tabs .form-type-textfield input {
+    width: 50%;
+}
+
 
 @media all and (max-width: 768px) {
     .quicktabs-tabs.quicktabs-style-nostyle li {

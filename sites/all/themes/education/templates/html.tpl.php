@@ -68,5 +68,7 @@
   <?php print $page_top; ?>
   <?php print $page; ?>
   <?php print $page_bottom; ?>
+
+  <script type="text/javascript" src="/sites/all/modules/custom/education_common/js/tooltip.js"></script>
 </body>
 </html>

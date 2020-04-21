@@ -1,0 +1,451 @@
+<?php
+
+
+/**
+ * Implements hook_theme()
+ */
+function education_tutor_theme() {
+  return array(
+    'education_tutor_tutor_menu' => array(
+      'variables' => array(
+        'menu_items' => NULL,
+      ),
+      'path' => drupal_get_path('module', 'education_tutor') . '/templates',
+      'template' => 'education-tutor-tutor-menu',
+    ),
+  );
+
+}
+
+/**
+ * Override or insert variables into the node template.
+ */
+function education_tutor_preprocess_page(&$variables) {
+  if (request_uri() == '/tutor-registration') {
+    drupal_set_title('');
+  }
+
+  $variables['show_tutor_menu'] = FALSE;
+  if (user_has_role(TEACHER_ROLE)) {
+    $variables['show_tutor_menu']= TRUE;
+  }
+
+  $tutors_menu = menu_tree('menu-tutors-menu');
+
+  $menu_items = array();
+  foreach ($tutors_menu as $key => $tutors_menu_item) {
+    if (is_numeric($key)) {
+      $menu_items[] = array(
+        'href' => $tutors_menu_item['#href'] == '<front>' ? '/' : $tutors_menu_item['#href'],
+        'title' =>  $tutors_menu_item['#title'],
+      );
+    }
+  }
+
+  $variables['education_tutor_tutor_menu'] = theme('education_tutor_tutor_menu', array('menu_items' => $menu_items));
+
+}
+
+/**
+ * Implements hook_block_info
+ */
+function education_tutor_block_info() {
+  $blocks['form-tutor-registation'] = array(
+    'info' => 'Tutor registration form',
+  );
+
+  $blocks['form-tutor-profile'] = array(
+    'info' => 'Tutor profile form',
+  );
+
+  $blocks['tutor-schedule'] = array(
+    'info' => 'Tutor schedule',
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view
+ */
+function education_tutor_block_view($delta = '') {
+  $block = array(
+    'subject' => '',
+    'content' => '',
+  );
+
+  switch ($delta) {
+    case 'form-tutor-registation':
+      $block['subject'] = t('Pupil registration');
+      $block['content'] = drupal_get_form('user_register_form');
+      break;
+    case 'form-tutor-profile':
+      module_load_include('inc', 'user', 'user.pages');
+      global $user;
+      $block['subject'] = t('Tutor profile');
+      $block['content'] = drupal_get_form('user_profile_form', user_load($user->uid));
+      break;
+
+    case 'tutor-schedule':
+      //module_load_include('inc', 'user', 'user.pages');
+      global $user;
+     // $block['subject'] = t('Tutor profile');
+      $block['subject'] = '';
+
+      $date = date('Y-m', time());
+      $uid = $user->uid;
+      $block['content'] = views_embed_view('lesson_calendar', 'block_1', $date, $uid);
+      break;
+  }
+  return $block;
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user register
+ */
+function education_tutor_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/tutor-registration') {
+
+    $form['field_is_a_teacher'][LANGUAGE_NONE]['#type'] = 'hidden';
+    $form['field_is_a_teacher'][LANGUAGE_NONE]['#default_value'] = 1;
+    $form['field_terms_of_service'][LANGUAGE_NONE]['#type'] = 'hidden';
+    $form['field_terms_of_service'][LANGUAGE_NONE]['#default_value'] = 1;
+    //$form['field_teaching_format']['#access'] = FALSE;
+    $form['field_ready_to_get_news']['#access'] = FALSE;
+    $form['field_student_promocode']['#access'] = FALSE;
+    $form['field_phone']['#access'] = FALSE;
+
+    //$form['account']['name']['#description'] = '';
+
+    //$form['account']['name']['#access'] = FALSE;
+
+    $form['account']['name']['#title'] = '';
+    $form['account']['name']['#attributes'] = array('placeholder' => 'Name');
+    $form['account']['name']['#theme_wrappers'] = array();
+    $form['account']['mail']['#title'] = '';
+    $form['account']['mail']['#theme_wrappers'] = array();
+    $form['field_teaching_format']['und']['#title'] = '';
+
+    $form['field_teaching_format']['und']['#options']['_none'] = 'Select teaching format';
+
+    $form['field_teaching_format']['#theme_wrappers'] = array();
+    $form['account']['mail']['#attributes'] = array('placeholder' => 'name@mail.com');
+    $form['account']['mail']['#description'] = '';
+    $form['account']['name']['#description'] = '';
+    $form['actions']['#weight'] = 100;
+    $form['actions']['submit']['#value'] = 'Register';
+
+
+    $form['agree']['#markup'] = '<div class="tutor-agree">
+<span class="mark">*</span>filling out the form, you consent to the processing of personal data in accordance with the
+<a href="http://education/terms-of-service"> Privacy Policy</a></div>';
+    $form['agree']['#weight'] = 101;
+
+  }
+  else {
+   // $form['field_age_category']['#access'] = FALSE;
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user profile (student)
+ */
+function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/tutor-setup') {
+    //echo 'dfsf'; die();
+
+    $form['vertical_tabs_personal_data'] = array(
+      '#type' => 'vertical_tabs'
+    );
+
+    /*
+    $form['vertical_tabs_tutor_place'] = array(
+      '#type' => 'vertical_tabs'
+    );
+
+    $form['vertical_tabs_tutor_subjects'] = array(
+      '#type' => 'vertical_tabs'
+    );
+    */
+
+    $form['personal_data'] = array(
+      '#title' => 'Personal data',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['tutor_place'] = array(
+      '#title' => 'Tutor place',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+
+      '#attributes' => array(
+        'class' => array('container-inline'),
+        'style' => array('foo: bar;')
+      ),
+    );
+
+    $form['subjects'] = array(
+      '#title' => 'Subjects',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['education_and_documents'] = array(
+      '#title' => 'Education and documents',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['profile'] = array(
+      '#title' => 'Profile',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['account']['mail']['#description'] = '';
+    $form['personal_data']['account']['name'] = $form['account']['name'];
+    $form['personal_data']['account']['mail'] = $form['account']['mail'];
+    $form['personal_data']['account']['current_pass'] = $form['account']['current_pass'];
+    $form['personal_data']['account']['pass'] = $form['account']['pass'];
+    //$form['personal_data']['account']['name']['#group'] = 'vertical_tabs_personal_data';
+    $form['personal_data']['field_phone'] = $form['field_phone'];
+    $form['personal_data']['field_first_name'] = $form['field_first_name'];
+    $form['personal_data']['field_teacher_last_name'] = $form['field_teacher_last_name'];
+    unset($form['field_gender'][LANGUAGE_NONE]['#options']['_none']);
+    $form['personal_data']['field_gender'] = $form['field_gender'];
+    //unset($form['account']['mail']);
+    unset($form['account']['name']);
+    unset($form['account']['mail']);
+    unset($form['account']['current_pass']);
+    unset($form['account']['pass']);
+    unset($form['field_phone']);
+    unset($form['field_first_name']);
+    unset($form['field_teacher_last_name']);
+    unset($form['field_gender']);
+
+    $form['tutor_place']['field_skype'] = $form['field_skype'];
+    unset($form['field_skype']);
+
+    $form['subjects']['field_languages_can_teach'] = $form['field_languages_can_teach'];
+    unset($form['field_languages_can_teach']);
+    $form['subjects']['field_grade_subject'] = $form['field_grade_subject'];
+    unset($form['field_grade_subject']);
+    $form['subjects']['field_age_category'] = $form['field_age_category'];
+    unset($form['field_age_category']);
+
+    $form['subjects']['field_hourly_rate_'] = $form['field_hourly_rate_'];
+    unset($form['field_hourly_rate_']);
+
+    $form['education_and_documents']['field_documents'] = $form['field_documents'];
+    unset($form['field_documents']);
+
+    $form['education_and_documents']['field_university'] = $form['field_university'];
+    unset($form['field_university']);
+    $form['education_and_documents']['field_speciality'] = $form['field_speciality'];
+    unset($form['field_speciality']);
+
+    unset($form['field_graduation_year'][LANGUAGE_NONE]['#options']['_none']);
+    $form['education_and_documents']['field_graduation_year'] = $form['field_graduation_year'];
+    unset($form['field_graduation_year']);
+
+    $form['education_and_documents']['field_academic_degree'] = $form['field_academic_degree'];
+    unset($form['field_academic_degree']);
+
+    $form['profile']['field_teachecr_pic'] = $form['field_teachecr_pic'];
+    unset($form['field_teachecr_pic']);
+
+    $form['profile']['field_resume_'] = $form['field_resume_'];
+    unset($form['field_resume_']);
+
+    $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_ready_to_get_news']['#access'] = FALSE;
+    $form['field_terms_of_service']['#access'] = FALSE;
+    $form['field_student_age_category']['#access'] = FALSE;
+    $form['field_select_pupil_role']['#access'] = FALSE;
+    $form['field_not_available_dates']['#access'] = FALSE;
+    $form['field_student_promocode']['#access'] = FALSE;
+    $form['field_teaching_format']['#access'] = FALSE; // Hide yet
+    $form['field_city']['#access'] = FALSE; // Hide yet
+    $form['mimemail']['#access'] = FALSE;
+
+    // Because of set fields in fieldset we need to change validatioj callback
+    unset($form['#validate'][0]);
+    array_unshift($form['#validate'], 'education_tutor_form_validate');
+  }
+}
+
+/**
+ * Form validation handler for user_account_form().
+ *
+ * @see user_account_form()
+ */
+function education_tutor_form_validate($form, &$form_state) {
+  if ($form['#user_category'] == 'account' || $form['#user_category'] == 'register') {
+    $account = $form['#user'];
+    // Validate new or changing username.
+    if (isset($form_state['values']['name'])) {
+      if ($error = user_validate_name($form_state['values']['name'])) {
+        form_set_error('name', $error);
+      }
+      elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('name', db_like($form_state['values']['name']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+        form_set_error('name', t('The name %name is already taken.', array('%name' => $form_state['values']['name'])));
+      }
+    }
+
+    // Trim whitespace from mail, to prevent confusing 'e-mail not valid'
+    // warnings often caused by cutting and pasting.
+    $mail = trim($form_state['values']['mail']);
+    //form_set_value($form['account']['mail'], $mail, $form_state);
+
+    // Validate the e-mail address, and check if it is taken by an existing user.
+    if ($error = user_validate_mail($form_state['values']['mail'])) {
+      form_set_error('mail', $error);
+    }
+    elseif ((bool) db_select('users')->fields('users', array('uid'))->condition('uid', $account->uid, '<>')->condition('mail', db_like($form_state['values']['mail']), 'LIKE')->range(0, 1)->execute()->fetchField()) {
+      // Format error message dependent on whether the user is logged in or not.
+      if ($GLOBALS['user']->uid) {
+        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $form_state['values']['mail'])));
+      }
+      else {
+        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $form_state['values']['mail'], '@password' => url('user/password'))));
+      }
+    }
+
+    // Make sure the signature isn't longer than the size of the database field.
+    // Signatures are disabled by default, so make sure it exists first.
+    if (isset($form_state['values']['signature'])) {
+      // Move text format for user signature into 'signature_format'.
+      $form_state['values']['signature_format'] = $form_state['values']['signature']['format'];
+      // Move text value for user signature into 'signature'.
+      $form_state['values']['signature'] = $form_state['values']['signature']['value'];
+
+      $user_schema = drupal_get_schema('users');
+      if (drupal_strlen($form_state['values']['signature']) > $user_schema['fields']['signature']['length']) {
+        form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
+      }
+    }
+  }
+}
+
+
+function education_tutor_views_query_alter(&$view, &$query) {
+
+  if ($view->name == 'lesson_calendar') {
+    $v = 1;
+  }
+}
+
+
+/**
+ * Implements hook_user_insert().
+ */
+
+/*
+function education_tutor_user_insert(&$edit, &$account, $category = NULL) {
+  // Don't create a new username if one is already set.
+  if (!empty($account->name) && strpos($account->name, 'email_registration_') !== 0) {
+    return;
+  }
+
+  // Other modules may implement hook_email_registration_name($edit, $account)
+  // to generate a username (return a string to be used as the username, NULL
+  // to have email_registration generate it).
+  //$names = module_invoke_all('email_registration_name', $edit, $account);
+  // Remove any empty entries.
+  //$names = array_filter($names);
+
+  if (empty($names)) {
+    // Strip off everything after the @ sign.
+    $new_name = preg_replace('/@.*$/', '', $edit['mail']);
+    // Clean up the username.
+    $new_name = education_tutor_cleanup_username($new_name, $account->uid);
+  }
+  else {
+    // One would expect a single implementation of the hook, but if there
+    // are multiples out there use the last one.
+    $new_name = array_pop($names);
+  }
+
+  // Ensure whatever name we have is unique.
+  $new_name = education_tutor_unique_username($new_name, $account->uid);
+
+  // Replace with generated username.
+  db_update('users')
+    ->fields(array('name' => $new_name))
+    ->condition('uid', $account->uid)
+    ->execute();
+
+  $edit['name'] = $new_name;
+  $account->name = $new_name;
+}
+*/
+
+
+/**
+ * Function to clean up username.
+ *
+ * e.g.
+ *     Replace two or more spaces with a single underscore
+ *     Strip illegal characters.
+ *
+ * @param string $name
+ *   The username to be cleaned up.
+ *
+ * @return string
+ *   Cleaned up username.
+ */
+/*
+function education_tutor_cleanup_username($name, $uid = NULL) {
+  // Strip illegal characters.
+  $name = preg_replace('/[^\x{80}-\x{F7} a-zA-Z0-9@_.\'-]/', '', $name);
+  // Strip leading and trailing spaces.
+  $name = trim($name);
+  // Convert any other series of spaces to a single underscore.
+  $name = preg_replace('/\s+/', '_', $name);
+  // If there's nothing left use a default.
+  $name = ('' === $name) ? t('user') : $name;
+  if (!empty($uid)) {
+    // Put uid on the end of the name.
+    $name = $name . '_' . $uid;
+  }
+  // Truncate to a reasonable size.
+  $name = (drupal_strlen($name) > (USERNAME_MAX_LENGTH - 10)) ? drupal_substr($name, 0, USERNAME_MAX_LENGTH - 11) : $name;
+  return $name;
+}
+*/
+
+/*
+function education_tutor_unique_username($name, $uid = NULL) {
+  // Iterate until we find a unique name.
+  $i = 0;
+  do {
+    $new_name = empty($i) ? $name : $name . '_' . $i;
+    if ($uid) {
+      $found = db_query_range("SELECT uid from {users} WHERE uid <> :uid AND name = :name", 0, 1, array(':uid' => $uid, ':name' => $new_name))->fetchAssoc();
+    }
+    else {
+      $found = db_query_range("SELECT uid from {users} WHERE name = :name", 0, 1, array(':name' => $new_name))->fetchAssoc();
+    }
+
+    $i++;
+  } while (!empty($found));
+
+  return $new_name;
+}
+*/

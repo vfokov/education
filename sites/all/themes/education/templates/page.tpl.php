@@ -92,7 +92,7 @@
     <header id="header" role="banner" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>"><div class="section clearfix">
         <?php if ($secondary_menu): ?>
           <nav id="secondary-menu" role="navigation" class="navigation">
-            <?php print theme('links__system_secondary_menu', array(
+            <?php /*print theme('links__system_secondary_menu', array(
               'links' => $secondary_menu,
               'attributes' => array(
                 'id' => 'secondary-menu-links',
@@ -103,7 +103,7 @@
                 'level' => 'h2',
                 'class' => array('element-invisible'),
               ),
-            )); ?>
+            ));*/ ?>
           </nav> <!-- /#secondary-menu -->
         <?php endif; ?>
 
@@ -158,6 +158,17 @@
             )); ?>
           </nav> <!-- /#main-menu -->
         <?php endif; ?>
+
+        <?php if ($show_user_menu): ?>
+          <!--<div class="b-topnav__icon"><span>&nbsp;</span></div>-->
+          <?php print $education_pupil_pupil_menu; ?>
+        <?php endif; ?>
+
+        <?php if ($show_tutor_menu): ?>
+          <!--<div class="b-topnav__icon"><span>&nbsp;</span></div>-->
+          <?php print $education_tutor_tutor_menu; ?>
+        <?php endif; ?>
+
       </div></header> <!-- /.section, /#header -->
 
     <?php if ($messages): ?>

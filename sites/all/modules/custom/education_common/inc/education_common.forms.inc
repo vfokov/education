@@ -580,6 +580,16 @@ function education_common_quick_order($form, &$form_state) {
 
   $type = 'lesson';
   $uid = arg(1);
+
+  // check uid
+  if ($uid == 'schedule') {
+    if (!empty($_GET['uid'])) {
+      $user_name = $_GET['uid'];
+      $t_user = user_load_by_name($user_name);
+      $uid = $t_user->uid;
+    }
+  }
+
   $query = new EntityFieldQuery;
   $result = $query
     ->entityCondition('entity_type', 'node')
@@ -606,6 +616,7 @@ function education_common_quick_order($form, &$form_state) {
       '#default_value' => '',
     );
   }
+  //else {}
 
   /* // TODO видимо нужно селект как выше
   $form['product_id'] = array(
@@ -808,3 +819,79 @@ function education_common_quick_order_ajax_callback(&$form, &$form_state) {
 
 }
 
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user register
+ */
+function education_common_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/pupil-registration') {
+
+    $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_teaching_format']['#access'] = FALSE;
+
+    $form['account']['name']['#description'] = '';
+    $form['account']['mail']['#description'] = '';
+
+    $pupil_role_options = $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'];
+    unset($pupil_role_options['_none']);
+    $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'] = $pupil_role_options;
+
+    $student_age_category_options = $form['field_student_age_category'][LANGUAGE_NONE]['#options'];
+    unset($student_age_category_options['_none']);
+    $form['field_student_age_category'][LANGUAGE_NONE]['#options'] = $student_age_category_options;
+
+    $form['field_select_pupil_role']['#states'] = array(
+      'visible' => array(
+        ':input[name="field_student_age_category[und]"]' => array('value' => 'schoolboy'),
+      ),
+    );
+
+    //field-student-age-category
+    //$pupil_role_options = $form['field_select_pupil_role'][LANGUAGE_NONE]['#options'];
+    $options_with_img = array();
+    foreach ($student_age_category_options as $val => $student_age_category_option) {
+      $img_var_fid = variable_get('pupil_registration_image_' . $val);
+      $file = file_load($img_var_fid);
+
+      $op_img = theme('image_style', array(
+        'style_name' => 'teacher_list',
+        'path' => $file->uri,
+        //'alt' => $file->alt,
+        //'title' => $file->title,
+        'attributes' => array(),
+      )) . '<br>' . $student_age_category_option;
+
+      $options_with_img[$val] = $op_img;
+    }
+    $form['field_student_age_category'][LANGUAGE_NONE]['#options'] = $options_with_img;
+
+  }
+  else {
+    $form['field_age_category']['#access'] = FALSE;
+  }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user profile (student)
+ */
+function education_common_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  // if form for pupil registartion
+  if (request_uri() == '/pupil/profile') {
+    $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_ready_to_get_news']['#access'] = FALSE;
+    $form['field_terms_of_service']['#access'] = FALSE;
+    $form['field_student_age_category']['#access'] = FALSE;
+    $form['field_age_category']['#access'] = FALSE;
+    $form['field_select_pupil_role']['#access'] = FALSE;
+    $form['field_not_available_dates']['#access'] = FALSE;
+    $form['field_languages_can_teach']['#access'] = FALSE;
+    $form['field_hourly_rate_']['#access'] = FALSE;
+    $form['field_resume_']['#access'] = FALSE;
+    $form['field_grade_subject']['#access'] = FALSE;
+    $form['field_documents']['#access'] = FALSE;
+    $form['mimemail']['#access'] = FALSE;
+  }
+}
