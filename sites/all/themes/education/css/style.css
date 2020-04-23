@@ -2664,6 +2664,14 @@ div.vertical-tabs {
     width: 50%;
 }
 
+.view-commerce-user-orders tr td, .view-commerce-user-orders tr th,
+.view-student-homewoks tr td, .view-student-homewoks tr th {
+    padding: 12px 13px;
+}
+
+.view-commerce-user-orders tr th, .view-student-homewoks tr th {
+    background: rgba(95, 94, 94, 0.51);
+}
 
 @media all and (max-width: 768px) {
 

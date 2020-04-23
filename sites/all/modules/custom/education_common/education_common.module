@@ -40,6 +40,14 @@ function education_common_user_insert(&$edit, $account, $category) {
 
   user_multiple_role_edit(array($account->uid), 'add_role', $role);
   if ($role == TEACHER_ROLE) {
+
+    $newly_registered_user_id = $account->uid;
+
+    // credit: ML and https://www.drupal.org/project/login_activity/issues/2066899 (second snippet of code)
+    global $user;
+    $user = user_load($newly_registered_user_id);
+    drupal_session_regenerate();
+
     drupal_goto('tutor-setup');
   }
 }
