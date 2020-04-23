@@ -1,6 +1,6 @@
 <div class="dropdown b-topnav__icon box">
-  <span class="dropbtn">&nbsp;</span>
-  <div class="dropdown-content">
+  <span onclick="ddClick()" class="dropbtn">&nbsp;</span>
+  <div id="d-button" class="dropdown-content">
     <?php foreach($menu_items as $key => $menu_item):?>
       <?php if ($key == 0) {
         $class = 'first';
@@ -11,6 +11,17 @@
     <?php endforeach; ?>
   </div>
 </div>
+<script>
+  function ddClick() {
+    var x = document.getElementById("d-button");
+    if (x.className.indexOf("w3-show") == -1) {
+      x.className += " w3-show";
+    } else {
+      x.className = x.className.replace(" w3-show", "");
+    }
+  }
+  </script>
+
 
 <!--
 <ul class="b-topnav__dropdown-menu" style="height: 118px; overflow-y: scroll;">

@@ -2479,7 +2479,10 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
 .dropdown-content a:hover {/*opacity: .8*/}
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
+/*.dropdown:hover .dropdown-content {display: block;}*/
+
+.w3-show{display:block!important}
+.w3-show-inline-block{display:inline-block!important}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {/*background-color: #3e8e41;*/}
@@ -2663,6 +2666,16 @@ div.vertical-tabs {
 
 
 @media all and (max-width: 768px) {
+
+    .b-topnav__icon {
+        right: 10px;
+        top: 40px;
+    }
+
+    .dropdown-content {
+        right: 0;
+    }
+
     .quicktabs-tabs.quicktabs-style-nostyle li {
         padding: 10px;
         display: inline-block;
