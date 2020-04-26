@@ -221,7 +221,10 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     $form['account']['mail']['#description'] = '';
     $form['personal_data']['account']['name'] = $form['account']['name'];
     $form['personal_data']['account']['mail'] = $form['account']['mail'];
-    $form['personal_data']['account']['current_pass'] = $form['account']['current_pass'];
+
+    //if ($_SERVER[''])
+
+    //$form['personal_data']['account']['current_pass'] = $form['account']['current_pass'];
     $form['personal_data']['account']['pass'] = $form['account']['pass'];
     //$form['personal_data']['account']['name']['#group'] = 'vertical_tabs_personal_data';
     $form['personal_data']['field_phone'] = $form['field_phone'];
@@ -286,7 +289,36 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
 
     // Because of set fields in fieldset we need to change validatioj callback
     unset($form['#validate'][0]);
+    unset($form['#validate'][1]);
+    array_unshift($form['#validate'], 'education_tutor_validate_current_pass');
     array_unshift($form['#validate'], 'education_tutor_form_validate');
+
+    //echo '<pre>'; print_r($form['#validate']); echo '</pre>'; die();
+  }
+}
+
+function education_tutor_validate_current_pass(&$form, &$form_state) {
+  $account = $form['#user'];
+  foreach ($form_state['values']['current_pass_required_values'] as $key => $name) {
+
+    // This validation only works for required textfields (like mail) or
+    // form values like password_confirm that have their own validation
+    // that prevent them from being empty if they are changed.
+    /*
+    if (strlen(trim($form_state['values'][$key])) > 0 && $form_state['values'][$key] != $account->{$key}) {
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+      $current_pass_failed = strlen(trim($form_state['values']['current_pass'])) == 0 || !user_check_password($form_state['values']['current_pass'], $account);
+      if ($current_pass_failed) {
+        form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array(
+          '%name' => $name,
+        )));
+        form_set_error($key);
+      }
+
+      // We only need to check the password once.
+      break;
+    }
+    */
   }
 }
 
