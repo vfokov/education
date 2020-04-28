@@ -669,6 +669,11 @@ function education_common_quick_order($form, &$form_state) {
     //'#default_value' =>'1',
   );
 
+  $form['is_paid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'0',
+  );
+
   /*
   $form['is_cart'] = array(
     '#type' => 'hidden',
@@ -730,9 +735,10 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       $date = $form_state['values']['lesson_date'];
 
       $is_cart = FALSE;
+      $is_paid = $form_state['values']['is_paid'];
       //$form_state['values']['is_cart']
       $order_id = education_common_create_quick_order($user, $product_id, $form_state['values']['product_quantity'], $date, $teacher_uid,
-        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $is_cart);
+        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $is_cart, $is_paid);
 
       $form_state['values']['order_id'] = $order_id;
 

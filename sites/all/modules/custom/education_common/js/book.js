@@ -343,7 +343,20 @@ function getOffsetRect(elem) {
             // This function captures the funds from the transaction.
             return actions.order.capture().then(function(details) {
               // This function shows a transaction success message to your buyer.
-              alert('Transaction completed by ' + details.payer.name.given_name);
+              //TODO чтобы делать заказ paid
+              //alert('Transaction completed by ' + details.payer.name.given_name);
+
+              $('input[name="is_paid"]').val(1);
+              $('#edit-submit').click();
+              $('#edit-submit').trigger('click');
+              $('#edit-submit').mousedown();
+
+              window.setTimeout(
+                function () {
+                  $('#edit-submit').click();
+                }, 500);
+
+
             });
           }
         }).render('#paypal-button-container');
