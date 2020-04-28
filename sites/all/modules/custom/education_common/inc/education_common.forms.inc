@@ -664,6 +664,10 @@ function education_common_quick_order($form, &$form_state) {
     '#type' => 'hidden',
     '#default_value' =>'1',
   );
+  $form['product_price'] = array(
+    '#type' => 'hidden',
+    //'#default_value' =>'1',
+  );
 
   /*
   $form['is_cart'] = array(
@@ -680,6 +684,19 @@ function education_common_quick_order($form, &$form_state) {
     '#required' => TRUE,
     '#suffix' => '<a class="term_of_use" href="/terms-of-use">Learn more</a>',
   );
+  */
+
+
+  $form['paypal_button'] = array(
+    '#markup' => '<div id="paypal-button-container"></div>'
+  );
+
+  /*
+
+  <script>
+  paypal.Buttons().render('#paypal-button-container');
+    // This function displays Smart Payment Buttons on your web page.
+  </script>
   */
 
   $form['submit'] = array(
