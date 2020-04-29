@@ -356,8 +356,9 @@ function getOffsetRect(elem) {
 
               window.setTimeout(
                 function () {
-                  $('#edit-submit').click();
-                }, 500);
+                  //$('#edit-submit').click();
+                  $('.form-submit').click();
+                }, 200);
 
 
             });

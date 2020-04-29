@@ -748,20 +748,8 @@ function education_common_quick_order_submit(&$form, &$form_state) {
 
       $order_user = user_load($order->uid);
       // получим тип заказа
-      if ($order_user && in_array(2, array_keys($order_user->roles))) {
-        $order_type_title = 'заказ';
-      }
-
-      if ($order_user && in_array(5, array_keys($order_user->roles))) {
-        $order_type_title = 'оптовый заказ';
-      }
 
       $order_mail_data = education_common_get_order_mail_data($order);
-
-      /*
-      rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
-        $form_state['values']['user_phone'], $order_id, $order_mail_data, $order_mail_data_admin, $order_type_title);
-      */
 
       rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
         $form_state['values']['user_phone'], $form_state['values']['skype'], $order_id, $order_mail_data);

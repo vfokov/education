@@ -575,7 +575,7 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
 
   global $user;
 
-  $order_status = $is_paid ? 'completed' : 'pending';
+  $order_status = $is_paid ? 'paid' : 'pending';
 
   //$user_phone = hb_user_clear_phone($user_phone);
   // for anonymous
