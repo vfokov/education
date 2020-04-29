@@ -328,6 +328,9 @@ function getOffsetRect(elem) {
         //PP TRY
         var amount_value = product_price.substr(1);
         //console.log('pp price' + amount_value);
+
+        //if (!paypal.Buttons)
+
         paypal.Buttons({
           createOrder: function(data, actions) {
             // This function sets up the details of the transaction, including the amount and line item details.
@@ -413,6 +416,8 @@ function getOffsetRect(elem) {
       $('.popup__close').click(function(){
         $('.popup_show').removeClass('popup_show');
         $('#popup__overlay').removeClass('mlpopup__show');
+
+        $('#paypal-button-container').html('');
 
         if ($(this).hasClass('close_reload')) {
           window.setTimeout(

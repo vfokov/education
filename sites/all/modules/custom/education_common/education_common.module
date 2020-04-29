@@ -25,6 +25,14 @@ function education_common_init() {
       drupal_goto('pupil/profile');
     }
   }
+
+  // for teacher user/56/edit
+  if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
+    if (user_has_role(TEACHER_ROLE)) {
+      drupal_goto('tutor-setup');
+    }
+  }
+
 }
 
 /**
