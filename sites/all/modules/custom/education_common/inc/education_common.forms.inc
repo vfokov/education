@@ -958,3 +958,72 @@ function education_common_user_login_validate($form, &$form_state) {
 
   return FALSE;
 }
+
+
+function lesson_pay_form($form, &$form_state) {
+  global $user;
+
+
+  $form['lesson_pay'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['order_price'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['paypal_button'] = array(
+    '#markup' => '<div id="paypal-button-container"></div>'
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Pay'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit pay_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'lesson_pay_form_ajax_callback',
+    ),
+  );
+  return $form;
+}
+
+function lesson_pay_form_submit($form, &$form_state) {
+  $lesson_pay_id = $form_state['values']['lesson_pay'];
+  //$order_price = $form_state['values']['order_price'];
+
+  $order = commerce_order_load($lesson_pay_id);
+  $order->status = 'paid';
+  commerce_order_save($order);
+}
+
+function lesson_pay_form_ajax_callback(&$form, &$form_state) {
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have paid this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}

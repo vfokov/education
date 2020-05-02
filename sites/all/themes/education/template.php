@@ -1,14 +1,10 @@
 <?php
 
-
-
 function education_form_element($variables) {
   $element = $variables['element'];
   // Disable radio button N/A
   if ($element['#type'] == 'radio' /*&& $element['#return_value'] === '_none'*/) {
     //$variables['element']['#attributes']['disabled'] = TRUE;
-    $e  = 1;
-
 
     $element =& $variables['element'];
 
@@ -59,8 +55,6 @@ function education_form_element($variables) {
 
         break;
       case 'after':
-        $i = 1;
-
         if (strstr($element['#id'], 'edit-field-student-age-category-und')) {
           $output .= ' ' . theme('form_element_label', $variables) . "\n";
           $output .= ' ' . $prefix . $element['#children'] . $suffix;
@@ -68,10 +62,7 @@ function education_form_element($variables) {
         else {
           $output .= ' ' . $prefix . $element['#children'] . $suffix;
           $output .= ' ' . theme('form_element_label', $variables) . "\n";
-
         }
-
-
 
         break;
       case 'none':
@@ -229,6 +220,15 @@ function education_process_maintenance_page(&$variables)
   if ($variables['hide_site_slogan']) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
     $variables['site_slogan'] = filter_xss_admin(variable_get('site_slogan', ''));
+  }
+}
+
+/**
+ * Override or insert variables into the page template.
+ */
+function education_preprocess_page(&$variables) {
+  if (drupal_is_front_page()) {
+    drupal_set_title('');
   }
 }
 

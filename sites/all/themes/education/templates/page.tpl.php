@@ -272,6 +272,10 @@
     <?php if (isset($lesson_date_enable_form)): ?>
       <?php print $lesson_date_enable_form; ?>
     <?php endif; ?>
+
+    <?php if (isset($lesson_pay_form)): ?>
+      <?php print $lesson_pay_form; ?>
+    <?php endif; ?>
     <!--------------------------------------->
 
   </div></div> <!-- /#page, /#page-wrapper -->
