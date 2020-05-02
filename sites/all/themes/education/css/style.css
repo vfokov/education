@@ -2733,3 +2733,24 @@ div.vertical-tabs {
         display: none;
     }
 }
+
+@media all and (max-width: 515px) {
+    .b-topnav__icon {
+        right: 10px;
+        top: 10px;
+        position: fixed;
+    }
+
+    #main-menu {
+        display: none;
+    }
+
+    #page #header {
+        background: #fff;
+    }
+
+    .b-topnav__icon {
+        height: 50px;
+        width: 75px;
+    }
+}
