@@ -2673,6 +2673,19 @@ div.vertical-tabs {
     background: rgba(95, 94, 94, 0.6);
 }
 
+#fast_cart #edit-submit, #fast_cart .form-submit {
+    background: #f17c1e;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.929em;
+    font-weight: normal;
+    text-align: center;
+    padding: 9px 37px 10px;
+    border-radius: 1px;
+    margin-top: 0;
+}
+
 @media all and (max-width: 768px) {
 
     .b-topnav__icon {
@@ -2718,5 +2731,26 @@ div.vertical-tabs {
 
     #logo, #secondary-menu{
         display: none;
+    }
+}
+
+@media all and (max-width: 515px) {
+    .b-topnav__icon {
+        right: 10px;
+        top: 10px;
+        position: fixed;
+    }
+
+    #main-menu {
+        display: none;
+    }
+
+    #page #header {
+        background: #fff;
+    }
+
+    .b-topnav__icon {
+        height: 50px;
+        width: 75px;
     }
 }

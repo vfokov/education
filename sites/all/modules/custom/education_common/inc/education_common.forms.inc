@@ -664,6 +664,15 @@ function education_common_quick_order($form, &$form_state) {
     '#type' => 'hidden',
     '#default_value' =>'1',
   );
+  $form['product_price'] = array(
+    '#type' => 'hidden',
+    //'#default_value' =>'1',
+  );
+
+  $form['is_paid'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'0',
+  );
 
   /*
   $form['is_cart'] = array(
@@ -680,6 +689,19 @@ function education_common_quick_order($form, &$form_state) {
     '#required' => TRUE,
     '#suffix' => '<a class="term_of_use" href="/terms-of-use">Learn more</a>',
   );
+  */
+
+
+  $form['paypal_button'] = array(
+    '#markup' => '<div id="paypal-button-container"></div>'
+  );
+
+  /*
+
+  <script>
+  paypal.Buttons().render('#paypal-button-container');
+    // This function displays Smart Payment Buttons on your web page.
+  </script>
   */
 
   $form['submit'] = array(
@@ -713,9 +735,10 @@ function education_common_quick_order_submit(&$form, &$form_state) {
       $date = $form_state['values']['lesson_date'];
 
       $is_cart = FALSE;
+      $is_paid = $form_state['values']['is_paid'];
       //$form_state['values']['is_cart']
       $order_id = education_common_create_quick_order($user, $product_id, $form_state['values']['product_quantity'], $date, $teacher_uid,
-        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $is_cart);
+        $form_state['values']['user_phone'], $form_state['values']['name'], $form_state['values']['email'], $form_state['values']['skype'], $is_cart, $is_paid);
 
       $form_state['values']['order_id'] = $order_id;
 
@@ -725,20 +748,8 @@ function education_common_quick_order_submit(&$form, &$form_state) {
 
       $order_user = user_load($order->uid);
       // получим тип заказа
-      if ($order_user && in_array(2, array_keys($order_user->roles))) {
-        $order_type_title = 'заказ';
-      }
-
-      if ($order_user && in_array(5, array_keys($order_user->roles))) {
-        $order_type_title = 'оптовый заказ';
-      }
 
       $order_mail_data = education_common_get_order_mail_data($order);
-
-      /*
-      rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
-        $form_state['values']['user_phone'], $order_id, $order_mail_data, $order_mail_data_admin, $order_type_title);
-      */
 
       rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
         $form_state['values']['user_phone'], $form_state['values']['skype'], $order_id, $order_mail_data);

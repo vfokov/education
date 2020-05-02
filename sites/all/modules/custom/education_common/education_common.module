@@ -25,6 +25,14 @@ function education_common_init() {
       drupal_goto('pupil/profile');
     }
   }
+
+  // for teacher user/56/edit
+  if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
+    if (user_has_role(TEACHER_ROLE)) {
+      drupal_goto('tutor-setup');
+    }
+  }
+
 }
 
 /**
@@ -39,6 +47,8 @@ function education_common_user_insert(&$edit, $account, $category) {
   }
 
   user_multiple_role_edit(array($account->uid), 'add_role', $role);
+
+  /*
   if ($role == TEACHER_ROLE) {
 
     $newly_registered_user_id = $account->uid;
@@ -50,6 +60,7 @@ function education_common_user_insert(&$edit, $account, $category) {
 
     drupal_goto('tutor-setup');
   }
+  */
 }
 
 
@@ -560,9 +571,11 @@ function education_common_create_quick_order_user($name, $pass, $mail, $phone, $
 /**
  * Создание "быстрого заказа"
  */
-function education_common_create_quick_order($user, $product_id, $quantity=1, $date, $teacher_uid,  $user_phone, $name, $email, $skype, $is_cart) {
+function education_common_create_quick_order($user, $product_id, $quantity=1, $date, $teacher_uid,  $user_phone, $name, $email, $skype, $is_cart, $is_paid) {
 
   global $user;
+
+  $order_status = $is_paid ? 'paid' : 'pending';
 
   //$user_phone = hb_user_clear_phone($user_phone);
   // for anonymous
@@ -584,10 +597,10 @@ function education_common_create_quick_order($user, $product_id, $quantity=1, $d
   //$new_user = TRUE;
   // Create order
   if ($new_user) {
-    $order = commerce_order_new($new_user->uid, 'pending');
+    $order = commerce_order_new($new_user->uid, $order_status);
   }
   else {
-    $order = commerce_order_new($user->uid, 'pending');
+    $order = commerce_order_new($user->uid, $order_status);
   }
   commerce_order_save($order);
 

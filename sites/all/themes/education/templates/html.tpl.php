@@ -62,6 +62,11 @@
   <![endif]-->
 </head>
 <body class="<?php print $classes; ?>" <?php print $attributes;?>>
+
+<script
+  src="https://www.paypal.com/sdk/js?client-id=AUV2r-z_ApYr_NFkZBYrSaqPc9eeh88nJUZTxi47OClr38tzMgcvcGRhnHmq_S9lz87vo94P9vrFCM9i"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+</script>
+
   <div id="skip-link">
     <a href="#main-content" class="element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>
   </div>

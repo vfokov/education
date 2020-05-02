@@ -95,6 +95,8 @@ $week_days = array(
 
 
 $teacher_dates = array();
+$prod_ids_by_teacher_date = array();
+$prod_prices_by_teacher_date = array();
 $type = 'lesson';
 $uid = arg(1);
 $query = new EntityFieldQuery;
@@ -110,9 +112,20 @@ if (!empty($result['node'])) {
   $nodes = node_load_multiple($nids);
 
   foreach ($nodes as $lesson_node) {
+
+    $product_reference = $lesson_node->field_product_reference[LANGUAGE_NONE][0]['product_id'];
+    $commerce_product = commerce_product_load($product_reference);
+    //echo '<pre>'; print_r($commerce_product); echo '</pre>'; die();
+
+    $commerce_product_price = $commerce_product->commerce_price;
+    $lesson_price = commerce_currency_format($commerce_product_price[LANGUAGE_NONE][0]['amount'], $commerce_product_price[LANGUAGE_NONE][0]['currency_code']);
+    // commerce_currency_format
+
     if (isset($lesson_node->field_lesson_date['und'])) {
       foreach($lesson_node->field_lesson_date['und'] as $key => $lesson_date_item ) {
-       $teacher_dates[] = $lesson_date_item['value'];
+        $teacher_dates[] = $lesson_date_item['value'];
+        $prod_ids_by_teacher_date[$lesson_date_item['value']] = $product_reference;
+        $prod_prices_by_teacher_date[$lesson_date_item['value']] = $lesson_price;
       }
     }
   }
@@ -196,7 +209,7 @@ if (!empty($result['node'])) {
             <div class="half-hour full-hour <?php print $av_class; ?>" data-hour-full="<?php print $day_date; print ' '; print  $time_cnt_output . ':00:00' ; ?>" >
               <?php //print $date_time; ?> &nbsp;
               <?php if (in_array($date_time, $teacher_dates)): ?>
-                <a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="<?php print $date_time; ?>" data-teacher-uid="<?php print $uid; ?>">Available</a>
+                <a href="#" class="btn product__card-fast popup__link" data-product-price="<?php print $prod_prices_by_teacher_date[$date_time]; ?>" data-popup="fast_cart" data-product-id="<?php print $prod_ids_by_teacher_date[$date_time]; ?>" data-date="<?php print $date_time; ?>" data-teacher-uid="<?php print $uid; ?>">Available</a>
               <?php endif; ?>
             </div>
 
@@ -206,7 +219,7 @@ if (!empty($result['node'])) {
             <div class="half-hour <?php print $av_class_half; ?>" data-hour-with-half="<?php print $day_date; print ' '; print $time_cnt_output . ':30:00' ?>" >
               <?php //print $with_half_date_time; ?> &nbsp;
               <?php if (in_array($with_half_date_time, $teacher_dates)): ?>
-                <a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="<?php print $with_half_date_time; ?>" data-teacher-uid="<?php print $uid; ?>">Available</a>
+                <a href="#" class="btn product__card-fast popup__link" data-product-price="<?php print $prod_prices_by_teacher_date[$with_half_date_time]; ?>" data-popup="fast_cart" data-product-id="<?php print $prod_ids_by_teacher_date[$with_half_date_time]; ?>" data-date="<?php print $with_half_date_time; ?>" data-teacher-uid="<?php print $uid; ?>">Available</a>
               <?php endif; ?>
             </div>
             <div class="calendar item-wrapper">

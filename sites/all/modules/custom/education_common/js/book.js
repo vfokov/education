@@ -316,12 +316,58 @@ function getOffsetRect(elem) {
       $('.btn.product__card-fast').bind('click', function(){
         $('#popup__overlay').addClass('popup_show');
         var product_id = $(this).attr('data-product-id');
+        var product_price = $(this).attr('data-product-price');
         //<a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="1" data-date="2020-04-08 23:00:00" data-teacher-uid="3">Book a lesson</a>
         var teacher_uid = $(this).attr('data-teacher-uid');
         var date = $(this).attr('data-date');
         $('input[name="product_id"]').val(product_id);
+        $('input[name="product_price"]').val(product_price);
         $('input[name="teacher_uid"]').val(teacher_uid);
         $('input[name="lesson_date"]').val(date);
+
+        //PP TRY
+        var amount_value = product_price.substr(1);
+        //console.log('pp price' + amount_value);
+
+        //if (!paypal.Buttons)
+
+        paypal.Buttons({
+          createOrder: function(data, actions) {
+            // This function sets up the details of the transaction, including the amount and line item details.
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: amount_value
+                }
+              }]
+            });
+          },
+          onApprove: function(data, actions) {
+            // This function captures the funds from the transaction.
+            return actions.order.capture().then(function(details) {
+              // This function shows a transaction success message to your buyer.
+              //TODO чтобы делать заказ paid
+              //alert('Transaction completed by ' + details.payer.name.given_name);
+
+              $('input[name="is_paid"]').val(1);
+              $('#edit-submit').click();
+              $('#edit-submit').trigger('click');
+              $('#edit-submit').mousedown();
+
+              window.setTimeout(
+                function () {
+                  //$('#edit-submit').click();
+                  $('.form-submit').click();
+                }, 200);
+
+
+            });
+          }
+        }).render('#paypal-button-container');
+
+        // PP
+
+
       });
 
       $('.btn.lesson_date_close').bind('click', function(){
@@ -371,6 +417,8 @@ function getOffsetRect(elem) {
       $('.popup__close').click(function(){
         $('.popup_show').removeClass('popup_show');
         $('#popup__overlay').removeClass('mlpopup__show');
+
+        $('#paypal-button-container').html('');
 
         if ($(this).hasClass('close_reload')) {
           window.setTimeout(
