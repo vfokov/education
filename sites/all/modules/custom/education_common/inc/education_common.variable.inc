@@ -32,6 +32,16 @@ function education_common_variable_info($options) {
     'localize' => TRUE,
   );
 
+  $variables['front_page_search_text'] = array(
+    'type' => 'text',
+    'title' => 'Front page search text.',
+    'default' => ' studying online with a personal teacher on the unique platform of the TutorOnline school!.',
+    'required' => TRUE,
+    'module' => 'education_common',
+    'group' => 'education_info',
+    'localize' => TRUE,
+  );
+
 
   $variables['pupil_registration_image_adult'] = array(
     'type' => 'image_managed',

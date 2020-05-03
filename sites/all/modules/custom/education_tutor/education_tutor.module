@@ -292,8 +292,6 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     unset($form['#validate'][1]);
     array_unshift($form['#validate'], 'education_tutor_validate_current_pass');
     array_unshift($form['#validate'], 'education_tutor_form_validate');
-
-    //echo '<pre>'; print_r($form['#validate']); echo '</pre>'; die();
   }
 }
 

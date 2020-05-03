@@ -41,12 +41,6 @@
   ?>
 <?php endif; ?>
 <div class="views-exposed-form">
-  <?php if (drupal_is_front_page()): ?>
-    <div class="front-page-tutor-search-text">
-     <?php print variable_get_value('front_page_teachers_search_text'); ?>
-    </div>
-  <?php endif; ?>
-
   <div class="views-exposed-widgets clearfix">
     <?php foreach ($widgets as $id => $widget): ?>
 

@@ -1,5 +1,32 @@
 <?php
 
+
+/**
+ * Override of theme_button().
+ *
+ * Render the button element as a button and the submit element as an input element.
+ */
+function education_button($variables) {
+  $element = $variables['element'];
+  $element['#attributes']['type'] = 'submit';
+
+  element_set_attributes($element, array('id', 'name', 'value'));
+
+  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
+  if (!empty($element['#attributes']['disabled'])) {
+    $element['#attributes']['class'][] = 'form-button-disabled';
+  }
+
+  if (isset($element['#buttontype']) && $element['#buttontype'] == 'button') {
+    $value = $element['#value'];
+    unset($element['#attributes']['value']);
+    return '<button' . drupal_attributes($element['#attributes']) . '>' . $value . '</button>';
+  }
+  else {
+    return '<input' . drupal_attributes($element['#attributes']) . ' />';
+  }
+}
+
 function education_form_element($variables) {
   $element = $variables['element'];
   // Disable radio button N/A

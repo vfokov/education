@@ -268,20 +268,8 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
   if ($form['#id'] == 'views-exposed-form-teachers-index-page') {
     ///////////////////////////////////////////////////
     $form['submit']['#weight'] = 30;
-
-    //unset($form['teacher_lessons_dates']);
-    /*
-    $field_grade_subject_options = $form['field_grade_subject']['#options'];
-    $field_grade_subject_options_new = array();
-    foreach ($field_grade_subject_options as $option) {
-      if (!strstr($option, 'Grade')) {
-        $field_grade_subject_options_new[] = $option;
-      }
-    }
-    $form['field_grade_subject']['#options'] = $field_grade_subject_options_new;
-    */
-
-    //field-grade-subject
+    $form['submit']['#buttontype'] = 'button';
+    $form['#after_build'][] = 'education_common_force_triggering_element';
 
     $form['field_grade_subject']['#options']['All'] = 'Select subject';
 
@@ -290,16 +278,16 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
 
     $form['teacher_lessons_dates']['#access'] = FALSE;
 
-    if (!drupal_is_front_page()) {
+
       $form['teacher_date_dates'] = array(
         '#type' => 'date_popup',
         '#size' => 30,
-        '#default_value' => date('Y-m-d', time()),
+        '#default_value' => !drupal_is_front_page() ? date('Y-m-d', time()) : '',
         '#date_format' => 'Y-m-d',
         '#date_year_range' => '-3:+3',
         '#description' => '',
       );
-
+    if (!drupal_is_front_page()) {
       $form['time_slider'] = array(
         '#title' => 'Select time range',
         '#input_title' => NULL,
@@ -324,7 +312,16 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
     }
     ///////////////////////////////////////////////////
   }
-  
+
+}
+
+function education_common_force_triggering_element($form, &$form_state) {
+  if (isset($form_state['input']['submit'])) {
+    $form_state['triggering_element'] = $form['submit'];
+  } elseif (isset($form_state['input']['other_button'])) {
+    $form_state['triggering_element'] = $form['other_button'];
+  }
+  return $form;
 }
 
 /**
@@ -333,8 +330,6 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
 function education_common_search_api_query_alter(SearchApiQueryInterface $query) {
   if ($query->getOption('search id') == 'search_api_views:teachers_index:page') {
     if (isset($_GET['time_slider'])) {
-
-      //echo '<pre>'; print_r($_GET['time_slider']); echo '</pre>';  die();
       $time_slider_arr = $_GET['time_slider'];
       $time_slider_from = $_GET['time_slider']['value'];
       $time_slider_to = $_GET['time_slider']['value2'];
@@ -394,7 +389,6 @@ function education_common_preprocess_page(&$variables) {
     //->propertyCondition('uid', $uid)
     ->execute();
   if (!empty($result['node'])) {
-    //echo '<pre>'; print_r($result['node']); echo '</pre>'; die();
 
     $users  = array();
     foreach($result['node'] as $n_obj) {
@@ -453,6 +447,10 @@ function education_common_preprocess_page(&$variables) {
     drupal_add_js('jQuery(document).ready(function(){jQuery("#pupils-accordion").accordion({collapsible: true});});', 'inline');
   }
 
+  if (drupal_is_front_page()) {
+    drupal_add_js(drupal_get_path('module', 'education_common') . '/js/front.js');
+  }
+
 }
 
 /**
@@ -484,6 +482,10 @@ function education_common_block_info() {
 
   $blocks['form-lesson-pay'] = array(
     'info' => 'Lesson pay form',
+  );
+
+  $blocks['front-tutors-search'] = array(
+    'info' => 'Front tutors search',
   );
   return $blocks;
 }
@@ -533,6 +535,16 @@ function education_common_block_view($delta = '') {
       global $user;
       $block['subject'] = t('Lesson pay');
       $block['content'] = drupal_get_form('lesson_pay_form');
+      break;
+
+    case 'front-tutors-search':
+      //module_load_include('inc', 'user', 'user.pages');
+      global $user;
+      $block['subject'] = '';
+
+      $block = module_invoke('views', 'block_view', '-exp-teachers_index-page');
+
+      $block['content'] = $block['content'];
       break;
   }
   return $block;

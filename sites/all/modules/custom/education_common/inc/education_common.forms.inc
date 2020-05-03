@@ -603,9 +603,6 @@ function education_common_quick_order($form, &$form_state) {
     $nodes = node_load_multiple($nids);
     $options = array();
     foreach ($nodes as $node) {
-
-      //echo '<pre>'; print_r($node->field_product_reference[LANGUAGE_NONE]); echo '</pre>'; die();
-
       $p_nid = $node->field_product_reference[LANGUAGE_NONE][0]['product_id'];
       $options[$p_nid] = $node->title;
     }
@@ -959,10 +956,8 @@ function education_common_user_login_validate($form, &$form_state) {
   return FALSE;
 }
 
-
 function lesson_pay_form($form, &$form_state) {
   global $user;
-
 
   $form['lesson_pay'] = array(
     '#type' => 'hidden',
@@ -1027,3 +1022,36 @@ function lesson_pay_form_ajax_callback(&$form, &$form_state) {
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+
+/*
+function education_common_front_tutors_form($form, &$form_state) {
+  global $user;
+
+  //taxonomy_get_tree
+
+  $form['field_grade_subject'] = array(
+    '#type' => 'select',
+    '#options' =>'',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Pay'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit pay_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+
+  );
+  return $form;
+}
+
+function education_common_front_tutors_form_submit($form, &$form_state) {
+
+}
+*/
+
