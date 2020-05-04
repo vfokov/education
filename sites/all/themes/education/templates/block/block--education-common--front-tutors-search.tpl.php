@@ -78,7 +78,10 @@
         </div>
 
 
-    <?php print $content ?>
+    <?php print $content; ?>
+
+    <?php $register_form = drupal_get_form('user_register_form'); ?>
+    <?php print render($register_form); ?>
 
 
     <div class="b-main__jumbotron-form__next_steps__group l-col l-full">

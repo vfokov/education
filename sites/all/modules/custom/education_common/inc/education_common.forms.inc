@@ -878,6 +878,29 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
   else {
     $form['field_age_category']['#access'] = FALSE;
   }
+
+  if (drupal_is_front_page()) {
+    $form['account']['name']['#description'] = '';
+    $form['account']['name']['#attributes']['placeholder'] = 'name';
+    $form['account']['mail']['#description'] = '';
+    $form['account']['mail']['#attributes']['placeholder'] = 'E-mail';
+    $form['account']['name']['#title'] = '';
+    $form['account']['mail']['#title'] = '';
+
+    $form['account']['mail']['#theme_wrappers'] = array();
+    $form['account']['name']['#theme_wrappers'] = array();
+    $form['field_phone']['#theme_wrappers'] = array();
+    $form['field_phone'][LANGUAGE_NONE][0]['value']['#theme_wrappers'] = array();
+    //$form['field_phone'][LANGUAGE_NONE][0]['#title'] = '';
+    $form['field_phone'][LANGUAGE_NONE][0]['value']['#title'] = '';
+    $form['field_phone'][LANGUAGE_NONE][0]['value']['#attributes']['placeholder'] = 'Phone';
+    //echo '<pre>'; print_r($form['field_phone']); echo '</pre>'; die();
+    //$form['field_phone']['#title'] = '';
+    $form['actions']['submit']['#value'] = 'Try fo free';
+
+    $form['actions']['submit']['#buttontype'] = 'button';
+    $form['#after_build'][] = 'education_common_force_triggering_element';
+  }
 }
 
 

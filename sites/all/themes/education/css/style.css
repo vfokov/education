@@ -2707,7 +2707,8 @@ div.vertical-tabs {
 }
 
 #block-views-exp-teachers-index-page button.form-submit,
-#block-education-common-front-tutors-search button.form-submit {
+#block-education-common-front-tutors-search button.form-submit,
+.user-info-from-cookie button.form-submit {
     background: #f17c1e;
     border: none;
     color: #fff;
@@ -2727,7 +2728,48 @@ div.vertical-tabs {
     padding: 14px 35px 10px;
 }
 
-#block-education-common-front-tutors-search button.form-submit::after {
+#block-education-common-front-tutors-search .user-info-from-cookie button.form-submit {
+    /*text-indent: -9999px;*/
+    color: #fff;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #edit-account {
+    width: 48%;
+    float: left;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #edit-account input {
+    width: 49.8%;
+    padding: 9px 9px 10px;
+    box-sizing: border-box;
+    border: none;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper input {
+    width: 99%;
+    padding: 9px 9px 10px;
+    box-sizing: border-box;
+    border: none;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper {
+    float: left;
+    width: 25%;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie {
+    margin: 0 auto;
+    width: 60%;
+}
+
+
+#block-education-common-front-tutors-search .user-info-from-cookie .form-actions{
+    float: left;
+    margin: 2px 0 0 0;
+    padding: 0;
+}
+
+#block-education-common-front-tutors-search .views-exposed-form button.form-submit::after {
     display: inline-block;
     font-size: 1em;
     height: 20px;
