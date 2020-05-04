@@ -66,8 +66,14 @@
           <div class="b-main__jumbotron-form__tabs l-col l-full">
             <div class="l-row clearfix">
 
+              <?php if (user_is_anonymous()): ?>
               <div class="l-col l-third">
-                <div class="e-form-tab sign-up-lesson m-active" data-tab="reserve">Sign up fot the lesson</div>
+                <div class="e-form-tab try-for-free m-active" data-tab="free">Try for free</div>
+              </div>
+              <?php endif; ?>
+
+              <div class="l-col l-third">
+                <div class="e-form-tab sign-up-lesson <?php print !user_is_anonymous() ? 'm-active' : '' ?>" data-tab="reserve">Sign up for the lesson</div>
               </div>
 
               <div class="l-col l-third">
@@ -77,15 +83,18 @@
           </div>
         </div>
 
+    <div class="search-forms <?php print user_is_anonymous() ? 'hidden' : ''; ?> ">
+      <?php print $content; ?>
+    </div>
 
-    <?php print $content; ?>
-
-    <?php $register_form = drupal_get_form('user_register_form'); ?>
-    <?php print render($register_form); ?>
+    <?php if (user_is_anonymous()): ?>
+      <?php $register_form = drupal_get_form('user_register_form'); ?>
+      <?php print render($register_form); ?>
+    <?php endif; ?>
 
 
     <div class="b-main__jumbotron-form__next_steps__group l-col l-full">
-      <div class="l-row clearfix" data-tab-form-description="free">
+      <div class="l-row clearfix try-for-free-step <?php print user_is_anonymous() ? 'm-active' : '' ?>" data-tab-form-description="free">
         <div class="l-col l-third">
           <div class="l-col l-quart"><span class="icon i-tutor-speaker">&nbsp;</span></div>
           <div class="l-col l-three-quart">
@@ -105,7 +114,7 @@
           </div>
         </div>
       </div>
-      <div class="l-row clearfix  sign-up-lesson-step m-active" data-tab-form-description="reserve">
+      <div class="l-row clearfix  sign-up-lesson-step <?php print !user_is_anonymous() ? 'm-active' : '' ?>" data-tab-form-description="reserve">
         <div class="l-col l-third">
           <div class="l-col l-quart"><span class="icon i-lesson-schedule">&nbsp;</span></div>
           <div class="l-col l-three-quart">

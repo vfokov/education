@@ -2769,6 +2769,16 @@ div.vertical-tabs {
     padding: 0;
 }
 
+/*
+#block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
+    display: none;
+}
+*/
+
+.search-forms.hidden {
+    display: none;
+}
+
 #block-education-common-front-tutors-search .views-exposed-form button.form-submit::after {
     display: inline-block;
     font-size: 1em;
@@ -2952,6 +2962,7 @@ input[type="submit"]:before {
 .b-main__jumbotron-form__next_steps__group {
     padding: 2.5em 0;
     float: none;
+    overflow: hidden;
 }
 
 .b-main__jumbotron-form__next_steps__group .l-row {

@@ -12,6 +12,10 @@ if (drupal_is_front_page()) {
   hide($form['field_ready_to_get_news']);
   hide($form['field_terms_of_service']);
   hide($form['field_student_promocode']);
+  hide($form['account']['pass']);
+  hide($form['account']['status']);
+  hide($form['account']['roles']);
+  hide($form['account']['notify']);
 }
 
 ?>
