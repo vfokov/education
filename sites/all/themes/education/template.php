@@ -256,6 +256,9 @@ function education_process_maintenance_page(&$variables)
 function education_preprocess_page(&$variables) {
   if (drupal_is_front_page()) {
     drupal_set_title('');
+    drupal_add_js(drupal_get_path('theme', 'education') . '/js/owl.carousel.min.js');
+    drupal_add_js(drupal_get_path('theme', 'education') . '/js/front-slider.js');
+    drupal_add_css(drupal_get_path('theme', 'education') . '/css/owl.carousel.css');
   }
 }
 

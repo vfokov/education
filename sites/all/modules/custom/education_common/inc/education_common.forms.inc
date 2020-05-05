@@ -97,8 +97,6 @@ function education_common_enable_lesson_date($form, &$form_state) {
     ),
   );
 
-
-
   // TODO get lessons_products_nids of current user
   $type = 'lesson';
   $uid = $user->uid;

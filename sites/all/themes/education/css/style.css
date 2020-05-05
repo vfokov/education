@@ -2863,7 +2863,53 @@ input[type="submit"]:before {
 
 /* seacrh form front tabs*/
 
+#front__logos .item {
+  padding: 1.4em 14%;
+}
 
+#front__logos {
+  position: relative;
+}
+
+#front__logos .owl-controls {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+
+}
+
+#front__logos .owl-controls .owl-nav div {
+  position: absolute;
+  text-indent: -9999px;
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+}
+
+#front__logos .owl-controls .owl-prev {
+  left: 0;
+  background-image: url(prev_arrow.svg);
+}
+
+#front__logos .owl-controls .owl-prev:hover {
+  background-image: url(prev_arrow_active.svg);
+}
+
+#front__logos .owl-controls .owl-next {
+  right: -20px;
+  background-image: url(next_arrow.svg);
+}
+
+#front__logos .owl-controls .owl-next:hover {
+  background-image: url(next_arrow_active.svg);
+}
+
+#block-views-front-logos-block {
+  padding: 50px 50px;
+}
+
+#front__logos {
+}
 
 .b-main__jumbotron-form .b-main__jumbotron-form__tabs {
     padding: 2em 0;
