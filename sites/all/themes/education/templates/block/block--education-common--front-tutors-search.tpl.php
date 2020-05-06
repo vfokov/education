@@ -55,7 +55,7 @@
   <div class="content"<?php print $content_attributes; ?>>
 
     <?php if (drupal_is_front_page()): ?>
-      <h2>Study perfectly</h2>
+      <h2>Study perfectly,</h2>
       <div class="front-page-tutor-search-text">
         <?php print variable_get_value('front_page_search_text'); ?>
       </div>

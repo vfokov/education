@@ -2858,7 +2858,9 @@ input[type="submit"]:before {
 }
 
 #block-education-common-front-tutors-search h2 {
-    text-align: center;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
 }
 
 /* seacrh form front tabs*/
@@ -3078,6 +3080,95 @@ span.icon.i-tutor-card {
 
 
 @media all and (max-width: 768px) {
+
+    .b-main__jumbotron-form {
+      width: 100%;
+      padding-top: 1em;
+    }
+
+    .front .l-col.l-third {
+      width: 47%;
+    }
+
+    .front .b-main__jumbotron-form__tabs .e-form-tab {
+      padding: 1em .2em;
+    }
+    #block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .front #block-education-common-front-tutors-search .views-widget-filter-field_grade_subject {
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .container-inline-date .form-item input {
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    .views-exposed-form .container-inline-date .date-padding {
+      padding: 0;
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search button.form-submit,
+    #block-views-exp-teachers-index-page button.form-submit {
+      width: 100%;
+    }
+
+    #block-views-exp-teachers-index-page button.form-submit {
+      margin-top: 15px;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie {
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #edit-account {
+      width: 100%;
+      float: none;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #edit-account input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #block-education-common-front-tutors-search .views-exposed-widget.views-submit-button .container-inline-date,
+    #block-education-common-front-tutors-search .container-inline-date .form-item .form-item {
+      float: left;
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .views-exposed-widget.views-submit-button {
+      float: none;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper {
+      float: none;
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .b-main__jumbotron-form__next_steps__group p {
+      margin: 1em 0;
+      padding: 0.5em 1em;
+      height: 100px;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie .form-actions {
+      float: none;
+    }
+
+    .front .l-col.l-third:last-of-type {
+      margin-top: 31px;
+    }
+
     .b-topnav__icon {
         right: 10px;
         top: 40px;
