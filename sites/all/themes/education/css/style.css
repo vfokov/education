@@ -509,7 +509,7 @@ h1#site-name {
     border-bottom-left-radius: 8px;
     margin-bottom: 4px;
     padding: 0.9em 0 0.9em 10px;
-    font-size: 20px;
+    font-size: 19px;
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
@@ -2233,6 +2233,7 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
 
 #views-exposed-form-teachers-index-page .container-inline-date > .form-item {
     display: block;
+    margin-right: 0;
 }
 
 
@@ -2665,7 +2666,8 @@ div.vertical-tabs {
 }
 
 .view-commerce-user-orders tr td, .view-commerce-user-orders tr th,
-.view-student-homewoks tr td, .view-student-homewoks tr th {
+.view-student-homewoks tr td, .view-student-homewoks tr th,
+.view-teacher-lessons tr td, .view-teacher-lessons tr th{
     padding: 12px 13px;
 }
 
@@ -2686,7 +2688,487 @@ div.vertical-tabs {
     margin-top: 0;
 }
 
+#block-education-common-front-tutors-search {
+    background: url("homepage-top-photo.jpg");
+    background-size: cover;
+    color: #ececec;
+    margin: 30px 0;
+    padding: 2em 2em !important;
+}
+
+#block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
+    margin: 0 auto;
+    width: 60%;
+}
+
+.front #block-education-common-front-tutors-search .views-widget-filter-field_grade_subject {
+    width: 53%;
+    margin: 0;
+    padding: 0;
+}
+
+#block-views-exp-teachers-index-page button.form-submit,
+#block-education-common-front-tutors-search button.form-submit,
+.user-info-from-cookie button.form-submit {
+    background: #f17c1e;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.929em;
+    font-weight: normal;
+    text-align: center;
+    padding: 13px 52px 11px;
+    border-radius: 1px;
+    margin-top: 0;
+}
+
+#block-education-common-front-tutors-search button.form-submit {
+    /*text-indent: -9999px;*/
+    color: #f17c1e;
+    position: relative;
+    padding: 14px 35px 10px;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie button.form-submit {
+    /*text-indent: -9999px;*/
+    color: #fff;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #edit-account {
+    width: 48%;
+    float: left;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #edit-account input {
+    width: 49.8%;
+    padding: 9px 9px 10px;
+    box-sizing: border-box;
+    border: none;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper input {
+    width: 99%;
+    padding: 9px 9px 10px;
+    box-sizing: border-box;
+    border: none;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper {
+    float: left;
+    width: 25%;
+}
+
+#block-education-common-front-tutors-search .user-info-from-cookie {
+    margin: 0 auto;
+    width: 60%;
+}
+
+
+#block-education-common-front-tutors-search .user-info-from-cookie .form-actions{
+    float: left;
+    margin: 2px 0 0 0;
+    padding: 0;
+}
+
+/*
+#block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
+    display: none;
+}
+*/
+
+.search-forms.hidden {
+    display: none;
+}
+
+#block-education-common-front-tutors-search .views-exposed-form button.form-submit::after {
+    display: inline-block;
+    font-size: 1em;
+    height: 20px;
+    line-height: 14px;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    content: 'Show';
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+#block-education-common-front-tutors-search .container-inline-date .form-item input {
+    width: 150px;
+    padding: 9px 9px 10px;
+    box-sizing: border-box;
+    border: none;
+    margin: 0;
+}
+
+#block-education-common-front-tutors-search .views-exposed-widget.views-submit-button {
+    padding: 0;
+}
+/*
+input[type="submit"]:before {
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+
+    content: '\f400';
+}
+*/
+
+.not-front #block-views-exp-teachers-index-page button.form-submit {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.front #block-views-exp-teachers-index-page {
+    background: url("tutors_search_bg.jpg");
+    color: #fff;
+    padding: 50px 60px;
+}
+
+.front .front-page-tutor-search-text {
+    text-align: center;
+    font-size: 20px;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.front #block-views-exp-teachers-index-page .views-exposed-widgets {
+    width: 50%;
+    margin: 20px auto;
+}
+
+.front .views-widget-filter-field_grade_subject {
+    width: 60%;
+}
+
+.front .views-widget-filter-field_grade_subject select {
+    padding: 7px;
+    width: 100%;
+}
+
+.form__submit.pay_lesson_button {
+    display: none;
+}
+
+.front #block-views-exp-teachers-index-page .form-item-teacher-date-dates {
+    display: none;
+}
+
+#block-education-common-front-tutors-search .form-item-teacher-date-dates label,
+#block-education-common-front-tutors-search .form-item-teacher-date-dates .description {
+    display: none;
+}
+
+#block-education-common-front-tutors-search h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* seacrh form front tabs*/
+
+#front__logos .item {
+  padding: 1.4em 14%;
+}
+
+#front__logos {
+  position: relative;
+}
+
+#front__logos .owl-controls {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+
+}
+
+#front__logos .owl-controls .owl-nav div {
+  position: absolute;
+  text-indent: -9999px;
+  width: 35px;
+  height: 35px;
+  background-repeat: no-repeat;
+}
+
+#front__logos .owl-controls .owl-prev {
+  left: 0;
+  background-image: url(prev_arrow.svg);
+}
+
+#front__logos .owl-controls .owl-prev:hover {
+  background-image: url(prev_arrow_active.svg);
+}
+
+#front__logos .owl-controls .owl-next {
+  right: -20px;
+  background-image: url(next_arrow.svg);
+}
+
+#front__logos .owl-controls .owl-next:hover {
+  background-image: url(next_arrow_active.svg);
+}
+
+#block-views-front-logos-block {
+  padding: 50px 50px;
+}
+
+#front__logos {
+}
+
+.b-main__jumbotron-form .b-main__jumbotron-form__tabs {
+    padding: 2em 0;
+}
+
+.l-col {
+    float: left;
+    min-height: 1px;
+    width: 12.5%;
+}
+
+.l-full {
+    width: 100%;
+}
+
+.l-row {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.b-main__jumbotron-form {
+    width: 60%;
+    padding-top: 4em;
+}
+
+.front  .l-col.l-third {
+    width: 31.33%;
+    margin-left: 1%;
+    margin-right: 1%;
+    position: relative;
+    text-align: center;
+}
+
+.front .l-col.l-third:first-of-type {
+    margin-left: 0;
+    margin-right: 2%;
+}
+
+.front .l-col.l-third:last-of-type {
+    margin-right: 0;
+    margin-left: 2%;
+}
+
+.front .b-main__jumbotron-form__tabs .e-form-tab {
+    font-size: 1.2em;
+    padding: 1.3em .3em;
+    border: 1px solid #ececec;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.front .b-main__jumbotron-form__tabs .e-form-tab.m-active {
+    color: #ef7c46;
+    border-color: #ef7c46;
+    background: #1a1919;
+}
+
+.front .b-main__jumbotron-form__tabs .e-form-tab.m-active:after,
+.front .b-main__jumbotron-form__tabs .e-form-tab.m-active:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.b-main__jumbotron-form .b-main__jumbotron-form__tabs .e-form-tab.m-active:before {
+    bottom: -14px;
+    border-top-color: #ef7c46;
+    border-width: 15px;
+}
+
+.b-main__jumbotron-form .b-main__jumbotron-form__tabs .e-form-tab.m-active:after {
+    bottom: -13px;
+    border-top-color: #1a1919;
+    border-width: 15px;
+}
+
+.l-row span.icon {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.4em;
+    background-repeat: no-repeat;
+    background-position: cover;
+    background-size: 100% 100%;
+    vertical-align: middle;
+    padding: 0 .1em;
+}
+
+.b-main__jumbotron-form__next_steps__group {
+    padding: 2.5em 0;
+    float: none;
+    overflow: hidden;
+}
+
+.b-main__jumbotron-form__next_steps__group .l-row {
+    display: none;
+}
+
+.b-main__jumbotron-form__next_steps__group .l-row.m-active {
+    display: block;
+}
+
+.b-main__jumbotron-form__next_steps__group .l-col.l-third {
+    width: 31.33%;
+    margin-right: 1%;
+    margin-left: 1%;
+}
+
+.b-main__jumbotron-form__next_steps__group .l-col.l-third:first-of-type {
+    margin-left: 0;
+    margin-right: 2%;
+}
+
+.b-main__jumbotron-form__next_steps__group .l-col.l-third .l-col {
+    width: 100%!important;
+}
+
+span.icon.i-tutor-speaker {
+    background-image: url(icon-tutor-speaker.svg);
+    width: 40px;
+    height: 40px;
+}
+
+span.icon.i-lesson-schedule {
+    background-image: url(icon-lesson-schedule.svg);
+    width: 40px;
+    height: 40px;
+}
+
+span.icon.i-lesson-tasks {
+    background-image: url(icon-lesson-tasks.svg);
+    width: 40px;
+    height: 40px;
+}
+
+span.icon.i-lesson-schedule {
+    background-image: url(icon-lesson-schedule.svg);
+    width: 40px;
+    height: 40px;
+}
+
+span.icon.i-lesson-tasks {
+    background-image: url(icon-lesson-tasks.svg);
+    width: 40px;
+    height: 40px;
+}
+
+span.icon.i-tutor-card {
+    background-image: url(icon-tutor-card.svg);
+    width: 40px;
+    height: 40px;
+}
+
+.b-main__jumbotron-form__next_steps__group p {
+    font-size: 1.2em;
+    padding: 0.5em 2em;
+    margin: 1.5em 0;
+}
+
+
 @media all and (max-width: 768px) {
+
+    .b-main__jumbotron-form {
+      width: 100%;
+      padding-top: 1em;
+    }
+
+    .front .l-col.l-third {
+      width: 47%;
+    }
+
+    .front .b-main__jumbotron-form__tabs .e-form-tab {
+      padding: 1em .2em;
+    }
+    #block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .front #block-education-common-front-tutors-search .views-widget-filter-field_grade_subject {
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .container-inline-date .form-item input {
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    .views-exposed-form .container-inline-date .date-padding {
+      padding: 0;
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search button.form-submit,
+    #block-views-exp-teachers-index-page button.form-submit {
+      width: 100%;
+    }
+
+    #block-views-exp-teachers-index-page button.form-submit {
+      margin-top: 15px;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie {
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #edit-account {
+      width: 100%;
+      float: none;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #edit-account input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #block-education-common-front-tutors-search .views-exposed-widget.views-submit-button .container-inline-date,
+    #block-education-common-front-tutors-search .container-inline-date .form-item .form-item {
+      float: left;
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .views-exposed-widget.views-submit-button {
+      float: none;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper {
+      float: none;
+      width: 100%;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .b-main__jumbotron-form__next_steps__group p {
+      margin: 1em 0;
+      padding: 0.5em 1em;
+      height: 100px;
+    }
+
+    #block-education-common-front-tutors-search .user-info-from-cookie .form-actions {
+      float: none;
+    }
+
+    .front .l-col.l-third:last-of-type {
+      margin-top: 31px;
+    }
 
     .b-topnav__icon {
         right: 10px;
@@ -2735,6 +3217,35 @@ div.vertical-tabs {
 }
 
 @media all and (max-width: 515px) {
+
+    .front .front-page-tutor-search-text {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .front #block-views-exp-teachers-index-page {
+        padding: 50px 20px;
+    }
+
+    .front #block-views-exp-teachers-index-page .views-exposed-widgets {
+        width: 100%;
+    }
+
+    .front .views-widget-filter-field_grade_subject {
+        width: 100%;
+    }
+
+    .front #block-views-exp-teachers-index-page .views-exposed-widget.views-submit-button {
+        margin-top: 10px;
+        float: none;
+        padding: 0;
+    }
+
+    #block-views-exp-teachers-index-page input.form-submit {
+        width: 100%;
+        margin-top: 20px;
+    }
+
     .b-topnav__icon {
         right: 10px;
         top: 10px;
@@ -2743,6 +3254,10 @@ div.vertical-tabs {
 
     #main-menu {
         display: none;
+    }
+
+    #main-menu.shown {
+      display: block;
     }
 
     #page #header {

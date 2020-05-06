@@ -24,6 +24,8 @@
  *
  */
 
+//echo current_path(); die();
+
 /*
 $header_ids = array();
 foreach ($day_names as $key => $value) {<?php

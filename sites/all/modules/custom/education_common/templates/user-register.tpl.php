@@ -4,6 +4,20 @@ if (request_uri() == '/tutor-registration') {
   hide($form['field_select_pupil_role']);
 }
 
+if (drupal_is_front_page()) {
+  hide($form['field_student_age_category']);
+  hide($form['field_select_pupil_role']);
+  hide($form['field_is_a_teacher']);
+  hide($form['field_teaching_format']);
+  hide($form['field_ready_to_get_news']);
+  hide($form['field_terms_of_service']);
+  hide($form['field_student_promocode']);
+  hide($form['account']['pass']);
+  hide($form['account']['status']);
+  hide($form['account']['roles']);
+  hide($form['account']['notify']);
+}
+
 ?>
 
 <?php

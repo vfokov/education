@@ -21,17 +21,27 @@ function education_common_variable_group_info() {
  * Implements hook_variable_info()
  */
 function education_common_variable_info($options) {
-  /*
-  $variables['slogan_one_line'] = array(
+
+  $variables['front_page_teachers_search_text'] = array(
     'type' => 'text',
-    'title' => 'Слоган сайта (в одну строку).',
-    'default' => '',
+    'title' => 'Front page teachers search text.',
+    'default' => ' More than 600 professional tutors in all school subjects are ready to help your child pass the exam, exam, enter the university and study perfectly.',
     'required' => TRUE,
-    'module' => 'd2b4_base',
+    'module' => 'education_common',
     'group' => 'education_info',
     'localize' => TRUE,
   );
-  */
+
+  $variables['front_page_search_text'] = array(
+    'type' => 'text',
+    'title' => 'Front page search text.',
+    'default' => ' studying online with a personal teacher on the unique platform of the TutorOnline school!.',
+    'required' => TRUE,
+    'module' => 'education_common',
+    'group' => 'education_info',
+    'localize' => TRUE,
+  );
+
 
   $variables['pupil_registration_image_adult'] = array(
     'type' => 'image_managed',

@@ -90,21 +90,23 @@
 <div id="page-wrapper"><div id="page">
 
     <header id="header" role="banner" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>"><div class="section clearfix">
-        <?php if ($secondary_menu): ?>
-          <nav id="secondary-menu" role="navigation" class="navigation">
-            <?php /*print theme('links__system_secondary_menu', array(
-              'links' => $secondary_menu,
-              'attributes' => array(
-                'id' => 'secondary-menu-links',
-                'class' => array('links', 'inline', 'clearfix'),
-              ),
-              'heading' => array(
-                'text' => t('Secondary menu'),
-                'level' => 'h2',
-                'class' => array('element-invisible'),
-              ),
-            ));*/ ?>
-          </nav> <!-- /#secondary-menu -->
+        <?php if (user_is_anonymous()): ?>
+          <?php if ($secondary_menu): ?>
+            <nav id="secondary-menu" role="navigation" class="navigation">
+              <?php /*print theme('links__system_secondary_menu', array(
+                'links' => $secondary_menu,
+                'attributes' => array(
+                  'id' => 'secondary-menu-links',
+                  'class' => array('links', 'inline', 'clearfix'),
+                ),
+                'heading' => array(
+                  'text' => t('Secondary menu'),
+                  'level' => 'h2',
+                  'class' => array('element-invisible'),
+                ),
+              ));*/ ?>
+            </nav> <!-- /#secondary-menu -->
+          <?php endif; ?>
         <?php endif; ?>
 
 
@@ -143,7 +145,7 @@
         <?php print render($page['header']); ?>
 
         <?php if ($main_menu): ?>
-          <nav id="main-menu" role="navigation" class="navigation">
+          <nav id="main-menu" role="navigation" class="navigation <?php print user_is_anonymous() ? 'shown' : ''; ?>">
             <?php print theme('links__system_main_menu', array(
               'links' => $main_menu,
               'attributes' => array(
@@ -271,6 +273,10 @@
 
     <?php if (isset($lesson_date_enable_form)): ?>
       <?php print $lesson_date_enable_form; ?>
+    <?php endif; ?>
+
+    <?php if (isset($lesson_pay_form)): ?>
+      <?php print $lesson_pay_form; ?>
     <?php endif; ?>
     <!--------------------------------------->
 

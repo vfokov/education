@@ -97,8 +97,6 @@ function education_common_enable_lesson_date($form, &$form_state) {
     ),
   );
 
-
-
   // TODO get lessons_products_nids of current user
   $type = 'lesson';
   $uid = $user->uid;
@@ -603,9 +601,6 @@ function education_common_quick_order($form, &$form_state) {
     $nodes = node_load_multiple($nids);
     $options = array();
     foreach ($nodes as $node) {
-
-      //echo '<pre>'; print_r($node->field_product_reference[LANGUAGE_NONE]); echo '</pre>'; die();
-
       $p_nid = $node->field_product_reference[LANGUAGE_NONE][0]['product_id'];
       $options[$p_nid] = $node->title;
     }
@@ -881,6 +876,29 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
   else {
     $form['field_age_category']['#access'] = FALSE;
   }
+
+  if (drupal_is_front_page()) {
+    $form['account']['name']['#description'] = '';
+    $form['account']['name']['#attributes']['placeholder'] = 'name';
+    $form['account']['mail']['#description'] = '';
+    $form['account']['mail']['#attributes']['placeholder'] = 'E-mail';
+    $form['account']['name']['#title'] = '';
+    $form['account']['mail']['#title'] = '';
+
+    $form['account']['mail']['#theme_wrappers'] = array();
+    $form['account']['name']['#theme_wrappers'] = array();
+    $form['field_phone']['#theme_wrappers'] = array();
+    $form['field_phone'][LANGUAGE_NONE][0]['value']['#theme_wrappers'] = array();
+    //$form['field_phone'][LANGUAGE_NONE][0]['#title'] = '';
+    $form['field_phone'][LANGUAGE_NONE][0]['value']['#title'] = '';
+    $form['field_phone'][LANGUAGE_NONE][0]['value']['#attributes']['placeholder'] = 'Phone';
+    //echo '<pre>'; print_r($form['field_phone']); echo '</pre>'; die();
+    //$form['field_phone']['#title'] = '';
+    $form['actions']['submit']['#value'] = 'Try fo free';
+
+    $form['actions']['submit']['#buttontype'] = 'button';
+    $form['#after_build'][] = 'education_common_force_triggering_element';
+  }
 }
 
 
@@ -958,3 +976,103 @@ function education_common_user_login_validate($form, &$form_state) {
 
   return FALSE;
 }
+
+function lesson_pay_form($form, &$form_state) {
+  global $user;
+
+  $form['lesson_pay'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['order_price'] = array(
+    '#type' => 'hidden',
+    '#default_value' =>'',
+  );
+
+  $form['paypal_button'] = array(
+    '#markup' => '<div id="paypal-button-container"></div>'
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Pay'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit pay_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'callback' => 'lesson_pay_form_ajax_callback',
+    ),
+  );
+  return $form;
+}
+
+function lesson_pay_form_submit($form, &$form_state) {
+  $lesson_pay_id = $form_state['values']['lesson_pay'];
+  //$order_price = $form_state['values']['order_price'];
+
+  $order = commerce_order_load($lesson_pay_id);
+  $order->status = 'paid';
+  commerce_order_save($order);
+}
+
+function lesson_pay_form_ajax_callback(&$form, &$form_state) {
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have paid this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+
+/*
+function education_common_front_tutors_form($form, &$form_state) {
+  global $user;
+
+  //taxonomy_get_tree
+
+  $form['field_grade_subject'] = array(
+    '#type' => 'select',
+    '#options' =>'',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Pay'),
+    '#attributes' => array(
+      'class' => array(
+        'btn btn_red form__submit pay_lesson_button',
+      ),
+    ),
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+
+  );
+  return $form;
+}
+
+function education_common_front_tutors_form_submit($form, &$form_state) {
+
+}
+*/
+

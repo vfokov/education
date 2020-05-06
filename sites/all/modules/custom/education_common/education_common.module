@@ -9,6 +9,21 @@ include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 include_once 'inc/education_common.variable.inc';
 
+/**
+ * Implements hook_views_pre_render
+ */
+function education_common_views_pre_render(&$view) {
+  $used_ids = array();
+  if ($view->name == 'commerce_user_orders'){
+    foreach ($view->result as $row){
+      if (!in_array($row->order_id, $used_ids)) {
+        $new_view_result[] = $row;
+        $used_ids[] = $row->order_id;
+      }
+    }
+    $view->result = $new_view_result;
+  }
+}
 
 /**
  * Implements hook_user_init
@@ -160,6 +175,14 @@ function education_common_theme() {
       'path' => drupal_get_path('module', 'education_common') . '/templates',
       'template' => 'user-profile',
     ),
+
+
+    'lesson_pay_formm' => array(
+      'render element'=>'form',
+      'path' => drupal_get_path('module', 'education_common') . '/templates',
+      'template' => 'lesson-pay-form',
+    ),
+
   );
 
 
@@ -245,54 +268,61 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
   if ($form['#id'] == 'views-exposed-form-teachers-index-page') {
     ///////////////////////////////////////////////////
     $form['submit']['#weight'] = 30;
+    $form['submit']['#buttontype'] = 'button';
+    $form['#after_build'][] = 'education_common_force_triggering_element';
 
-    //unset($form['teacher_lessons_dates']);
-    /*
-    $field_grade_subject_options = $form['field_grade_subject']['#options'];
-    $field_grade_subject_options_new = array();
-    foreach ($field_grade_subject_options as $option) {
-      if (!strstr($option, 'Grade')) {
-        $field_grade_subject_options_new[] = $option;
-      }
-    }
-    $form['field_grade_subject']['#options'] = $field_grade_subject_options_new;
-    */
+    $form['field_grade_subject']['#options']['All'] = 'Select subject';
+
+    $form['field_grade_subject']['#title'] = '';
+    $form['field_grade_subject']['#theme_wrapper'] = '';
 
     $form['teacher_lessons_dates']['#access'] = FALSE;
 
-    $form['teacher_date_dates'] = array (
-      '#type' => 'date_popup',
-      '#size' => 30,
-      '#default_value' => date('Y-m-d', time()),
-      '#date_format' => 'Y-m-d',
-      '#date_year_range' => '-3:+3',
-      '#description' => '',
-    );
 
-    $form['time_slider'] = array(
-      '#title' => 'Select time range',
-      '#input_title' => NULL,
-      '#input2_title' => NULL,
-      '#type' => 'slider',
-      '#default_value' => array('value' => 0.00, 'value2' => 24.00),
-      //'#orientation' => 'vertical',
-     // '#slider_style' => 'orange',
-      '#range' => TRUE,
-      '#min' => 0.00,
-      '#max' => 24.00,
-      '#step' => 1.00,
-     // '#display_bubble' => TRUE,
-      //'#display_bubble_format' => '$%{value}%MIN||$%{value}%MAX',
-      //'#required' => 1,
-      //'#disabled' => TRUE,
-      '#display_inputs' => FALSE,
-      '#display_values' => TRUE,
-      '#display_values_format' => '%{value}%.00',
-      '#weight' => 29,
-    );
+      $form['teacher_date_dates'] = array(
+        '#type' => 'date_popup',
+        '#size' => 30,
+        '#default_value' => !drupal_is_front_page() ? date('Y-m-d', time()) : '',
+        '#date_format' => 'Y-m-d',
+        '#date_year_range' => '-3:+3',
+        '#description' => '',
+        '#attributes' => array('placeholder' => 'Nearest date')
+      );
+    if (!drupal_is_front_page()) {
+      $form['time_slider'] = array(
+        '#title' => 'Select time range',
+        '#input_title' => NULL,
+        '#input2_title' => NULL,
+        '#type' => 'slider',
+        '#default_value' => array('value' => 0.00, 'value2' => 24.00),
+        //'#orientation' => 'vertical',
+        // '#slider_style' => 'orange',
+        '#range' => TRUE,
+        '#min' => 0.00,
+        '#max' => 24.00,
+        '#step' => 1.00,
+        // '#display_bubble' => TRUE,
+        //'#display_bubble_format' => '$%{value}%MIN||$%{value}%MAX',
+        //'#required' => 1,
+        //'#disabled' => TRUE,
+        '#display_inputs' => FALSE,
+        '#display_values' => TRUE,
+        '#display_values_format' => '%{value}%.00',
+        '#weight' => 29,
+      );
+    }
     ///////////////////////////////////////////////////
   }
 
+}
+
+function education_common_force_triggering_element($form, &$form_state) {
+  if (isset($form_state['input']['submit'])) {
+    $form_state['triggering_element'] = $form['submit'];
+  } elseif (isset($form_state['input']['other_button'])) {
+    $form_state['triggering_element'] = $form['other_button'];
+  }
+  return $form;
 }
 
 /**
@@ -301,8 +331,6 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
 function education_common_search_api_query_alter(SearchApiQueryInterface $query) {
   if ($query->getOption('search id') == 'search_api_views:teachers_index:page') {
     if (isset($_GET['time_slider'])) {
-
-      //echo '<pre>'; print_r($_GET['time_slider']); echo '</pre>';  die();
       $time_slider_arr = $_GET['time_slider'];
       $time_slider_from = $_GET['time_slider']['value'];
       $time_slider_to = $_GET['time_slider']['value2'];
@@ -362,7 +390,6 @@ function education_common_preprocess_page(&$variables) {
     //->propertyCondition('uid', $uid)
     ->execute();
   if (!empty($result['node'])) {
-    //echo '<pre>'; print_r($result['node']); echo '</pre>'; die();
 
     $users  = array();
     foreach($result['node'] as $n_obj) {
@@ -401,6 +428,17 @@ function education_common_preprocess_page(&$variables) {
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
   }
 
+  //echo current_path();die();
+  if (strstr(request_uri(), '/pupil/planned-lessons')) {
+    $block_lesson_pay = education_common_get_rendered_block('education_common', 'form-lesson-pay');
+    //echo 'dff'; die();
+
+    $variables['lesson_pay_form'] = $block_lesson_pay;
+    drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
+  }
+
+  //pupil/planned-lessons
+
   //drupal_add_js(drupal_get_path('module', 'education_common') . '/js/tooltip.js');
   drupal_add_css(drupal_get_path('module', 'education_common') . '/css/tooltip.css');
   drupal_add_js(drupal_get_path('module', 'education_common') . '/js/all-teachers.js');
@@ -408,6 +446,10 @@ function education_common_preprocess_page(&$variables) {
   if (request_uri() == '/pupil/profile') {
     drupal_add_library('system', 'ui.accordion');
     drupal_add_js('jQuery(document).ready(function(){jQuery("#pupils-accordion").accordion({collapsible: true});});', 'inline');
+  }
+
+  if (drupal_is_front_page()) {
+    drupal_add_js(drupal_get_path('module', 'education_common') . '/js/front.js');
   }
 
 }
@@ -437,6 +479,14 @@ function education_common_block_info() {
 
   $blocks['form-pupil-profile'] = array(
     'info' => 'Pupil profile form',
+  );
+
+  $blocks['form-lesson-pay'] = array(
+    'info' => 'Lesson pay form',
+  );
+
+  $blocks['front-tutors-search'] = array(
+    'info' => 'Front tutors search',
   );
   return $blocks;
 }
@@ -479,6 +529,23 @@ function education_common_block_view($delta = '') {
       global $user;
       $block['subject'] = t('Pupil profile');
       $block['content'] = drupal_get_form('user_profile_form', user_load($user->uid));
+      break;
+
+    case 'form-lesson-pay':
+      //module_load_include('inc', 'user', 'user.pages');
+      global $user;
+      $block['subject'] = t('Lesson pay');
+      $block['content'] = drupal_get_form('lesson_pay_form');
+      break;
+
+    case 'front-tutors-search':
+      //module_load_include('inc', 'user', 'user.pages');
+      global $user;
+      $block['subject'] = '';
+
+      $block = module_invoke('views', 'block_view', '-exp-teachers_index-page');
+
+      $block['content'] = $block['content'];
       break;
   }
   return $block;
