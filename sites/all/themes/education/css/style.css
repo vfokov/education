@@ -509,7 +509,7 @@ h1#site-name {
     border-bottom-left-radius: 8px;
     margin-bottom: 4px;
     padding: 0.9em 0 0.9em 10px;
-    font-size: 20px;
+    font-size: 19px;
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
@@ -2666,7 +2666,8 @@ div.vertical-tabs {
 }
 
 .view-commerce-user-orders tr td, .view-commerce-user-orders tr th,
-.view-student-homewoks tr td, .view-student-homewoks tr th {
+.view-student-homewoks tr td, .view-student-homewoks tr th,
+.view-teacher-lessons tr td, .view-teacher-lessons tr th{
     padding: 12px 13px;
 }
 
@@ -3253,6 +3254,10 @@ span.icon.i-tutor-card {
 
     #main-menu {
         display: none;
+    }
+
+    #main-menu.shown {
+      display: block;
     }
 
     #page #header {
