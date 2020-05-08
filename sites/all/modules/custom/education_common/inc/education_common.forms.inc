@@ -908,6 +908,7 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
  */
 function education_common_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   // if form for pupil registartion
+  $form['field_balance']['#access'] = FALSE;
   if (request_uri() == '/pupil/profile') {
     $form['field_is_a_teacher']['#access'] = FALSE;
     $form['field_ready_to_get_news']['#access'] = FALSE;

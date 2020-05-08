@@ -254,6 +254,7 @@ function education_process_maintenance_page(&$variables)
  * Override or insert variables into the page template.
  */
 function education_preprocess_page(&$variables) {
+
   if (drupal_is_front_page()) {
     drupal_set_title('');
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/owl.carousel.min.js');
