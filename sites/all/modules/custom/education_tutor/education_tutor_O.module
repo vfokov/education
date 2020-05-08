@@ -193,10 +193,145 @@ function education_tutor_form_user_register_form_alter(&$form, &$form_state, $fo
 function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   // if form for pupil registartion
   if (request_uri() == '/tutor-setup') {
-    $form['account']['mail']['#description'] = '';
+    //echo 'dfsf'; die();
 
+    /*
+    $form['vertical_tabs_personal_data'] = array(
+      '#type' => 'vertical_tabs'
+    );
+    */
+
+    /*
+    $form['vertical_tabs_tutor_place'] = array(
+      '#type' => 'vertical_tabs'
+    );
+
+    $form['vertical_tabs_tutor_subjects'] = array(
+      '#type' => 'vertical_tabs'
+    );
+    */
+
+    /*
+    $form['personal_data'] = array(
+      '#title' => 'Personal data',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['tutor_place'] = array(
+      '#title' => 'Tutor place',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+
+      '#attributes' => array(
+        'class' => array('container-inline'),
+        'style' => array('foo: bar;')
+      ),
+    );
+
+    $form['subjects'] = array(
+      '#title' => 'Subjects',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['education_and_documents'] = array(
+      '#title' => 'Education and documents',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+
+    $form['profile'] = array(
+      '#title' => 'Profile',
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'vertical_tabs_personal_data',
+    );
+    */
+
+    $form['account']['mail']['#description'] = '';
+    /*
+    $form['personal_data']['account']['name'] = $form['account']['name'];
+    $form['personal_data']['account']['mail'] = $form['account']['mail'];
+    */
+
+    //if ($_SERVER[''])
+
+    //$form['personal_data']['account']['current_pass'] = $form['account']['current_pass'];
+    //$form['personal_data']['account']['pass'] = $form['account']['pass'];
+    //$form['personal_data']['account']['name']['#group'] = 'vertical_tabs_personal_data';
+    /*
+    $form['personal_data']['field_phone'] = $form['field_phone'];
+    $form['personal_data']['field_first_name'] = $form['field_first_name'];
+    $form['personal_data']['field_teacher_last_name'] = $form['field_teacher_last_name'];
+    */
     unset($form['field_gender'][LANGUAGE_NONE]['#options']['_none']);
+    //$form['personal_data']['field_gender'] = $form['field_gender'];
+    //unset($form['account']['mail']);
+    /*
+    unset($form['account']['name']);
+    unset($form['account']['mail']);
+    */
     unset($form['account']['current_pass']);
+    //unset($form['account']['pass']);
+
+    /*
+    unset($form['field_phone']);
+    unset($form['field_first_name']);
+    unset($form['field_teacher_last_name']);
+    unset($form['field_gender']);
+    */
+
+    /*
+    $form['tutor_place']['field_skype'] = $form['field_skype'];
+    unset($form['field_skype']);
+    */
+
+    /*
+    //$form['subjects']['field_languages_can_teach'] = $form['field_languages_can_teach'];
+    unset($form['field_languages_can_teach']);
+   //$form['subjects']['field_grade_subject'] = $form['field_grade_subject'];
+    unset($form['field_grade_subject']);
+    //$form['subjects']['field_age_category'] = $form['field_age_category'];
+    unset($form['field_age_category']);
+
+    ///$form['subjects']['field_hourly_rate_'] = $form['field_hourly_rate_'];
+    unset($form['field_hourly_rate_']);
+    */
+
+    /*
+   // $form['education_and_documents']['field_documents'] = $form['field_documents'][LANGUAGE_NONE];
+    $form['education_and_documents']['field_documents'] = $form['field_documents'];
+    unset($form['field_documents']);
+
+    $form['education_and_documents']['field_university'] = $form['field_university'];
+    unset($form['field_university']);
+    $form['education_and_documents']['field_speciality'] = $form['field_speciality'];
+    unset($form['field_speciality']);
+
+    unset($form['field_graduation_year'][LANGUAGE_NONE]['#options']['_none']);
+    $form['education_and_documents']['field_graduation_year'] = $form['field_graduation_year'];
+    unset($form['field_graduation_year']);
+
+
+    $form['education_and_documents']['field_academic_degree'] = $form['field_academic_degree'];
+    unset($form['field_academic_degree']);
+    */
+
+    //$form['profile']['field_teachecr_pic'] = $form['field_teachecr_pic'];
+    //unset($form['field_teachecr_pic']);
+
+    //$form['profile']['field_resume_'] = $form['field_resume_'];
+    //unset($form['field_resume_']);
 
     $form['field_is_a_teacher']['#access'] = FALSE;
     $form['field_ready_to_get_news']['#access'] = FALSE;
@@ -214,8 +349,6 @@ function education_tutor_form_user_profile_form_alter(&$form, &$form_state, $for
     unset($form['#validate'][1]);
     array_unshift($form['#validate'], 'education_tutor_validate_current_pass');
     array_unshift($form['#validate'], 'education_tutor_form_validate');
-    //drupal_add_library('system', 'ui');
-    //drupal_add_library('system', 'ui.tabs');
   }
 }
 

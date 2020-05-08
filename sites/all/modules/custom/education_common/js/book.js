@@ -413,7 +413,7 @@ function getOffsetRect(elem) {
         //$('input[name="enable_lesson_nid"]').val(lesson_nid);
       });
 
-      // lesson pay block with pappal
+      // lesson pay block with paypal
       $('.btn.product__lesson_pay').bind('click', function(){
         $('#popup__overlay').addClass('popup_show');
 
@@ -446,7 +446,6 @@ function getOffsetRect(elem) {
 
               window.setTimeout(
                 function () {
-                  //$('#edit-submit').click();
                   $('.form__submit.pay_lesson_button').click();
                 }, 200);
 
@@ -454,8 +453,45 @@ function getOffsetRect(elem) {
           }
         }).render('#paypal-button-container');
         // PP
+      });
 
+      // balance recharge block with paypal
+      $('.btn.product__balance_recharge').bind('click', function(){
+        $('#popup__overlay').addClass('popup_show');
 
+        //$('input[name="order_price"]').val(order_price);
+        paypal.Buttons({
+          createOrder: function(data, actions) {
+            // This function sets up the details of the transaction, including the amount and line item details.
+            var balance_summ = $('input[name="summ"]').val(); //summ
+            //var amount_value = order_price.substr(1);
+            var amount_value = balance_summ; // TODO now with no $ sign
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: amount_value
+                }
+              }]
+            });
+          },
+          onApprove: function(data, actions) {
+            // This function captures the funds from the transaction.
+            return actions.order.capture().then(function(details) {
+              // This function shows a transaction success message to your buyer.
+              //$('input[name="is_paid"]').val(1);
+              $('#edit-submit').click();
+              $('#edit-submit').trigger('click');
+              $('#edit-submit').mousedown();
+
+              window.setTimeout(
+                function () {
+                  $('.form__submit.balance_recharge_button').click();
+                }, 200);
+
+            });
+          }
+        }).render('#paypal-button-container');
+        // PP
       });
 
 
@@ -480,7 +516,6 @@ function getOffsetRect(elem) {
         $('#popup__overlay').removeClass('mlpopup__show');
         $('#popup__overlay').hide();
       });
-
 
       $('#views-exposed-form-lesson-calendar-page-1 .form-item select').bind('change', function(){
         console.log('selected');

@@ -3079,6 +3079,110 @@ span.icon.i-tutor-card {
     margin: 1.5em 0;
 }
 
+/*Tutor profile redo*/
+
+.page-tutor-setup .ui-tabs-vertical {
+  border-top: 1px solid #ccc;
+  position: relative;
+  min-height: 500px;
+  border-right: 1px solid #ccc;
+  margin: 1em 0 1em 20em;
+  border-left: 1px solid #ccc;
+}
+.page-tutor-setup .ui-tabs-vertical .ui-tabs-nav {
+  margin: -1px 0 -1px -20em;
+  width: 20em;
+}
+.page-tutor-setup .ui-tabs-vertical .ui-tabs-nav li {
+  clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0;
+}
+.page-tutor-setup .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+.page-tutor-setup .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
+.page-tutor-setup .ui-tabs-vertical .ui-tabs-panel { padding: 2em; float: left;}
+
+.page-tutor-setup #content input.form-submit {
+  background: #f17c1e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.929em;
+  font-weight: normal;
+  text-align: center;
+  padding: 11px 53px 12px;
+  border-radius: 1px;
+  margin-top: 0;
+}
+
+.balance_recharge_button {
+  display: none;
+}
+
+.page-tutor-setup ul.ui-tabs-nav {
+  list-style: none;
+  list-style-image: none;
+  /*border-top: 1px solid #ccc;*/
+  padding: 0;
+  position: relative;
+  float: left;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li a {
+  color: #000;
+  padding: 1.9em 1.2em;
+  position: relative;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li strong {
+  padding-left: 50px;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li a::before {
+  content: '';
+  min-width: 40px;
+  height: 40px;
+  background: url(reg_steps_2.svg);
+  background-color: rgba(0, 0, 0, 0);
+  background-color: #95c11f;
+  border-color: #95c11f;
+  width: 40px;
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+  top: 20%;
+  bottom: 0;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li.ui-state-active a::before {
+  background-color: #f7931e;
+}
+.page-tutor-setup ul.ui-tabs-nav li.ui-state-active {
+  border: 1px solid #ccc;
+  border-right-color: rgb(204, 204, 204);
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right: none;
+  background-color: #fff;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li:nth-child(2) a::before {
+  background-position: -40px,center;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li:nth-child(3) a::before {
+  background-position: -80px center;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li:nth-child(4) a::before {
+  background-position: -120px center;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li:nth-child(5) a::before {
+  background-position: -160px,center;
+}
+
+.page-tutor-setup ul.ui-tabs-nav li.selected a::before {
+  background-color: #f7931e;
+}
 
 @media all and (max-width: 768px) {
 

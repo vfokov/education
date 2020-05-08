@@ -10,6 +10,34 @@ include_once 'inc/education_common.forms.inc';
 include_once 'inc/education_common.variable.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function education_common_menu() {
+  $items = array();
+
+  $items['recharge-balance'] = array(
+    'title' => 'Recharge balance',
+    'page callback' => 'education_recharge_balance',
+    'access callback' => TRUE,
+    //'page arguments' => array(1),
+  );
+
+  return $items;
+}
+
+function education_recharge_balance() {
+  global $user;
+  $account = user_load($user->uid);
+  $summ = isset($account->field_balance[LANGUAGE_NONE]) ? $account->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+  $balance_summ = $summ;
+  return array(
+    '#markup' => '<div class="balance"><div class="user-balance">Your balance is: ' . $balance_summ . '$</div>
+<div class="recharge"><a href="#" class="btn product__balance_recharge popup__link" data-popup="balance_recharge">Recharge balance</a>
+</div>',
+  );
+}
+
+/**
  * Implements hook_views_pre_render
  */
 function education_common_views_pre_render(&$view) {
@@ -431,9 +459,13 @@ function education_common_preprocess_page(&$variables) {
   //echo current_path();die();
   if (strstr(request_uri(), '/pupil/planned-lessons')) {
     $block_lesson_pay = education_common_get_rendered_block('education_common', 'form-lesson-pay');
-    //echo 'dff'; die();
-
     $variables['lesson_pay_form'] = $block_lesson_pay;
+    drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
+  }
+
+  if (strstr(request_uri(), '/recharge-balance')) {
+    $block_balance_recharge = education_common_get_rendered_block('education_common', 'form-balance-recharge');
+    $variables['form_balance_recharge'] = $block_balance_recharge;
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
   }
 
@@ -485,6 +517,10 @@ function education_common_block_info() {
     'info' => 'Lesson pay form',
   );
 
+  $blocks['form-balance-recharge'] = array( // balance_pay_form
+    'info' => 'Recharge balance form',
+  );
+
   $blocks['front-tutors-search'] = array(
     'info' => 'Front tutors search',
   );
@@ -532,10 +568,15 @@ function education_common_block_view($delta = '') {
       break;
 
     case 'form-lesson-pay':
-      //module_load_include('inc', 'user', 'user.pages');
       global $user;
       $block['subject'] = t('Lesson pay');
       $block['content'] = drupal_get_form('lesson_pay_form');
+      break;
+
+    case 'form-balance-recharge':
+      global $user;
+      $block['subject'] = t('Balance recharge');
+      $block['content'] = drupal_get_form('balance_pay_form');
       break;
 
     case 'front-tutors-search':
@@ -544,7 +585,6 @@ function education_common_block_view($delta = '') {
       $block['subject'] = '';
 
       $block = module_invoke('views', 'block_view', '-exp-teachers_index-page');
-
       $block['content'] = $block['content'];
       break;
   }
