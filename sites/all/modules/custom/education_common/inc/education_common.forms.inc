@@ -1045,16 +1045,20 @@ function lesson_pay_form_ajax_callback(&$form, &$form_state) {
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
-
-/*
-function education_common_front_tutors_form($form, &$form_state) {
+function balance_pay_form($form, &$form_state) {
   global $user;
 
-  //taxonomy_get_tree
+  $form['summ'] = array(
+    '#title' => 'Enter summ to recharge you balance',
+    '#type' => 'textfield',
+    '#default_value' =>'',
+    '#required' => TRUE,
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
 
-  $form['field_grade_subject'] = array(
-    '#type' => 'select',
-    '#options' =>'',
+  $form['paypal_button'] = array(
+    '#markup' => '<div id="paypal-button-container"></div>'
   );
 
   $form['submit'] = array(
@@ -1062,18 +1066,57 @@ function education_common_front_tutors_form($form, &$form_state) {
     '#value' => t('Pay'),
     '#attributes' => array(
       'class' => array(
-        'btn btn_red form__submit pay_lesson_button',
+        'btn btn_red form__submit balance_recharge_button',
       ),
     ),
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
-
+    '#ajax' => array(
+      'callback' => 'balance_pay_form_ajax_callback',
+    ),
   );
   return $form;
 }
 
-function education_common_front_tutors_form_submit($form, &$form_state) {
+function balance_pay_form_submit($form, &$form_state) {
+  global $user;
+  $summ = $form_state['values']['summ'];
 
+  $current_user = user_load($user->uid);
+  $existing_summ = isset($current_user->field_balance[LANGUAGE_NONE]) ? $current_user->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+
+  $edit = array(
+    'field_balance' => array(
+      LANGUAGE_NONE => array(
+        0 => array(
+          'value' => $summ + $existing_summ,
+        ),
+      ),
+    ),
+  );
+  user_save($current_user, $edit);
 }
-*/
 
+function balance_pay_form_ajax_callback(&$form, &$form_state) {
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have successfully recharged your balance.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
+}

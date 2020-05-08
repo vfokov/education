@@ -278,6 +278,10 @@
     <?php if (isset($lesson_pay_form)): ?>
       <?php print $lesson_pay_form; ?>
     <?php endif; ?>
+
+    <?php if (isset($form_balance_recharge)): ?>
+      <?php print $form_balance_recharge; ?>
+    <?php endif; ?>
     <!--------------------------------------->
 
   </div></div> <!-- /#page, /#page-wrapper -->

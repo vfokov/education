@@ -3113,6 +3113,10 @@ span.icon.i-tutor-card {
   margin-top: 0;
 }
 
+.balance_recharge_button {
+  display: none;
+}
+
 .page-tutor-setup ul.ui-tabs-nav {
   list-style: none;
   list-style-image: none;
