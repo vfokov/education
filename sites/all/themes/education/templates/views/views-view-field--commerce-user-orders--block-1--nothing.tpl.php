@@ -12,7 +12,7 @@ $total = $row->field_commerce_order_total[0]['rendered']['#markup'];
 <?php if ($row->commerce_order_status == 'pending'): ?>
 <a href="#"
    class="btn product__lesson_pay popup__link" data-order-price="<?php print $total; ?>"
-   data-popup="lesson_pay" data-order-id="<?php print $row->order_id; ?>" >pay lesson</a>
+   data-popup="lesson_pay" data-order-id="<?php print $row->order_id; ?>" >Pay for the Lesson</a>
 
 
 <?php else: ?>

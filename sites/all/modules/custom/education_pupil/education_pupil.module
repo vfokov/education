@@ -44,3 +44,38 @@ function education_pupil_preprocess_page(&$variables) {
   $variables['education_pupil_pupil_menu'] = theme('education_pupil_pupil_menu', array('menu_items' => $menu_items));
 }
 
+
+/**
+ * Implements hook_block_info
+ */
+function education_pupil_block_info() {
+  $blocks['student-balance'] = array(
+    'info' => 'Student Balance',
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view
+ */
+function education_pupil_block_view($delta = '') {
+  $block = array(
+    'subject' => '',
+    'content' => '',
+  );
+
+  switch ($delta) {
+    case 'student-balance':
+      $block['subject'] = t('');
+
+      global $user;
+      $account = user_load($user->uid);
+      $summ = isset($account->field_balance[LANGUAGE_NONE]) ? $account->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+      //$balance_summ = $summ;
+
+      $block['content']['#markup'] = '<div class="balance"><div class="user-balance">Your balance is: ' . $summ . 'С$</div></div>';
+      break;
+  }
+  return $block;
+}

@@ -1,7 +1,8 @@
 <?php
 
-if (request_uri() != '/tutor-setup') {
+if (request_uri() != '/tutor-setup' /*|| user_has_role(STUDENT_ROLE)*/) {
   hide($form['account']['mail']);
+  hide($form['account']['name']);
   hide($form['field_teacher_last_name']);
   hide($form['field_first_name']);
   hide($form['field_phone']);
@@ -41,13 +42,14 @@ if (request_uri() != '/tutor-setup') {
   hide($form['field_teachecr_pic']);
   hide($form['field_resume_']);
 
-hide($form['account']['mail']);
-hide($form['account']['pass']);
-hide($form['field_phone']);
-hide($form['field_first_name']);
-hide($form['field_teacher_last_name']);
-hide($form['field_gender']);
-hide($form['actions']);
+  hide($form['account']['mail']);
+  hide($form['account']['name']);
+  hide($form['account']['pass']);
+  hide($form['field_phone']);
+  hide($form['field_first_name']);
+  hide($form['field_teacher_last_name']);
+  hide($form['field_gender']);
+  hide($form['actions']);
 }
 
 hide($form['mimemail']);
@@ -64,7 +66,9 @@ hide($form['mimemail']);
     <div>
       <p>
         ID<br />
-        <?php print render($form['account']['mail']); ?>
+        <?php print render($form['account']['mail']); ?><br />
+        <?php print render($form['account']['name']); ?>
+        <?php //echo '<pre>'; print_r($form['account']); echo '</pre>'; die(); ?>
       </p>
     </div>
     <h3>Personal data</h3>
@@ -110,7 +114,7 @@ hide($form['mimemail']);
 
 <!-- TUTOR -->
 <?php else: ?>
-  <!-- ЭТО подгрузить в form_alter-->
+  <!-- Load to в form_alter-->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
@@ -126,12 +130,11 @@ hide($form['mimemail']);
       <li class="subjects"><a href="#subjects"><strong>Subjects</strong></a></li>
       <li class="education-n-documents"><a href="#education-n-documents"><strong>Education and documents</strong></a></li>
       <li class="profile"><a href="#profile"><strong>Profile</strong></a></li>
-
-
     </ul>
 
     <div class="vertical-tabs-panes vertical-tabs-processed">
       <div id="personal-data">
+        <?php print render($form['account']['name']); ?>
         <?php print render($form['account']['mail']); ?>
         <?php print render($form['account']['pass']); ?>
         <?php print render($form['field_phone']); ?>
@@ -143,11 +146,10 @@ hide($form['mimemail']);
         <?php print render($form['field_skype']); ?>
       </div>
       <div id="subjects">
-
         <?php print render($form['field_languages_can_teach']); ?>
         <?php print render($form['field_grade_subject']); ?>
         <?php print render($form['field_age_category']); ?>
-        <?php print render($form['field_hourly_rate_']); ?>
+        <?php //print render($form['field_hourly_rate_']); ?>
       </div>
       <div id="education-n-documents">
         <?php print render($form['field_documents']); ?>
@@ -161,14 +163,10 @@ hide($form['mimemail']);
         <?php print render($form['field_resume_']); ?>
       </div>
     </div>
-
-
   </div>
 
   <div class="profile-actions">
     <?php print render($form['actions']); ?>
   </div>
-
-
 
 <?php endif; ?>
