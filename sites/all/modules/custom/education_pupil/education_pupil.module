@@ -74,7 +74,7 @@ function education_pupil_block_view($delta = '') {
       $summ = isset($account->field_balance[LANGUAGE_NONE]) ? $account->field_balance[LANGUAGE_NONE][0]['value'] : 0;
       //$balance_summ = $summ;
 
-      $block['content']['#markup'] = '<div class="balance"><div class="user-balance">Your balance is: ' . $summ . 'С$</div></div>';
+      $block['content'] = '<div class="balance"><div class="user-balance">Your balance is: ' . $summ . 'С$</div></div>';
       break;
   }
   return $block;
