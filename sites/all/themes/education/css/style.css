@@ -3184,7 +3184,27 @@ span.icon.i-tutor-card {
   background-color: #f7931e;
 }
 
+#page #featured {
+  font-size: 1.2em;
+  line-height: 1.4;
+  padding: 10px;
+  text-align: right;
+  background: none;
+}
+
+#header-container .full tr th .week-date {
+  font-size: 16px;
+}
+
+.form-item-enable-lesson-date-to-date > label {
+  display: none;
+}
+
 @media all and (max-width: 768px) {
+
+    #page #featured {
+      margin-top: 40px;
+    }
 
     .b-main__jumbotron-form {
       width: 100%;

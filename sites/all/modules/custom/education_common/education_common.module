@@ -75,6 +75,13 @@ function education_common_init() {
       drupal_goto('tutor-setup');
     }
   }
+  /*
+  if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
+    if (user_has_role(STUDENT_ROLE)) {
+      drupal_goto('pupil/profile');
+    }
+  }
+  */
 
 }
 
@@ -233,6 +240,7 @@ function education_common_rules_event_info() {
         'skype' => array('type' => 'text', 'label' => t('Skype login')),
         'order_id' => array('type' => 'text', 'label' => t('Order Id')),
         'order_mail_data' => array('type' => 'text', 'label' => t('Order mail data')),
+        'teacher_email' => array('type' => 'text', 'label' => t('Teacher email form quick order form')),
         //'order_mail_data_admin' => array('type' => 'text', 'label' => t('Order mail data admin')),
         //'order_type_title' => array('type' => 'text', 'label' => t('Order typ title')),
       ),

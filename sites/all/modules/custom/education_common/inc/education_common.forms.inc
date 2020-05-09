@@ -46,6 +46,27 @@ function education_common_enable_lesson_date($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
+  $form['enabled_enable_date_range'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Or select another date for range'),
+  );
+
+  // Date to hidden while enabled_enable_date_range is not checked
+  $form['enabled_date']['enable_lesson_date_to'] = array(
+    '#title' => 'Date to',
+    '#type' => 'date_popup',
+    '#default_value' =>'',
+    '#date_format' => 'Y-m-d',
+    '#date_year_range' => '-3:+3',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_date_range"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
   $form['enabled_date']['enable_time'] = array(
     //'#type' => 'datetime',
     '#type' => 'date_popup',
@@ -182,48 +203,65 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
 
   $lesson_node = node_load($enable_lesson_nid);
 
+  // collect date ranges when Date to is set
+  $dates_range = array($enable_lesson_date);
+  if (!empty($form_state['values']['enabled_enable_date_range'])) {
+    $date_from = $form_state['values']['enable_lesson_date'];
+    $date_to = $form_state['values']['enable_lesson_date_to'];
+
+    $date_calc = $date_from;
+    $date_calc_time = strtotime($date_calc);
+    $date_to_time = strtotime($date_to);
+    while ($date_calc_time < $date_to_time) {
+      $date_calc = date('Y-m-d', strtotime('+1 day', strtotime($date_calc)) );
+      $dates_range[] = $date_calc;
+      $date_calc_time = strtotime($date_calc);
+    }
+  }
+
   // if time range selected
   if (!empty($form_state['values']['enabled_enable_time_range'])) {
-    $z = 1;
     $new_date_items = array();
     $time_ranges = $form_state['values']['enabled_time_range'];
     $range_to = $time_ranges['value2'];
     $range_from = $time_ranges['value'];
 
-    for ($i = $range_from; $i <= $range_to; $i++) {
+    foreach ($dates_range as $enable_lesson_date) { // dates range
+      for ($i = $range_from; $i <= $range_to; $i++) {
 
-      $hour_value = $i < 10 ? '0' . $i : $i;
-      $enable_lesson_time_item = $hour_value . ':' . '00';
-      $enable_lesson_time_item_half = $hour_value . ':' . '30';
-      $enable_lesson_date_time = $enable_lesson_date . ' ' . $enable_lesson_time_item;
-      if ($i != $range_to) {
-        $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
-      }
+        $hour_value = $i < 10 ? '0' . $i : $i;
+        $enable_lesson_time_item = $hour_value . ':' . '00';
+        $enable_lesson_time_item_half = $hour_value . ':' . '30';
+        $enable_lesson_date_time = $enable_lesson_date . ' ' . $enable_lesson_time_item;
+        if ($i != $range_to) {
+          $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
+        }
 
-      //$new_date_items[] = array (
-      $new_date_items_hour = array (
-        'value' => $enable_lesson_date_time,
-        // TODO change
-        'timezone' => 'Asia/Yekaterinburg',
-        'timezone_db' => 'Asia/Yekaterinburg',
-        'date_type' => 'datetime',
-      );
-
-      if (isset($enable_lesson_date_time_half)) {
-        $new_date_items_hour_half = array(
-          'value' => $enable_lesson_date_time_half,
+        //$new_date_items[] = array (
+        $new_date_items_hour = array(
+          'value' => $enable_lesson_date_time,
           // TODO change
           'timezone' => 'Asia/Yekaterinburg',
           'timezone_db' => 'Asia/Yekaterinburg',
           'date_type' => 'datetime',
         );
-      }
 
-      if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
-        //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
-        array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour);
         if (isset($enable_lesson_date_time_half)) {
-          array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour_half);
+          $new_date_items_hour_half = array(
+            'value' => $enable_lesson_date_time_half,
+            // TODO change
+            'timezone' => 'Asia/Yekaterinburg',
+            'timezone_db' => 'Asia/Yekaterinburg',
+            'date_type' => 'datetime',
+          );
+        }
+
+        if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+          //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+          array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour);
+          if (isset($enable_lesson_date_time_half)) {
+            array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_items_hour_half);
+          }
         }
       }
     }
@@ -235,17 +273,19 @@ function education_common_enable_lesson_date_submit(&$form, &$form_state) {
   }
 
   else { // ADD one position
-    $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
-    $new_date_item = array(
-      'value' => $enable_lesson_date,
-      // TODO change
-      'timezone' => 'Asia/Yekaterinburg',
-      'timezone_db' => 'Asia/Yekaterinburg',
-      'date_type' => 'datetime',
-    );
+    foreach ($dates_range as $enable_lesson_date) { // dates range
+      $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
+      $new_date_item = array(
+        'value' => $enable_lesson_date,
+        // TODO change
+        'timezone' => 'Asia/Yekaterinburg',
+        'timezone_db' => 'Asia/Yekaterinburg',
+        'date_type' => 'datetime',
+      );
 
-    if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
-      array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_item);
+      if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+        array_unshift($lesson_node->field_lesson_date[LANGUAGE_NONE], $new_date_item);
+      }
     }
   }
 
@@ -746,8 +786,12 @@ function education_common_quick_order_submit(&$form, &$form_state) {
 
       $order_mail_data = education_common_get_order_mail_data($order);
 
+      //13 BY
+      $teacher_user = user_load($teacher_uid);
+      $teacher_mail = $teacher_user->mail;
+
       rules_invoke_event('education_common_send_message_to_user', $form_state['values']['email'], $form_state['values']['name'],
-        $form_state['values']['user_phone'], $form_state['values']['skype'], $order_id, $order_mail_data);
+        $form_state['values']['user_phone'], $form_state['values']['skype'], $order_id, $order_mail_data, $teacher_mail);
 
     }
   }
@@ -909,7 +953,7 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
 function education_common_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   // if form for pupil registartion
   $form['field_balance']['#access'] = FALSE;
-  if (request_uri() == '/pupil/profile') {
+  if (request_uri() == '/pupil/profile' || user_has_role(STUDENT_ROLE)) {
     $form['field_is_a_teacher']['#access'] = FALSE;
     $form['field_ready_to_get_news']['#access'] = FALSE;
     $form['field_terms_of_service']['#access'] = FALSE;
@@ -923,6 +967,17 @@ function education_common_form_user_profile_form_alter(&$form, &$form_state, $fo
     $form['field_grade_subject']['#access'] = FALSE;
     $form['field_documents']['#access'] = FALSE;
     $form['mimemail']['#access'] = FALSE;
+
+    //if (isset($_SERVER["HTTP_REFERER"]) && strstr( $_SERVER["HTTP_REFERER"], 'user/reset') ) {
+    if (isset($_GET["pass-reset-token"]) ) {
+      $form['field_first_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_teacher_last_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_phone'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_city'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_skype'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      //$form['account']['pass'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['account']['pass']['#required'] = TRUE;
+    }
   }
 }
 
@@ -1040,6 +1095,7 @@ function lesson_pay_form_ajax_callback(&$form, &$form_state) {
 
   $message .= "</p>";
   $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_html('#lesson_pay .popup__title', 'Thank you');
   $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
 
   return array('#type' => 'ajax', '#commands' => $commands);

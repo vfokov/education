@@ -157,6 +157,8 @@ if (!empty($result['node'])) {
           <?php foreach ($day_names as $cell): ?>
             <th class="<?php print $cell['class']; ?> " data-week-date ="<?php print $week_array[$cell['data']]; ?>" id="<?php print $cell['header_id']; ?>">
               <?php print $cell['data']; /*. ' ' . $week_array[$cell['data']];*/ ?>
+              <br />
+              <span class="week-date"><?php print $week_array[$cell['data']]; ?></span>
             </th>
           <?php endforeach; ?>
           <th class="calendar-day-holder margin-right"></th>
