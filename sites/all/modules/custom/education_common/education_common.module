@@ -9,6 +9,38 @@ include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 include_once 'inc/education_common.variable.inc';
 
+
+/**
+ * Implements hook_node_presave().
+ */
+function education_common_node_presave($node){
+
+  if ($node->type == 'lesson' && $node->is_new ) {
+    // todo create com prod b add rel
+    $product = commerce_product_new('product');
+    $product->sku = "LESSON_" . time();
+    $product->title = "CP_" . $node->title;
+    $product->language = LANGUAGE_NONE;
+    $product->uid = $node->uid;
+    $product->commerce_price[LANGUAGE_NONE][0] = array(
+      'amount' => $node->field_price[LANGUAGE_NONE][0]['value'] * 100, // $10
+      'currency_code' => "USD",
+    );
+    commerce_product_save($product);
+    $node->field_product_reference[LANGUAGE_NONE][0]['product_id'] = $product->product_id;
+
+  }
+}
+/**
+ * Implements form_FORM_ID_alter().
+ */
+function education_common_form_lesson_node_form_alter(&$form, &$form_state, $form_id) {
+  // Alter the 'article' form here.
+  if (user_has_role(TEACHER_ROLE)) {
+    $form['field_product_reference']['#access'] = FALSE;
+  }
+}
+
 /**
  * Implements hook_menu().
  */
@@ -418,7 +450,6 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
-
   /*
   $query = new EntityFieldQuery;
   $type = 'lesson';
