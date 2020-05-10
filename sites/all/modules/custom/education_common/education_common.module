@@ -72,16 +72,20 @@ function education_common_init() {
   // for teacher user/56/edit
   if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
     if (user_has_role(TEACHER_ROLE)) {
-      drupal_goto('tutor-setup');
+      if (!$_GET["pass-reset-token"]) {
+        drupal_goto('tutor-setup');
+      }
     }
   }
-  /*
+
   if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
     if (user_has_role(STUDENT_ROLE)) {
-      drupal_goto('pupil/profile');
+      if (!$_GET["pass-reset-token"]) {
+        drupal_goto('pupil/profile');
+      }
     }
   }
-  */
+
 
 }
 
