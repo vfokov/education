@@ -1,14 +1,9 @@
 <?php
-hide($form['mimemail']);
+
 hide($form['field_not_available_dates']);
 
-?>
 
-<?php if ( !strstr(request_uri(), 'user') && !strstr(request_uri(), 'edit') ) : ?>
-
-<?php
-
-if (request_uri() != '/tutor-setup' /*|| user_has_role(STUDENT_ROLE)*/) {
+if (request_uri() != '/tutor-setup' && user_has_role(STUDENT_ROLE)) {
   hide($form['account']['mail']);
   hide($form['account']['name']);
   hide($form['field_teacher_last_name']);
@@ -60,15 +55,26 @@ if (request_uri() != '/tutor-setup' /*|| user_has_role(STUDENT_ROLE)*/) {
   hide($form['actions']);
 }
 
+hide($form['mimemail']);
 
+?>
 
+<?php
+if (user_has_role(TEACHER_ROLE)) {
+  hide($form['field_select_pupil_role']);
+  hide($form['field_student_age_category']);
+
+  hide($form['field_is_a_teacher']['#access']);
+  hide($form['field_ready_to_get_news']['#access']);
+  hide($form['field_terms_of_service']['#access']);
+}
 ?>
 
 <?php
   print drupal_render_children($form);
 ?>
 
-<?php if (request_uri() != '/tutor-setup') : ?>
+<?php if (request_uri() != '/tutor-setup' && !user_has_role(TEACHER_ROLE) ) : ?>
   <div id="pupils-accordion">
     <h3>Identification data</h3>
     <div>
@@ -94,17 +100,7 @@ if (request_uri() != '/tutor-setup' /*|| user_has_role(STUDENT_ROLE)*/) {
     </div>
     <h3>Alerts and subscriptions</h3>
     <div>
-      <p>
-        Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
-        Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero
-        ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis
-        lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.
-      </p>
-      <ul>
-        <li>List item one</li>
-        <li>List item two</li>
-        <li>List item three</li>
-      </ul>
+
     </div>
     <h3>Change password</h3>
     <div>
@@ -122,6 +118,8 @@ if (request_uri() != '/tutor-setup' /*|| user_has_role(STUDENT_ROLE)*/) {
 
 <!-- TUTOR -->
 <?php else: ?>
+
+<?php if (request_uri() == '/tutor-setup'){ ?>
   <!-- Load to в form_alter-->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -176,8 +174,6 @@ if (request_uri() != '/tutor-setup' /*|| user_has_role(STUDENT_ROLE)*/) {
   <div class="profile-actions">
     <?php print render($form['actions']); ?>
   </div>
-<?php endif; ?>
 
-<?php else: ?>
-  <?php print drupal_render_children($form); ?>
+<?php } ?>
 <?php endif; ?>

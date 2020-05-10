@@ -966,6 +966,14 @@ function education_common_form_user_profile_form_alter(&$form, &$form_state, $fo
     $form['field_resume_']['#access'] = FALSE;
     $form['field_grade_subject']['#access'] = FALSE;
     $form['field_documents']['#access'] = FALSE;
+    $form['field_teaching_format']['#access'] = FALSE;
+
+    $form['field_gender']['#access'] = FALSE;
+    $form['field_university']['#access'] = FALSE;
+    $form['field_speciality']['#access'] = FALSE;
+    $form['field_graduation_year']['#access'] = FALSE;
+    $form['field_academic_degree']['#access'] = FALSE;
+
     $form['mimemail']['#access'] = FALSE;
 
     //if (isset($_SERVER["HTTP_REFERER"]) && strstr( $_SERVER["HTTP_REFERER"], 'user/reset') ) {
@@ -977,6 +985,38 @@ function education_common_form_user_profile_form_alter(&$form, &$form_state, $fo
       $form['field_skype'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
       //$form['account']['pass'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
       $form['account']['pass']['#required'] = TRUE;
+      $form['field_student_promocode']['#access'] = FALSE;
+      //field_student_promocode
+    }
+  }
+
+  if (user_has_role(TEACHER_ROLE)) {
+
+    $form['field_is_a_teacher']['#access'] = FALSE;
+    $form['field_ready_to_get_news']['#access'] = FALSE;
+    $form['field_terms_of_service']['#access'] = FALSE;
+    $form['field_select_pupil_role']['#access'] = FALSE;
+    $form['field_student_promocode']['#access'] = FALSE;
+    $form['field_student_age_category']['#access'] = FALSE;
+    $form['field_hourly_rate_']['#access'] = FALSE;
+    $form['field_teaching_format']['#access'] = FALSE;
+
+    if (isset($_GET["pass-reset-token"]) ) {
+      $form['field_first_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_teacher_last_name'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_phone'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_city'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_skype'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['field_speciality'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      //$form['field_languages_can_teach'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      //$form['account']['pass'][LANGUAGE_NONE][0]['value']['#required'] = TRUE;
+      $form['account']['pass']['#required'] = TRUE;
+
+      $form['field_gender']['#access'] = FALSE;
+      $form['field_academic_degree']['#access'] = FALSE;
+      $form['field_languages_can_teach']['#access'] = FALSE;
+
+
     }
   }
 }
