@@ -31,6 +31,7 @@ function education_common_node_presave($node){
 
   }
 }
+
 /**
  * Implements form_FORM_ID_alter().
  */
@@ -38,6 +39,18 @@ function education_common_form_lesson_node_form_alter(&$form, &$form_state, $for
   // Alter the 'article' form here.
   if (user_has_role(TEACHER_ROLE)) {
     $form['field_product_reference']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements form_FORM_ID_alter().
+ */
+function education_common_form_classroom_node_form_alter(&$form, &$form_state, $form_id) {
+  // Alter the 'classroom' form here.
+  if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE)) {
+    $form['title']['#access'] = FALSE;
+    $form['field_desk'][LANGUAGE_NONE][0]['#title'] = '';
+    $form['field_desk'][LANGUAGE_NONE][0]['data']['#title'] = '';
   }
 }
 
@@ -462,6 +475,17 @@ function education_common_get_rendered_block($module_name, $block_name) {
   $block_build = _block_get_renderable_array($block_render_data);
   $rendered_block = drupal_render($block_build);
   return $rendered_block;
+}
+
+/**
+ * Override or insert variables into the node template.
+ */
+function education_common_preprocess_node(&$variables) {
+  // student or teacher redirects to classroom
+  if ($variables['type'] == 'classroom' && (user_has_role(STUDENT_ROLE) ||
+      user_has_role(TEACHER_ROLE) )) {
+    drupal_goto('classroom/' . $variables['nid']);
+    }
 }
 
 /**

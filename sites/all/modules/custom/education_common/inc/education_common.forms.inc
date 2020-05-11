@@ -1139,7 +1139,7 @@ function lesson_pay_form_submit($form, &$form_state) {
 
     $node_classroom->uid = $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid'];
     node_save($node_classroom);
-    
+
     // set field_classroom to lesson product display
     $product_display->field_classroom[LANGUAGE_NONE][0]['nid'] = $node_classroom->nid;
     node_save($product_display);
