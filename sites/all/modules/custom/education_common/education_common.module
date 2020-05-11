@@ -51,7 +51,68 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
     $form['title']['#access'] = FALSE;
     $form['field_desk'][LANGUAGE_NONE][0]['#title'] = '';
     $form['field_desk'][LANGUAGE_NONE][0]['data']['#title'] = '';
+
+    $a = 1;
+
+    $form['actions']['preview']['#access'] = FALSE;
+    $form['actions']['delete']['#access'] = FALSE;
+    if (user_has_role(STUDENT_ROLE)) {
+      $form['actions']['submit']['#access'] = FALSE;
+    }
+    $form['field_order_id']['#access'] = FALSE;
+
+    //var_dump($form['actions']);
+
+
+
+
+    if (user_has_role(TEACHER_ROLE)) {
+
+      $form['actions']['submit']['#attributes'] = array(
+        'class' => array(
+          'btn btn_red form__submit save_lesson_classroom',
+        ),
+      );
+
+      $form['actions']['finish'] = array(
+        '#type' => 'submit',
+        '#value' => t('Finish lesson'),
+        '#attributes' => array(
+          'class' => array(
+            'btn btn_red form__submit finish_lesson',
+          ),
+        ),
+        '#prefix' => '<div class="form__block finish_lesson_wrapper">',
+        '#suffix' => '</div>',
+        '#ajax' => array(
+          'callback' => 'education_common_finish_lesson_ajax_callback',
+        ),
+      );
+    }
   }
+}
+
+function education_common_finish_lesson_ajax_callback(&$form, &$form_state) {
+
+  $classroom_nid = $form['nid']['#value'];
+  $classroom = node_load($classroom_nid);
+
+  $order_id = $classroom->field_order_id[LANGUAGE_NONE][0]['value'];
+  $order =commerce_order_load($order_id);
+  $order->status = 'completed';
+  commerce_order_save($order);
+  //$lesson
+
+  $message = "<p>";
+  $message .= '<div class="form__block"><div class="form__desc lesson_completed">
+  You have completed this lesson.<br />
+      <br /></div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  //$commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 /**
@@ -82,6 +143,13 @@ function education_common_menu() {
 function education_common_class_room($arg) {
   $node = node_load($arg);
   $form_state['build_info']['args'] = array($node);
+
+  $order_id = $node->field_order_id[LANGUAGE_NONE][0]['value'];
+  $order =commerce_order_load($order_id);
+  if ($order->status == 'completed') {
+    return '<div class="form__desc lesson_completed">This lesson is completed</div>';
+  }
+
   form_load_include($form_state, 'inc', 'node', 'node.pages');
   $form = drupal_build_form('classroom_node_form', $form_state);
   //return $form;
