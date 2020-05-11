@@ -54,7 +54,25 @@ function education_common_menu() {
     //'page arguments' => array(1),
   );
 
+  $items['classroom/%'] = array(
+    'title' => 'Classroom',
+    'page callback' => 'education_common_class_room',
+    'access callback' => TRUE,
+    'page arguments' => array(1),
+    'file path' => drupal_get_path('module', 'node'),
+    'file' => 'node.pages.inc',
+  );
+
   return $items;
+}
+
+function education_common_class_room($arg) {
+  $node = node_load($arg);
+  $form_state['build_info']['args'] = array($node);
+  form_load_include($form_state, 'inc', 'node', 'node.pages');
+  $form = drupal_build_form('classroom_node_form', $form_state);
+  //return $form;
+  return drupal_render($form);
 }
 
 function education_recharge_balance() {
@@ -450,6 +468,10 @@ function education_common_get_rendered_block($module_name, $block_name) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
+
+ // $l_node = node_load(31);
+ // var_dump($l_node); die();
+
   /*
   $query = new EntityFieldQuery;
   $type = 'lesson';
