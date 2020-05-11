@@ -1,0 +1,29 @@
+diff --git a/drawingfield.js b/drawingfield.js
+index 897d5c9..0ed92aa 100644
+--- a/drawingfield.js
++++ b/drawingfield.js
+@@ -9,7 +9,7 @@
+       settings = Drupal.settings.drawingfield;
+       var imageSize = {width: settings.width, height: settings.height};
+       var lc = LC.init(
+-      document.getElementsByClassName('literally export')[0],{imageSize: imageSize,backgroundColor: settings.backgroundColor,imageURLPrefix: settings.imageUrlPrefix});
++      document.getElementsByClassName('drawingfield export')[0],{imageSize: imageSize,backgroundColor: settings.backgroundColor,imageURLPrefix: settings.imageUrlPrefix});
+       var localStorageKey = 'drawing'
+       json = settings.drawingEditPath;
+       localStorage.setItem(localStorageKey, json);
+diff --git a/templates/drawingfield.tpl.php b/templates/drawingfield.tpl.php
+index 24a5d6d..1fc82dc 100644
+--- a/templates/drawingfield.tpl.php
++++ b/templates/drawingfield.tpl.php
+@@ -7,8 +7,8 @@
+  * A hidden field is created to capture base64 code to convert it into image.
+  */
+ ?>
+-<div class="form-group"> 
+-    <label for="<?php echo $element['#id'] ?>"><?php echo $element['#title'] ?> </label>   
+-    <div class="literally export" style="width:<?php echo $element['#width'] ?>px;height:<?php echo $element['#height'] ?>px;"></div> 
++<div class="form-group">
++    <label for="<?php echo $element['#id'] ?>"><?php echo $element['#title'] ?> </label>
++    <div class="drawingfield export" style="width:<?php echo $element['#width'] ?>px;height:<?php echo $element['#height'] ?>px;"></div>
+ 	 <input type='hidden' name='<?php echo $element['#name'] ?>' id='<?php echo $element['#id'] ?>' class='output' value='<?php if(isset($element['#default_value'])): echo $element['#default_value']; endif;?>'>
+ </div>

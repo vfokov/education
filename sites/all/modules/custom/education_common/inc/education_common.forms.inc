@@ -1113,7 +1113,52 @@ function lesson_pay_form_submit($form, &$form_state) {
 
   $order = commerce_order_load($lesson_pay_id);
   $order->status = 'paid';
+
+  // get order product (lesson)
+  $product_id = 0;
+  foreach (entity_metadata_wrapper('commerce_order', $order)->commerce_line_items as $delta => $line_item_wrapper) {
+    if (in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
+      $product_id = $line_item_wrapper->commerce_product->raw();
+    }
+  }
+
+  // get lesson product display
+  if ($product_id) {
+    $product_display = get_product_display_by_product_id($product_id, 'lesson', 'field_product_reference');
+    // TODO
+    // create new classroom
+    $node_classroom = new stdClass();
+    $node_classroom->type = 'classroom';
+    $node_classroom->language = LANGUAGE_NONE;
+    node_object_prepare($node_classroom);
+
+    $node_classroom->title = 'Classroom ' . $product_display->title;
+    $node_classroom->status = 1;
+    $node_classroom->promote = 0;
+    $node_classroom->sticky = 0;
+
+    $node_classroom->uid = $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid'];
+    $node_classroom->field_order_id[LANGUAGE_NONE][0]['value'] = $order->order_id;
+    node_save($node_classroom);
+
+    // set field_classroom to lesson product display
+    $product_display->field_classroom[LANGUAGE_NONE][0]['nid'] = $node_classroom->nid;
+    node_save($product_display);
+  }
   commerce_order_save($order);
+}
+
+function get_product_display_by_product_id($product_id, $bundle = 'product_display', $field_name = 'field_product') {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node');
+  $query->propertyCondition('type', $bundle);
+  $query->fieldCondition($field_name, 'product_id', $product_id);
+  $query->range(0, 1);
+  $result = $query->execute();
+  if ($result) {
+    $product_display_nid = key($result['node']);
+    return node_load($product_display_nid);
+  }
 }
 
 function lesson_pay_form_ajax_callback(&$form, &$form_state) {

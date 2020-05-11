@@ -1,0 +1,14 @@
+name = Canvas Field
+description = Defines a signature field type.
+
+version = 7.x-1.x-dev
+core = 7.x
+
+files[] = canvas_field.module
+files[] = tests/canvas_field.test
+; Information added by Drupal.org packaging script on 2016-11-11
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "canvas_field"
+datestamp = "1478897341"
+

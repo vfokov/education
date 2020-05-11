@@ -3100,7 +3100,8 @@ span.icon.i-tutor-card {
 .page-tutor-setup .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
 .page-tutor-setup .ui-tabs-vertical .ui-tabs-panel { padding: 2em; float: left;}
 
-.page-tutor-setup #content input.form-submit {
+.page-tutor-setup #content input.form-submit, .btn.btn_red.form__submit.finish_lesson,
+.btn.btn_red.save_lesson_classroom{
   background: #f17c1e;
   border: none;
   color: #fff;
@@ -3111,6 +3112,10 @@ span.icon.i-tutor-card {
   padding: 11px 53px 12px;
   border-radius: 1px;
   margin-top: 0;
+}
+
+.finish_lesson_wrapper {
+  float: left;
 }
 
 .balance_recharge_button {
@@ -3199,6 +3204,52 @@ span.icon.i-tutor-card {
 .form-item-enable-lesson-date-to-date > label {
   display: none;
 }
+
+/*
+.lc-drawing.with-gui {
+  width: 100%;
+  height: auto;
+}
+
+.drawingfield.export.literally {
+  width: 100% !important;
+  height: auto !important;
+}
+
+
+
+.lc-drawing.with-gui canvas:nth-child(2) {
+  width: 1300px !important;
+  height: 1000px !important;
+}
+*/
+
+.literally .lc-drawing>* {
+  min-height: 600px;
+}
+
+
+
+.literally {
+  position: relative;
+  background: url('board-background-cells.jpg');
+  /*width: 1300px !important;
+  height: 1000px !important;*/
+  min-height: 600px;
+}
+
+/*
+canvas {
+  height: 100vh;
+  width: 100vw;
+  display: block;
+}
+*/
+
+.form__desc.lesson_completed {
+  font-size: 26px;
+}
+
 
 @media all and (max-width: 768px) {
 
