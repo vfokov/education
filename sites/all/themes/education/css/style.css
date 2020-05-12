@@ -3114,7 +3114,7 @@ span.icon.i-tutor-card {
   margin-top: 0;
 }
 
-.finish_lesson_wrapper {
+.finish_lesson_wrapper, .start_lesson_wrapper {
   float: left;
 }
 

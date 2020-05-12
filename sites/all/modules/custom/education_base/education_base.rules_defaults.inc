@@ -29,6 +29,18 @@ function education_base_default_rules_configuration() {
             },
             "PROVIDE" : { "send_status" : { "send_status" : "Send status" } }
           }
+        },
+        { "mimemail" : {
+            "USING" : {
+              "key" : "teacher_booking_notification",
+              "to" : "[teacher-email:value]",
+              "from_name" : "[site:mail]",
+              "subject" : "Booking lesson notification",
+              "body" : "Booking \\u2116 [order-id:value] \\u003Cbr \\/\\u003E\\r\\nUser name: [name:value] \\u003Cbr \\/\\u003E\\r\\nPhone: [phone:value] \\u003Cbr \\/\\u003E\\r\\nSkype: [skype:value] \\u003Cbr \\/\\u003E",
+              "language" : [ "" ]
+            },
+            "PROVIDE" : { "send_status" : { "send_notification_status" : "Send status" } }
+          }
         }
       ]
     }

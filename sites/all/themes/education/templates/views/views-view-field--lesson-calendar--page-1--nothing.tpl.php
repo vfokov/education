@@ -1,7 +1,7 @@
 <?php
 
 global $user;
-// TODO перенести в preprocess field
+// TODO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ preprocess field
 
 /*
 if (strstr(current_path(), 'user')) {

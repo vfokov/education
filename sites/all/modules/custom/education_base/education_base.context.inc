@@ -20,8 +20,13 @@ function education_base_context_default_contexts() {
   $context->conditions = array(
     'path' => array(
       'values' => array(
-        'user/*' => 'user/*',
         '~user/*/orders' => '~user/*/orders',
+        'user' => 'user',
+      ),
+    ),
+    'user' => array(
+      'values' => array(
+        'Teacher' => 'Teacher',
       ),
     ),
   );
@@ -37,7 +42,7 @@ function education_base_context_default_contexts() {
       ),
     ),
   );
-  $context->condition_mode = 0;
+  $context->condition_mode = 1;
 
   // Translatables
   // Included for use with string extractors like potx.
