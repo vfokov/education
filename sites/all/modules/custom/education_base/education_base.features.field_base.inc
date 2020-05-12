@@ -58,6 +58,54 @@ function education_base_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
+  // Exported field_base: 'field_classroom'.
+  $field_bases['field_classroom'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_classroom',
+    'indexes' => array(
+      'nid' => array(
+        0 => 'nid',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'node_reference',
+    'settings' => array(
+      'referenceable_types' => array(
+        'article' => 0,
+        'classroom' => 'classroom',
+        'front_slider' => 0,
+        'homework' => 0,
+        'lesson' => 0,
+        'page' => 0,
+      ),
+      'view' => array(
+        'args' => array(),
+        'display_name' => '',
+        'view_name' => '',
+      ),
+    ),
+    'translatable' => 0,
+    'type' => 'node_reference',
+  );
+
+  // Exported field_base: 'field_desk'.
+  $field_bases['field_desk'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_desk',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'drawingfield',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'drawingfield',
+  );
+
   // Exported field_base: 'field_is_a_teacher'.
   $field_bases['field_is_a_teacher'] = array(
     'active' => 1,
@@ -112,6 +160,31 @@ function education_base_field_default_field_bases() {
     'type' => 'datetime',
   );
 
+  // Exported field_base: 'field_lesson_started'.
+  $field_bases['field_lesson_started'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_lesson_started',
+    'indexes' => array(
+      'value' => array(
+        0 => 'value',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'list',
+    'settings' => array(
+      'allowed_values' => array(
+        0 => '',
+        1 => '',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => 0,
+    'type' => 'list_boolean',
+  );
+
   // Exported field_base: 'field_lesson_subject'.
   $field_bases['field_lesson_subject'] = array(
     'active' => 1,
@@ -138,6 +211,21 @@ function education_base_field_default_field_bases() {
     'type' => 'taxonomy_term_reference',
   );
 
+  // Exported field_base: 'field_order_id'.
+  $field_bases['field_order_id'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_order_id',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
+  );
+
   // Exported field_base: 'field_phone'.
   $field_bases['field_phone'] = array(
     'active' => 1,
@@ -157,6 +245,25 @@ function education_base_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'text',
+  );
+
+  // Exported field_base: 'field_price'.
+  $field_bases['field_price'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_price',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(
+      'decimal_separator' => '.',
+      'precision' => 10,
+      'scale' => 2,
+    ),
+    'translatable' => 0,
+    'type' => 'number_decimal',
   );
 
   // Exported field_base: 'field_product_reference'.
@@ -300,6 +407,21 @@ function education_base_field_default_field_bases() {
     ),
     'translatable' => 0,
     'type' => 'list_boolean',
+  );
+
+  // Exported field_base: 'field_time_started'.
+  $field_bases['field_time_started'] = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'field_time_started',
+    'indexes' => array(),
+    'locked' => 0,
+    'module' => 'number',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'number_integer',
   );
 
   return $field_bases;

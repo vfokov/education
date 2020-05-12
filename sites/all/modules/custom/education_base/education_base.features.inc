@@ -50,6 +50,14 @@ function education_base_image_default_styles() {
  */
 function education_base_node_info() {
   $items = array(
+    'classroom' => array(
+      'name' => t('Classroom'),
+      'base' => 'node_content',
+      'description' => '',
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
     'lesson' => array(
       'name' => t('Lesson'),
       'base' => 'node_content',

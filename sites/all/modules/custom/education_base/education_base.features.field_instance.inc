@@ -11,6 +11,182 @@
 function education_base_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-classroom-field_desk'.
+  $field_instances['node-classroom-field_desk'] = array(
+    'bundle' => 'classroom',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'drawingfield',
+        'settings' => array(),
+        'type' => 'drawingfield_formatter',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_desk',
+    'label' => 'Desk',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'drawingfield',
+      'settings' => array(
+        'background_color' => '',
+        'height' => 700,
+        'width' => 900,
+      ),
+      'type' => 'drawingfield_default',
+      'weight' => 32,
+    ),
+  );
+
+  // Exported field_instance: 'node-classroom-field_lesson_started'.
+  $field_instances['node-classroom-field_lesson_started'] = array(
+    'bundle' => 'classroom',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 3,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_lesson_started',
+    'label' => 'Lesson started',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 34,
+    ),
+  );
+
+  // Exported field_instance: 'node-classroom-field_order_id'.
+  $field_instances['node-classroom-field_order_id'] = array(
+    'bundle' => 'classroom',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 2,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_order_id',
+    'label' => 'Order Id',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 33,
+    ),
+  );
+
+  // Exported field_instance: 'node-classroom-field_time_started'.
+  $field_instances['node-classroom-field_time_started'] = array(
+    'bundle' => 'classroom',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_integer',
+        'weight' => 4,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_time_started',
+    'label' => 'Time started',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 35,
+    ),
+  );
+
   // Exported field_instance: 'node-lesson-body'.
   $field_instances['node-lesson-body'] = array(
     'bundle' => 'lesson',
@@ -51,7 +227,7 @@ function education_base_field_default_field_instances() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => -4,
+      'weight' => 1,
     ),
   );
 
@@ -88,7 +264,48 @@ function education_base_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 1,
+      'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-lesson-field_classroom'.
+  $field_instances['node-lesson-field_classroom'] = array(
+    'bundle' => 'lesson',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_classroom',
+    'label' => 'Classroom',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'node_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'node_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'node_reference_autocomplete',
+      'weight' => 8,
     ),
   );
 
@@ -135,7 +352,7 @@ function education_base_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_popup',
-      'weight' => -2,
+      'weight' => 4,
     ),
   );
 
@@ -172,7 +389,53 @@ function education_base_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => -1,
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-lesson-field_price'.
+  $field_instances['node-lesson-field_price'] = array(
+    'bundle' => 'lesson',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 2,
+          'thousand_separator' => '',
+        ),
+        'type' => 'number_decimal',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_price',
+    'label' => 'Price',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 3,
     ),
   );
 
@@ -207,7 +470,7 @@ function education_base_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_product_reference',
     'label' => 'Lesson commerce_product reference',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'field_injection' => 1,
       'referenceable_types' => array(
@@ -224,7 +487,7 @@ function education_base_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'commerce_product_reference_autocomplete',
-      'weight' => -3,
+      'weight' => 2,
     ),
   );
 
@@ -241,9 +504,8 @@ function education_base_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 13,
       ),
     ),
@@ -278,9 +540,8 @@ function education_base_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 15,
       ),
     ),
@@ -344,16 +605,15 @@ function education_base_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => 14,
       ),
     ),
     'entity_type' => 'user',
     'field_name' => 'field_terms_of_service',
     'label' => 'Terms of service',
-    'required' => 1,
+    'required' => 0,
     'settings' => array(
       'user_register_form' => 1,
     ),
@@ -372,13 +632,19 @@ function education_base_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Age category');
   t('Body');
+  t('Classroom');
+  t('Desk');
   t('Lesson commerce_product reference');
   t('Lesson date');
+  t('Lesson started');
   t('Lesson subject');
+  t('Order Id');
+  t('Price');
   t('Ready to get news');
   t('Select pupil role');
   t('Student age category');
   t('Terms of service');
+  t('Time started');
 
   return $field_instances;
 }
