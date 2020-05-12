@@ -52,7 +52,11 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
     $form['field_desk'][LANGUAGE_NONE][0]['#title'] = '';
     $form['field_desk'][LANGUAGE_NONE][0]['data']['#title'] = '';
 
-    $a = 1;
+    $form['timer'] = array(
+      '#markup' =>  '<div id="classroom-timer"></div>'
+    );
+
+    //$a = 1;
 
     $form['actions']['preview']['#access'] = FALSE;
     $form['actions']['delete']['#access'] = FALSE;
@@ -61,12 +65,17 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
     }
     $form['field_order_id']['#access'] = FALSE;
 
-    //var_dump($form['actions']);
+    $form['field_lesson_started'][LANGUAGE_NONE][0]['value']['#access'] = FALSE;
+    $form['field_lesson_started'][LANGUAGE_NONE]['#access'] = FALSE;
 
-
-
+    $form['field_time_started'][LANGUAGE_NONE][0]['value']['#access'] = FALSE;
 
     if (user_has_role(TEACHER_ROLE)) {
+
+      $form['#attached']['js'][] = array(
+        'data' => drupal_get_path('theme', 'education') . '/js/classroom-ajax.js',
+        'type' => 'file',
+      );
 
       $form['actions']['submit']['#attributes'] = array(
         'class' => array(
@@ -74,28 +83,65 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
         ),
       );
 
-      $form['actions']['finish'] = array(
-        '#type' => 'submit',
-        '#value' => t('Finish lesson'),
-        '#attributes' => array(
-          'class' => array(
-            'btn btn_red form__submit finish_lesson',
+      $classroom = node_load(arg(1));
+      if ($classroom->field_lesson_started[LANGUAGE_NONE][0]['value']) {
+        $form['actions']['finish'] = array(
+          '#type' => 'submit',
+          '#value' => t('Finish lesson'),
+          '#attributes' => array(
+            'class' => array(
+              'btn btn_red form__submit finish_lesson',
+            ),
           ),
-        ),
-        '#prefix' => '<div class="form__block finish_lesson_wrapper">',
-        '#suffix' => '</div>',
-        '#ajax' => array(
-          'callback' => 'education_common_finish_lesson_ajax_callback',
-        ),
-      );
+          '#prefix' => '<div class="form__block finish_lesson_wrapper">',
+          '#suffix' => '</div>',
+          '#ajax' => array(
+            'callback' => 'education_common_finish_lesson_ajax_callback',
+          ),
+        );
+      } else {
+
+        $form['actions']['start'] = array(
+          '#type' => 'submit',
+          '#value' => t('Start lesson'),
+          '#attributes' => array(
+            'class' => array(
+              'btn btn_red form__submit finish_lesson',
+            ),
+          ),
+          '#prefix' => '<div class="form__block start_lesson_wrapper">',
+          '#suffix' => '</div>',
+          '#ajax' => array(
+            'callback' => 'education_common_start_lesson_ajax_callback',
+          ),
+        );
+      }
+
     }
   }
+}
+
+function education_common_start_lesson_ajax_callback(&$form, &$form_state) {
+  // TODO set
+  $classroom_nid = $form['nid']['#value'];
+  $classroom = node_load($classroom_nid);
+  $classroom->field_lesson_started[LANGUAGE_NONE][0]['value'] = 1;
+
+  $time = time();
+  $classroom->field_time_started[LANGUAGE_NONE][0]['value'] = $time;
+  node_save($classroom);
+
+  $commands[] = array('command' => 'reloadPage');
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 function education_common_finish_lesson_ajax_callback(&$form, &$form_state) {
 
   $classroom_nid = $form['nid']['#value'];
   $classroom = node_load($classroom_nid);
+
+  $classroom->field_time_started[LANGUAGE_NONE][0]['value'] = 0;
+  node_save($classroom);
 
   $order_id = $classroom->field_order_id[LANGUAGE_NONE][0]['value'];
   $order =commerce_order_load($order_id);
@@ -153,6 +199,15 @@ function education_common_class_room($arg) {
   form_load_include($form_state, 'inc', 'node', 'node.pages');
   $form = drupal_build_form('classroom_node_form', $form_state);
   //return $form;
+
+  $time_stared = 0;
+  $now = 0;
+  $time_stared = $node->field_time_started[LANGUAGE_NONE][0]['value'];
+  if ($time_stared) {
+    $now = 40 * 60 - (time() - $time_stared);
+  }
+
+  drupal_add_js(array('time_stared' => $now), 'setting');
   return drupal_render($form);
 }
 
@@ -553,7 +608,7 @@ function education_common_preprocess_node(&$variables) {
   if ($variables['type'] == 'classroom' && (user_has_role(STUDENT_ROLE) ||
       user_has_role(TEACHER_ROLE) )) {
     drupal_goto('classroom/' . $variables['nid']);
-    }
+  }
 }
 
 /**
@@ -639,6 +694,13 @@ function education_common_preprocess_page(&$variables) {
 
   if (drupal_is_front_page()) {
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/front.js');
+  }
+  if (strstr(request_uri(), '/classroom')) {
+    drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.plugin.js');
+    drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.countdown.js');
+    drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom-timer.js');
+    //sites\all\themes\education\js\classroom-timer.js
+    //sites\all\themes\education\js\jquery.countdown\js\jquery.countdown.js
   }
 
 }
