@@ -1,0 +1,56 @@
+<?php
+
+
+/**
+ * Implements hook_menu().
+ */
+function education_classroom_menu() {
+  $items = array();
+
+  $items['save-onchange'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_save_onchange',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['get-changes-from-server'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_get_changes',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+
+  return $items;
+}
+
+function education_classroom_save_onchange() {
+  if (isset($_POST['text'])) {
+    $text = $_POST['text'];
+    $node = node_load($_POST['nid']);
+
+    watchdog(
+      'education_classroom_ckeck_save',
+      'Name before: @name, message before: @message',
+      array('@name' => $node->nid, '@message' => $text)
+    );
+
+    //$node->field_desk[LANGUAGE_NONE][0]['data'] = serialize($text);
+    $node->field_desk[LANGUAGE_NONE][0]['data'] = drawingfield_base64_to_image($text);
+
+    /*
+    watchdog(
+      'education_classroom_ckeck_save',
+      'Name: @name, message: @message',
+      array('@name' => $node->nid, '@message' => serialize($text))
+    );
+    */
+
+    node_save($node);
+  }
+}
+
+function education_classroom_get_changes() {
+
+}
+
