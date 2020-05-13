@@ -67,10 +67,11 @@
             //console.log(settings);
 
             var carr_val =  $('.drawingfield.export input').val();
+            console.log(carr_val);
 
             var check = true;
             if (carr_val != msg.text) {
-              //check = true;
+              check = true;
             }
 
 
@@ -133,7 +134,7 @@
           ///////////////////////////////////////////
 
           setTimeout(function () {
-            sendUpdateRequest(classroom_nid); //this will send request again and again;
+            ///////////sendUpdateRequest(classroom_nid); //this will send request again and again;
           }, 5000);
 
 
@@ -199,8 +200,8 @@
 
   $(document).ready(function($) {
 
-    setTimeout(function () {
-    //setInterval(function () {
+    //setTimeout(function () {
+    setInterval(function () {
       console.log(Drupal.settings.classroom_nid);
       console.log('lock = ' + lock);
       //if (!lock) {
