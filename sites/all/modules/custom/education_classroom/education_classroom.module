@@ -51,6 +51,20 @@ function education_classroom_save_onchange() {
 }
 
 function education_classroom_get_changes() {
+  if (isset($_POST['nid'])) {
+    $node = node_load($_POST['nid']);
+    $image_data = $node->field_desk[LANGUAGE_NONE][0]['data'];
 
+    $values = unserialize($image_data);
+    $drawing_edit_path = $values['json'];
+
+    echo json_encode(
+      array(
+        'text' => $image_data,
+        'drawing_edit_path' => $drawing_edit_path
+        //'current_editor_id' => $current_editor_id
+      )
+    );
+  }
 }
 

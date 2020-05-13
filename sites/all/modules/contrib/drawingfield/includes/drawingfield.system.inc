@@ -49,14 +49,8 @@ function form_type_drawingfield_value($element, $edit, $form_state) {
       $values = unserialize($element['#default_value']);
       drupal_unlink($values['image_path']);
     }
-
-
-
     return drawingfield_base64_to_image($edit);
   }
-
-  //var_dump($edit);
-
   return $edit;
 }
 

@@ -90,10 +90,6 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
         'callback' => 'education_common_submit_lesson_ajax_callback',
       );
       */
-
-      //var_dump($form['actions']['submit']); die();
-
-
       $classroom = node_load(arg(1));
       if ($classroom->field_lesson_started[LANGUAGE_NONE][0]['value']) {
         $form['actions']['finish'] = array(
@@ -132,9 +128,10 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
   }
 }
 
+/*
 function education_common_submit_lesson_ajax_callback(&$form, &$form_state) {
   // TODO set
-  /*
+
   $classroom_nid = $form['nid']['#value'];
   $classroom = node_load($classroom_nid);
   $classroom->field_lesson_started[LANGUAGE_NONE][0]['value'] = 1;
@@ -142,16 +139,17 @@ function education_common_submit_lesson_ajax_callback(&$form, &$form_state) {
   $time = time();
   $classroom->field_time_started[LANGUAGE_NONE][0]['value'] = $time;
   node_save($classroom);
-  */
+
 
   //$commands[] = array('command' => 'reloadPage');
   /*
   $commands[] = array();
   return array('#type' => 'ajax', '#commands' => $commands);
-  */
+
 
   //return $form;
 }
+  */
 
 function education_common_start_lesson_ajax_callback(&$form, &$form_state) {
   // TODO set
@@ -221,26 +219,29 @@ function education_common_menu() {
 function education_common_class_room($arg) {
   $node = node_load($arg);
   $form_state['build_info']['args'] = array($node);
+  if ($node) {
 
-  $order_id = isset($node->field_order_id[LANGUAGE_NONE]) ? $node->field_order_id[LANGUAGE_NONE][0]['value'] : 0;
-  $order = commerce_order_load($order_id);
-  if ($order->status == 'completed') {
-    return '<div class="form__desc lesson_completed">This lesson is completed</div>';
+    $order_id = isset($node->field_order_id[LANGUAGE_NONE]) ? $node->field_order_id[LANGUAGE_NONE][0]['value'] : 0;
+    $order = commerce_order_load($order_id);
+    if ($order->status == 'completed') {
+      return '<div class="form__desc lesson_completed">This lesson is completed</div>';
+    }
+
+    form_load_include($form_state, 'inc', 'node', 'node.pages');
+    $form = drupal_build_form('classroom_node_form', $form_state);
+
+    $time_stared = 0;
+    $now = 0;
+    $time_stared = isset($node->field_time_started[LANGUAGE_NONE]) ?
+      $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0;
+    if ($time_stared) {
+      $now = 40 * 60 - (time() - $time_stared);
+    }
+
+    drupal_add_js(array('time_stared' => $now), 'setting');
+    return drupal_render($form);
   }
-
-  form_load_include($form_state, 'inc', 'node', 'node.pages');
-  $form = drupal_build_form('classroom_node_form', $form_state);
-
-  $time_stared = 0;
-  $now = 0;
-  $time_stared = isset($node->field_time_started[LANGUAGE_NONE]) ?
-    $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0;
-  if ($time_stared) {
-    $now = 40 * 60 - (time() - $time_stared);
-  }
-
-  drupal_add_js(array('time_stared' => $now), 'setting');
-  return drupal_render($form);
+  return '';
 }
 
 function education_recharge_balance() {
