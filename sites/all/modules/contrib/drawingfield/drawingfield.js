@@ -67,15 +67,18 @@
             //console.log(imageSize);
             //console.log(settings);
 
+            /*
             var carr_val =  $('.drawingfield.export input').val();
             console.log(carr_val);
 
-            var editor_uid = msg.current_editor_uid;
 
             var check = true;
             if (carr_val != msg.text) {
               check = true;
             }
+            */
+            var check = true;
+            var editor_uid = msg.current_editor_uid;
             if (editor_uid == Drupal.settings.classroom_uid) {
               check = false;
             }
@@ -99,20 +102,59 @@
                 //console.log(lc);
               }
               //////////////////////////////////////////////////////////////////////
-              lc.on('drawingChange', function() {
+              lc.on('drawingChange', function () {
                 json = lc.getSnapshotJSON();
                 var base64 = lc.getImage().toDataURL();
                 var jsonBase64 = json + 'JSON' + base64;
                 paintId = $(".form-group").find("input.output").attr('id');
                 $("#" + paintId).val(jsonBase64);
                 lock = 1;
-                timer = setTimeout(function(){
+                timer = setTimeout(function () {
                   var uid = Drupal.settings.classroom_uid;
                   sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
                 }, 700);
                 console.log('drawChange')
               });
 
+              // Clear image
+              lc.on('clear', function () {
+                json = lc.getSnapshotJSON();
+                var base64 = lc.getImage().toDataURL();
+                var jsonBase64 = json + 'JSON' + base64;
+                paintId = $(".form-group").find("input.output").attr('id');
+                $("#" + paintId).val(jsonBase64);
+                lock = 1;
+                timer = setTimeout(function () {
+                  var uid = Drupal.settings.classroom_uid;
+                  sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
+                }, 700);
+                console.log('Clear')
+              });
+
+              // toolChange
+              lc.on('toolChange', function () {
+                json = lc.getSnapshotJSON();
+                var base64 = lc.getImage().toDataURL();
+                var jsonBase64 = json + 'JSON' + base64;
+                paintId = $(".form-group").find("input.output").attr('id');
+                $("#" + paintId).val(jsonBase64);
+                lock = 1;
+                timer = setTimeout(function () {
+                  var uid = Drupal.settings.classroom_uid;
+                  sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
+                }, 700);
+                console.log('toolChange')
+              });
+
+              lc.on('primaryColorChange', function() {
+                console.log('colorIsChanged');
+                lock = 1;
+              });
+
+              lc.on('backgroundColorChange', function() {
+                console.log('backgroundColorChange');
+                lock = 1;
+              });
               //lc.on('lc-pointerup', function() {
               //lc.on('pointerdown', function() {
               lc.on('drawContinue', function() {
@@ -179,9 +221,49 @@
         $("#" + paintId).val(jsonBase64);
         lock = 1;
         timer = setTimeout(function(){
-            sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid);
+          var uid = Drupal.settings.classroom_uid;
+          sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
           }, 700);
           console.log('drawChange')
+      });
+
+      // Clear image
+      lc.on('clear', function() {
+        json = lc.getSnapshotJSON();
+        var base64 = lc.getImage().toDataURL();
+        var jsonBase64 = json + 'JSON' + base64;
+        paintId = $(".form-group").find("input.output").attr('id');
+        $("#" + paintId).val(jsonBase64);
+        lock = 1;
+        timer = setTimeout(function(){
+          var uid = Drupal.settings.classroom_uid;
+          sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
+        }, 700);
+        console.log('Clear')
+      });
+
+      // toolChange
+      lc.on('toolChange', function() {
+        json = lc.getSnapshotJSON();
+        var base64 = lc.getImage().toDataURL();
+        var jsonBase64 = json + 'JSON' + base64;
+        paintId = $(".form-group").find("input.output").attr('id');
+        $("#" + paintId).val(jsonBase64);
+        lock = 1;
+        timer = setTimeout(function(){
+          var uid = Drupal.settings.classroom_uid;
+          sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
+        }, 700);
+        console.log('toolChange')
+      });
+      lc.on('primaryColorChange', function() {
+        console.log('colorIsChanged');
+        lock = 1;
+      });
+
+      lc.on('backgroundColorChange', function() {
+        console.log('backgroundColorChange');
+        lock = 1;
       });
 
       //lc.on('lc-pointerup', function() {
