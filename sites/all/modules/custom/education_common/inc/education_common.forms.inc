@@ -952,7 +952,9 @@ function education_common_form_user_register_form_alter(&$form, &$form_state, $f
  */
 function education_common_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   // if form for pupil registartion
-  $form['field_balance']['#access'] = FALSE;
+  if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE)) {
+    $form['field_balance']['#access'] = FALSE;
+  }
   if (request_uri() == '/pupil/profile' || user_has_role(STUDENT_ROLE)) {
     $form['field_is_a_teacher']['#access'] = FALSE;
     $form['field_ready_to_get_news']['#access'] = FALSE;
@@ -1148,6 +1150,8 @@ function lesson_pay_from_balance_form_ajax_callback($form, &$form_state) {
   $message = "<p>";
   $path_to_return = l($current_path_text, $current_path);
 
+  $message_text = 'You have paid this lesson';
+  $popup__title = 'Thank you';
   // todo take from user balance
   if ($form_state['values']['order_price']) {
     $order_price = substr($form_state['values']['order_price'], 1);
@@ -1155,62 +1159,86 @@ function lesson_pay_from_balance_form_ajax_callback($form, &$form_state) {
     $existing_summ = isset($current_user->field_balance[LANGUAGE_NONE]) ? $current_user->field_balance[LANGUAGE_NONE][0]['value'] : 0;
     if ($existing_summ) {
       $summ_to_left = $existing_summ - $order_price;
-      $current_user->field_balance[LANGUAGE_NONE][0]['value'] = $summ_to_left;
-      user_save($current_user);
+      if ($summ_to_left < 0) {
+        $popup__title = 'Not enough money';
+        $message_text = 'Not enough money on balance';
+      }
+      else {
+        $current_user->field_balance[LANGUAGE_NONE][0]['value'] = $summ_to_left;
+        user_save($current_user);
+      }
     }
   }
 
-  $message .= '<div class="form__block"><div class="form__desc">
-  You have paid this lesson.<br />
+  $message .= '<div class="form__block"><div class="form__desc">' . $message_text . '<br />
       <br />' . $path_to_return . '</div></div>';
 
   $message .= "</p>";
   $commands[] = ajax_command_replace('#' . $form['#id'], $message);
-  $commands[] = ajax_command_html('#lesson_pay .popup__title', 'Thank you');
+  $commands[] = ajax_command_html('#lesson_pay .popup__title', $popup__title);
   $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 function lesson_pay_form_submit($form, &$form_state) {
+  global $user;
   $lesson_pay_id = $form_state['values']['lesson_pay'];
   //$order_price = $form_state['values']['order_price'];
 
-  $order = commerce_order_load($lesson_pay_id);
-  $order->status = 'paid';
+  //echo '<pre>'; print_r($form_state['values']); echo '</pre>'; die();
 
-  // get order product (lesson)
-  $product_id = 0;
-  foreach (entity_metadata_wrapper('commerce_order', $order)->commerce_line_items as $delta => $line_item_wrapper) {
-    if (in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
-      $product_id = $line_item_wrapper->commerce_product->raw();
+  $change_order_status = TRUE;
+  if ($form_state['values']['op'] == 'Pay from Balance') {
+    // todo check balance
+    $order_price = substr($form_state['values']['order_price'], 1);
+    $current_user = user_load($user->uid);
+    $existing_summ = isset($current_user->field_balance[LANGUAGE_NONE]) ? $current_user->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+    if ($existing_summ) {
+      $summ_to_left = $existing_summ - $order_price;
+      if ($summ_to_left < 0) {
+        $change_order_status = FALSE;
+      }
     }
   }
 
-  // get lesson product display
-  if ($product_id) {
-    $product_display = get_product_display_by_product_id($product_id, 'lesson', 'field_product_reference');
-    // TODO
-    // create new classroom
-    $node_classroom = new stdClass();
-    $node_classroom->type = 'classroom';
-    $node_classroom->language = LANGUAGE_NONE;
-    node_object_prepare($node_classroom);
+  if ($change_order_status) {
+    $order = commerce_order_load($lesson_pay_id);
+    $order->status = 'paid';
 
-    $node_classroom->title = 'Classroom ' . $product_display->title;
-    $node_classroom->status = 1;
-    $node_classroom->promote = 0;
-    $node_classroom->sticky = 0;
+    // get order product (lesson)
+    $product_id = 0;
+    foreach (entity_metadata_wrapper('commerce_order', $order)->commerce_line_items as $delta => $line_item_wrapper) {
+      if (in_array($line_item_wrapper->type->value(), commerce_product_line_item_types())) {
+        $product_id = $line_item_wrapper->commerce_product->raw();
+      }
+    }
 
-    $node_classroom->uid = $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid'];
-    $node_classroom->field_order_id[LANGUAGE_NONE][0]['value'] = $order->order_id;
-    node_save($node_classroom);
+    // get lesson product display
+    if ($product_id) {
+      $product_display = get_product_display_by_product_id($product_id, 'lesson', 'field_product_reference');
+      // TODO
+      // create new classroom
+      $node_classroom = new stdClass();
+      $node_classroom->type = 'classroom';
+      $node_classroom->language = LANGUAGE_NONE;
+      node_object_prepare($node_classroom);
 
-    // set field_classroom to lesson product display
-    $product_display->field_classroom[LANGUAGE_NONE][0]['nid'] = $node_classroom->nid;
-    node_save($product_display);
+      $node_classroom->title = 'Classroom ' . $product_display->title;
+      $node_classroom->status = 1;
+      $node_classroom->promote = 0;
+      $node_classroom->sticky = 0;
+
+      $node_classroom->uid = $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid'];
+      $node_classroom->field_order_id[LANGUAGE_NONE][0]['value'] = $order->order_id;
+      node_save($node_classroom);
+
+      // set field_classroom to lesson product display
+      $product_display->field_classroom[LANGUAGE_NONE][0]['nid'] = $node_classroom->nid;
+      node_save($product_display);
+    }
+    commerce_order_save($order);
   }
-  commerce_order_save($order);
 }
 
 function get_product_display_by_product_id($product_id, $bundle = 'product_display', $field_name = 'field_product') {
