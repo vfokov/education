@@ -26,7 +26,6 @@
           uid: uid,
         },
         success: function (msg) {
-
           setTimeout(function () {
             lock = 0;
           }, 1000)
@@ -59,19 +58,14 @@
         success: function (msg) {
 
           if (msg.text) {
-
-            //console.log(msg.text);
             settings = Drupal.settings.drawingfield;
             var imageSize = {width: settings.width, height: settings.height};
 
             //console.log(imageSize);
             //console.log(settings);
-
             /*
             var carr_val =  $('.drawingfield.export input').val();
             console.log(carr_val);
-
-
             var check = true;
             if (carr_val != msg.text) {
               check = true;
@@ -83,10 +77,7 @@
               check = false;
             }
 
-
             if (check) {
-              ///////////////////////
-
               var lc = LC.init(
                 document.getElementsByClassName('drawingfield export')[0], {
                   imageSize: imageSize,
@@ -156,7 +147,6 @@
                 lock = 1;
               });
               //lc.on('lc-pointerup', function() {
-              //lc.on('pointerdown', function() {
               lc.on('drawContinue', function() {
                 console.log('drawContinue');
                 lock = 1;
@@ -201,8 +191,8 @@
     attach: function(context, settings) {
       settings = Drupal.settings.drawingfield;
       var imageSize = {width: settings.width, height: settings.height};
-      console.log(imageSize);
-      console.log(settings);
+      //console.log(imageSize);
+      //console.log(settings);
 
       var lc = LC.init(
       document.getElementsByClassName('drawingfield export')[0],{imageSize: imageSize,backgroundColor: settings.backgroundColor,imageURLPrefix: settings.imageUrlPrefix});
@@ -213,6 +203,7 @@
       if (localStorage.getItem(localStorageKey)) {
         lc.loadSnapshotJSON(localStorage.getItem(localStorageKey));
       }
+      // drawingChange
       lc.on('drawingChange', function() {
         json = lc.getSnapshotJSON();
         var base64 = lc.getImage().toDataURL();
@@ -285,29 +276,29 @@
         lock = 0;
       });
 
+      $('.square-toolbar-button').on('click', function(){
+        lock = 1;
+        console.log('square-toolbar-button clicked');
+      });
+
+      $('.lc-color-pickers').on('click', function(){
+        lock = 1;
+        console.log('lc-color-pickers clicked');
+      });
+
     }
   }
 
-
   $(document).ready(function($) {
-
-    //setTimeout(function () {
     setInterval(function () {
       console.log(Drupal.settings.classroom_nid);
       console.log('lock = ' + lock);
-      //if (!lock) {
-        sendUpdateRequest(Drupal.settings.classroom_nid); //this will send request again and again;
-      //}
-      //$('.field-name-body').show();
-      //var lock = 1;
-   }, 3000);
-
-    //console.log(lc);
+      sendUpdateRequest(Drupal.settings.classroom_nid); //this will send request again and again;
+    }, 3000);
 
     $('.field-desk-add-more-wrapper').mouseup(function(){
       console.log('mouseup');
     });
-
   })
 
 })(jQuery);
