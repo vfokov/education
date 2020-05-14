@@ -1,0 +1,8 @@
+name = Education classroom
+description = "Provides improvements for classroom"
+package = Custom
+core = 7.x
+
+version = "7.x-3.0-dev"
+project = "education_classroom"
+datestamp = "1543859984"

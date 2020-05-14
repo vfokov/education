@@ -63,6 +63,9 @@ function drawingfield_after_build($element, $form_state) {
   $libpath_literallycanvas = libraries_get_path('literallycanvas');
   $libpath_reactjs = libraries_get_path('reactjs');
   $modpath = drupal_get_path('module', 'drawingfield');
+
+  //echo '<pre>'; print_r($element['#default_value']); echo '<pre>'; die();
+
   if (!empty($element['#default_value'])) {
     $values = unserialize($element['#default_value']);
     $drawing_edit_path = $values['json'];

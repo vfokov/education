@@ -3250,6 +3250,27 @@ canvas {
   font-size: 26px;
 }
 
+.form__block .pay_from_balance_button {
+  background: #ffc439;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  vertical-align: top;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 4px;
+  height: 45px;
+  min-height: 30px;
+  max-height: 55px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.form__block .pay_from_balance_button:hover {
+  background: #f5b828;
+}
+
 
 @media all and (max-width: 768px) {
 

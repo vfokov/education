@@ -1,7 +1,6 @@
 (function ($) {
 
   $(document).ready(function($) {
-    //alert(Drupal.settings.time_stared); // покажет "bar"
     // $('#classroom-timer').countdown({until: new Date(2020, 12-1, 25)});
     //$('#classroom-timer').countdown({until: new Date(2020, 5, 13), format: 'dHM'});
     if (Drupal.settings.time_stared) {

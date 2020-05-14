@@ -1,0 +1,73 @@
+<?php
+
+
+/**
+ * Implements hook_menu().
+ */
+function education_classroom_menu() {
+  $items = array();
+
+  $items['save-onchange'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_save_onchange',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['get-changes-from-server'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_get_changes',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+
+  return $items;
+}
+
+function education_classroom_save_onchange() {
+  if (isset($_POST['text'])) {
+    $text = $_POST['text'];
+    $node = node_load($_POST['nid']);
+    $uid = $_POST['uid'];
+
+    watchdog(
+      'education_classroom_ckeck_save',
+      'Name before: @name, message before: @message',
+      array('@name' => $node->nid, '@message' => $text)
+    );
+
+    //$node->field_desk[LANGUAGE_NONE][0]['data'] = serialize($text);
+    $node->field_desk[LANGUAGE_NONE][0]['data'] = drawingfield_base64_to_image($text);
+    $node->field_current_editor_uid[LANGUAGE_NONE][0]['uid'] = $uid;
+
+    /*
+    watchdog(
+      'education_classroom_ckeck_save',
+      'Name: @name, message: @message',
+      array('@name' => $node->nid, '@message' => serialize($text))
+    );
+    */
+
+    node_save($node);
+  }
+}
+
+function education_classroom_get_changes() {
+  if (isset($_POST['nid'])) {
+    $node = node_load($_POST['nid']);
+    $image_data = $node->field_desk[LANGUAGE_NONE][0]['data'];
+
+    $values = unserialize($image_data);
+    $drawing_edit_path = $values['json'];
+    $editor_uid = $node->field_current_editor_uid[LANGUAGE_NONE][0]['uid'];
+
+    echo json_encode(
+      array(
+        'text' => $image_data,
+        'drawing_edit_path' => $drawing_edit_path,
+        'current_editor_uid' => $editor_uid
+      )
+    );
+  }
+}
+
