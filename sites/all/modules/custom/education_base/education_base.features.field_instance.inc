@@ -11,6 +11,47 @@
 function education_base_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'node-classroom-field_current_editor_uid'.
+  $field_instances['node-classroom-field_current_editor_uid'] = array(
+    'bundle' => 'classroom',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'user_reference',
+        'settings' => array(),
+        'type' => 'user_reference_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_current_editor_uid',
+    'label' => 'Current editor uid',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'user_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'user_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'user_reference_autocomplete',
+      'weight' => 36,
+    ),
+  );
+
   // Exported field_instance: 'node-classroom-field_desk'.
   $field_instances['node-classroom-field_desk'] = array(
     'bundle' => 'classroom',
@@ -633,6 +674,7 @@ function education_base_field_default_field_instances() {
   t('Age category');
   t('Body');
   t('Classroom');
+  t('Current editor uid');
   t('Desk');
   t('Lesson commerce_product reference');
   t('Lesson date');

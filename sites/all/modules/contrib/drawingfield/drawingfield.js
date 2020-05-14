@@ -140,9 +140,11 @@
 
           ///////////////////////////////////////////
 
-          setTimeout(function () {
-            ///////////sendUpdateRequest(classroom_nid); //this will send request again and again;
-          }, 5000);
+          if (editor_uid != Drupal.settings.classroom_uid) {
+            setTimeout(function () {
+              ///////////sendUpdateRequest(classroom_nid); //this will send request again and again;
+            }, 2000);
+          }
 
 
         },

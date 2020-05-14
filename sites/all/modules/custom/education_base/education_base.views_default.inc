@@ -181,6 +181,69 @@ function education_base_views_default_views() {
     'lesson' => '#ffffff',
   );
   $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Author uid */
+  $handler->display->display_options['fields']['uid']['id'] = 'uid';
+  $handler->display->display_options['fields']['uid']['table'] = 'node';
+  $handler->display->display_options['fields']['uid']['field'] = 'uid';
+  $handler->display->display_options['fields']['uid']['label'] = '';
+  $handler->display->display_options['fields']['uid']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['uid']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['uid']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['uid']['link_to_user'] = FALSE;
+  /* Field: Content: Lesson date */
+  $handler->display->display_options['fields']['field_lesson_date']['id'] = 'field_lesson_date';
+  $handler->display->display_options['fields']['field_lesson_date']['table'] = 'field_data_field_lesson_date';
+  $handler->display->display_options['fields']['field_lesson_date']['field'] = 'field_lesson_date';
+  $handler->display->display_options['fields']['field_lesson_date']['label'] = '';
+  $handler->display->display_options['fields']['field_lesson_date']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['field_lesson_date']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_lesson_date']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['field_lesson_date']['type'] = 'date_plain';
+  $handler->display->display_options['fields']['field_lesson_date']['settings'] = array(
+    'format_type' => 'custom',
+    'custom_date_format' => 'd.m.Y H:i',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+    'show_remaining_days' => 0,
+  );
+  $handler->display->display_options['fields']['field_lesson_date']['group_rows'] = FALSE;
+  $handler->display->display_options['fields']['field_lesson_date']['delta_offset'] = '0';
+  /* Field: Commerce Product: Product ID */
+  $handler->display->display_options['fields']['product_id']['id'] = 'product_id';
+  $handler->display->display_options['fields']['product_id']['table'] = 'commerce_product';
+  $handler->display->display_options['fields']['product_id']['field'] = 'product_id';
+  $handler->display->display_options['fields']['product_id']['relationship'] = 'field_product_reference_product_id';
+  $handler->display->display_options['fields']['product_id']['label'] = '';
+  $handler->display->display_options['fields']['product_id']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['product_id']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['product_id']['element_default_classes'] = FALSE;
+  $handler->display->display_options['fields']['product_id']['link_to_product'] = 0;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  $handler->display->display_options['fields']['title']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing']['id'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing']['label'] = '';
+  $handler->display->display_options['fields']['nothing']['exclude'] = TRUE;
+  $handler->display->display_options['fields']['nothing']['alter']['text'] = '<a href="#" class="btn product__card-fast popup__link" data-popup="fast_cart" data-product-id="[product_id]" data-date="[field_lesson_date]" data-teacher-uid="[uid]">Book a lesson</a> ';
+  $handler->display->display_options['fields']['nothing']['element_label_colon'] = FALSE;
+  /* Field: Global: Custom text */
+  $handler->display->display_options['fields']['nothing_1']['id'] = 'nothing_1';
+  $handler->display->display_options['fields']['nothing_1']['table'] = 'views';
+  $handler->display->display_options['fields']['nothing_1']['field'] = 'nothing';
+  $handler->display->display_options['fields']['nothing_1']['label'] = '';
+  $handler->display->display_options['fields']['nothing_1']['element_label_colon'] = FALSE;
 
   /* Display: Calendar Week Page */
   $handler = $view->new_display('page', 'Calendar Week Page', 'page_1');
