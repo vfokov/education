@@ -1090,6 +1090,33 @@ function lesson_pay_form($form, &$form_state) {
     '#markup' => '<div id="paypal-button-container"></div>'
   );
 
+  // todo balance
+
+  if ($user->uid) {
+    $current_user = user_load($user->uid);
+    $existing_summ = isset($current_user->field_balance[LANGUAGE_NONE]) ? $current_user->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+    if ($existing_summ) {
+      $form['existing_summ'] = array(
+        '#markup' => '<div class="user_balance">Account Balance: ' . $existing_summ . ' C$</div>',
+      );
+
+      $form['pay_from_balance'] = array(
+        '#type' => 'submit',
+        '#value' => t('Pay from balance'),
+        '#attributes' => array(
+          'class' => array(
+            'btn btn_red form__submit pay_from_balance_button',
+          ),
+        ),
+        '#prefix' => '<div class="form__block">',
+        '#suffix' => '</div>',
+        '#ajax' => array(
+          'callback' => 'lesson_pay_from_balance_form_ajax_callback',
+        ),
+      );
+    }
+  }
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Pay'),
@@ -1105,6 +1132,44 @@ function lesson_pay_form($form, &$form_state) {
     ),
   );
   return $form;
+}
+
+function lesson_pay_from_balance_form_ajax_callback($form, &$form_state) {
+  global $user;
+  if ($form_state['values']['current_path']) {
+    $current_path_text = 'Return to page';
+    $current_path = $form_state['values']['current_path'];
+
+    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+      $current_path_text = 'Return to page';
+    }
+  }
+
+  $message = "<p>";
+  $path_to_return = l($current_path_text, $current_path);
+
+  // todo take from user balance
+  if ($form_state['values']['order_price']) {
+    $order_price = substr($form_state['values']['order_price'], 1);
+    $current_user = user_load($user->uid);
+    $existing_summ = isset($current_user->field_balance[LANGUAGE_NONE]) ? $current_user->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+    if ($existing_summ) {
+      $summ_to_left = $existing_summ - $order_price;
+      $current_user->field_balance[LANGUAGE_NONE][0]['value'] = $summ_to_left;
+      user_save($current_user);
+    }
+  }
+
+  $message .= '<div class="form__block"><div class="form__desc">
+  You have paid this lesson.<br />
+      <br />' . $path_to_return . '</div></div>';
+
+  $message .= "</p>";
+  $commands[] = ajax_command_replace('#' . $form['#id'], $message);
+  $commands[] = ajax_command_html('#lesson_pay .popup__title', 'Thank you');
+  $commands[] = ajax_command_invoke('.popup__close', 'addClass', array('close_reload'));
+
+  return array('#type' => 'ajax', '#commands' => $commands);
 }
 
 function lesson_pay_form_submit($form, &$form_state) {
