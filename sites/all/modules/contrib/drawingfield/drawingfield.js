@@ -8,7 +8,7 @@
   var lock = 0;
 
   // send changes to server via ajax
-  function sendChangesToServer(text, classroom_nid) {
+  function sendChangesToServer(text, classroom_nid, uid) {
     window.setTimeout(function () {
       //$('.info').addClass('show');
       //$('.info').text('Saving...');
@@ -23,6 +23,7 @@
         data: {
           text: text,
           nid: classroom_nid,
+          uid: uid,
         },
         success: function (msg) {
 
@@ -69,9 +70,14 @@
             var carr_val =  $('.drawingfield.export input').val();
             console.log(carr_val);
 
+            var editor_uid = msg.current_editor_uid;
+
             var check = true;
             if (carr_val != msg.text) {
               check = true;
+            }
+            if (editor_uid == Drupal.settings.classroom_uid) {
+              check = false;
             }
 
 
@@ -101,7 +107,8 @@
                 $("#" + paintId).val(jsonBase64);
                 lock = 1;
                 timer = setTimeout(function(){
-                  sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid);
+                  var uid = Drupal.settings.classroom_uid;
+                  sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
                 }, 700);
                 console.log('drawChange')
               });
