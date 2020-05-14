@@ -1102,7 +1102,7 @@ function lesson_pay_form($form, &$form_state) {
 
       $form['pay_from_balance'] = array(
         '#type' => 'submit',
-        '#value' => t('Pay from balance'),
+        '#value' => t('Pay from Balance'),
         '#attributes' => array(
           'class' => array(
             'btn btn_red form__submit pay_from_balance_button',
@@ -1140,7 +1140,7 @@ function lesson_pay_from_balance_form_ajax_callback($form, &$form_state) {
     $current_path_text = 'Return to page';
     $current_path = $form_state['values']['current_path'];
 
-    if ( strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
+    if (strstr($current_path, 'products') || strstr($current_path, 'cart') ) {
       $current_path_text = 'Return to page';
     }
   }
