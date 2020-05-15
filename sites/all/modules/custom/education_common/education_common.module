@@ -217,31 +217,37 @@ function education_common_menu() {
 }
 
 function education_common_class_room($arg) {
-  $node = node_load($arg);
-  $form_state['build_info']['args'] = array($node);
-  if ($node) {
-
-    $order_id = isset($node->field_order_id[LANGUAGE_NONE]) ? $node->field_order_id[LANGUAGE_NONE][0]['value'] : 0;
-    $order = commerce_order_load($order_id);
-    if ($order->status == 'completed') {
-      return '<div class="form__desc lesson_completed">This lesson is completed</div>';
-    }
-
-    form_load_include($form_state, 'inc', 'node', 'node.pages');
-    $form = drupal_build_form('classroom_node_form', $form_state);
-
-    $time_stared = 0;
-    $now = 0;
-    $time_stared = isset($node->field_time_started[LANGUAGE_NONE]) ?
-      $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0;
-    if ($time_stared) {
-      $now = 40 * 60 - (time() - $time_stared);
-    }
-
-    drupal_add_js(array('time_stared' => $now), 'setting');
-    return drupal_render($form);
+  if (user_is_anonymous()) {
+    drupal_access_denied();
+    drupal_exit();
   }
-  return '';
+  else  {
+    $node = node_load($arg);
+    $form_state['build_info']['args'] = array($node);
+    if ($node) {
+
+      $order_id = isset($node->field_order_id[LANGUAGE_NONE]) ? $node->field_order_id[LANGUAGE_NONE][0]['value'] : 0;
+      $order = commerce_order_load($order_id);
+      if ($order->status == 'completed') {
+        return '<div class="form__desc lesson_completed">This lesson is completed</div>';
+      }
+
+      form_load_include($form_state, 'inc', 'node', 'node.pages');
+      $form = drupal_build_form('classroom_node_form', $form_state);
+
+      $time_stared = 0;
+      $now = 0;
+      $time_stared = isset($node->field_time_started[LANGUAGE_NONE]) ?
+        $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0;
+      if ($time_stared) {
+        $now = 40 * 60 - (time() - $time_stared);
+      }
+
+      drupal_add_js(array('time_stared' => $now), 'setting');
+      return drupal_render($form);
+    }
+    return '';
+  }
 }
 
 function education_recharge_balance() {
