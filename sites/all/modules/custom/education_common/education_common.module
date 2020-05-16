@@ -735,10 +735,42 @@ function education_common_preprocess_page(&$variables) {
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/front.js');
   }
   if (strstr(request_uri(), '/classroom')) {
+
+    // todo ЭТИ данные получать из данных по vox пользователя юзера и тичера
+
+    if (user_has_role(TEACHER_ROLE)) {
+      drupal_add_js(array('vox_username' => 'ladovod'), 'setting');
+      // todo
+      drupal_add_js(array('vox_password' => 'ladovod'), 'setting');
+    }
+    if (user_has_role(STUDENT_ROLE)) {
+      drupal_add_js(array('vox_username' => 'ladovod2'), 'setting');
+      // todo
+      drupal_add_js(array('vox_password' => 'ladovod2'), 'setting');
+    }
+    /////////////////////
+
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.plugin.js');
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.countdown.js');
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom-timer.js');
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom.js');
+
+
+    //////////////////////////////////
+    // For video block
+
+
+    drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/bootstrap.min.css');
+    drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/bootstrap-dialog.css');
+    drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/app.css');
+
+    drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/bootstrap.min.js');
+    drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/bootstrap-dialog.js');
+    drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/voximplant.min.js');
+
+
+
+    drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/app.js');
 
     drupal_add_js(array('classroom_nid' => arg(1)), 'setting');
 

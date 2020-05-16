@@ -71,3 +71,33 @@ function education_classroom_get_changes() {
   }
 }
 
+
+/**
+ * Implements hook_block_info
+ */
+function education_classroom_block_info() {
+  $blocks['classroom-video'] = array(
+    'info' => 'Classroom video',
+  );
+  return $blocks;
+}
+
+//https://education.designseonweb.com/vox/#accname=ladovod
+
+/**
+ * Implements hook_block_view
+ */
+function education_classroom_block_view($delta = '') {
+  $block = array(
+    'subject' => '',
+    'content' => '',
+  );
+
+  switch ($delta) {
+    case 'classroom-video':
+      $block['subject'] = t('');
+      $block['content'] = 'Video';
+      break;
+  }
+  return $block;
+}
