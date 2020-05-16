@@ -307,7 +307,7 @@ function education_base_views_default_views() {
     'lesson' => 'lesson',
   );
   $handler->display->display_options['filters']['type']['group'] = 1;
-  /* Filter criterion: Field: Teacher age category (field_age_category) */
+  /* Filter criterion: Field: Age category (field_age_category) */
   $handler->display->display_options['filters']['field_age_category_tid']['id'] = 'field_age_category_tid';
   $handler->display->display_options['filters']['field_age_category_tid']['table'] = 'field_data_field_age_category';
   $handler->display->display_options['filters']['field_age_category_tid']['field'] = 'field_age_category_tid';
@@ -466,11 +466,10 @@ function education_base_views_default_views() {
   $handler->display->display_options['fields']['field_lesson_subject']['id'] = 'field_lesson_subject';
   $handler->display->display_options['fields']['field_lesson_subject']['table'] = 'field_data_field_lesson_subject';
   $handler->display->display_options['fields']['field_lesson_subject']['field'] = 'field_lesson_subject';
-  /* Field: Field: Teacher age category */
+  /* Field: Field: Age category */
   $handler->display->display_options['fields']['field_age_category']['id'] = 'field_age_category';
   $handler->display->display_options['fields']['field_age_category']['table'] = 'field_data_field_age_category';
   $handler->display->display_options['fields']['field_age_category']['field'] = 'field_age_category';
-  $handler->display->display_options['fields']['field_age_category']['label'] = 'Age category';
   $handler->display->display_options['fields']['field_age_category']['type'] = 'taxonomy_term_reference_plain';
   $handler->display->display_options['fields']['field_age_category']['delta_offset'] = '0';
   /* Field: Content: Link to edit content */

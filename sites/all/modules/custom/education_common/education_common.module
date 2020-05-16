@@ -744,9 +744,9 @@ function education_common_preprocess_page(&$variables) {
       drupal_add_js(array('vox_password' => 'ladovod'), 'setting');
     }
     if (user_has_role(STUDENT_ROLE)) {
-      drupal_add_js(array('vox_username' => 'ladovod2'), 'setting');
+      drupal_add_js(array('vox_username' => 'ladovod3'), 'setting');
       // todo
-      drupal_add_js(array('vox_password' => 'ladovod2'), 'setting');
+      drupal_add_js(array('vox_password' => 'ladovod3'), 'setting');
     }
     /////////////////////
 
