@@ -669,6 +669,74 @@ function education_base_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'user-user-field_vox_password'.
+  $field_instances['user-user-field_vox_password'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 27,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_vox_password',
+    'label' => 'Vox_password',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 30,
+    ),
+  );
+
+  // Exported field_instance: 'user-user-field_vox_username'.
+  $field_instances['user-user-field_vox_username'] = array(
+    'bundle' => 'user',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 26,
+      ),
+    ),
+    'entity_type' => 'user',
+    'field_name' => 'field_vox_username',
+    'label' => 'Vox_username',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => 0,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 29,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Age category');
@@ -687,6 +755,8 @@ function education_base_field_default_field_instances() {
   t('Student age category');
   t('Terms of service');
   t('Time started');
+  t('Vox_password');
+  t('Vox_username');
 
   return $field_instances;
 }
