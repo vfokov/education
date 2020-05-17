@@ -43,6 +43,16 @@
  *
  * @ingroup themeable
  */
+
+ // Temporary after vox user creation need to replace for real vox data
+ if (user_has_role(TEACHER_ROLE)) {
+   $to_call = 'ladovod3';
+ }
+
+ if (user_has_role(STUDENT_ROLE)) {
+   $to_call = 'ladovod';
+ }
+
 ?>
 
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
@@ -58,11 +68,13 @@
   <div class="content"<?php print $content_attributes; ?>>
     <div id="video-content" class="panel-body">
       <div id="voximplant_container"></div>
+      <div id="voximplant_containerr"></div>
       <div id="controls" style="display:none">
         <div class="input-wrapper">
           <div class="input-group">
-            <span class="input-group-addon">@</span>
-            <input id="phonenum" type="text" class="form-control" placeholder="Username">
+            <!--<span class="input-group-addon">@</span> -->
+            <!--<input id="phonenum" type="text" class="form-control" placeholder="Username" value="<?php //print $to_call; ?>"> -->
+            <input id="phonenum" type="hidden" class="form-control" placeholder="Username" value="<?php print $to_call; ?>">
           </div>
         </div>
         <div class="btn-group btn-group-justified">

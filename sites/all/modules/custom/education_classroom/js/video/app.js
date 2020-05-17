@@ -89,7 +89,7 @@
         videoSupport: true, // enable video support
         progressTone: true, // play progress tone
         localVideoContainerId: "voximplant_container", // element id for local video from camera or screen sharing
-        remoteVideoContainerId: "voximplant_container"
+        remoteVideoContainerId: "voximplant_containerr"
       });
     } catch(e) {
       log(e);
@@ -246,7 +246,7 @@
 // Call failed
     function onCallFailed(e) {
       //log("CallFailed: "+currentCall.id()+" code: "+e.code+" reason: "+e.reason);
-      $('#cancelButton').replaceWith('<button type="button" class="btn btn-success" id="callButton">Call</button>');
+      $('#cancelButton').replaceWith('<button type="button" class="btn btn-success" id="callButton">Connect</button>');
       $('#cancelButton').remove();
       $('#callButton').click(function() {
         createCall();
