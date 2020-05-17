@@ -236,7 +236,7 @@
     function onCallDisconnected(e) {
       //log("CallDisconnected: "+currentCall.id()+" Call state: "+currentCall.state());
       currentCall = null;
-      $('#cancelButton').replaceWith('<button type="button" class="btn btn-success" id="callButton">Call</button>');
+      $('#cancelButton').replaceWith('<button type="button" class="btn btn-success" id="callButton">Connect</button>');
       $('#cancelButton, #shareButton').remove();
       $('#callButton').click(function() {
         createCall();
