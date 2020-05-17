@@ -68,7 +68,6 @@
   <div class="content"<?php print $content_attributes; ?>>
     <div id="video-content" class="panel-body">
       <div id="voximplant_container"></div>
-      <div id="voximplant_containerr"></div>
       <div id="controls" style="display:none">
         <div class="input-wrapper">
           <div class="input-group">

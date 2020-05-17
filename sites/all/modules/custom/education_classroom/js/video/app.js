@@ -95,7 +95,7 @@
         videoSupport: true, // enable video support
         progressTone: true, // play progress tone
         localVideoContainerId: "voximplant_container", // element id for local video from camera or screen sharing
-        remoteVideoContainerId: "voximplant_containerr"
+        remoteVideoContainerId: "voximplant_container"
       });
     } catch(e) {
       log(e);
