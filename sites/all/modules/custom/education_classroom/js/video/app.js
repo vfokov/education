@@ -210,7 +210,7 @@
         $('#shareButton').html('Stop Sharing');
         $('#shareButton').off('click').click(function() {
           currentCall.stopSharingScreen();
-          $('#shareButton').html('Share Screen');
+          //$('#shareButton').html('Share Screen');
           $('#shareButton').off('click').click(function() {
             currentCall.shareScreen(true);
           });
@@ -223,10 +223,10 @@
       //log("CallConnected: "+currentCall.id());
       if ($('#cancelButton').length) {
         $('#cancelButton').html('Disconnect');
-        $('<button type="button" class="btn btn-default" id="shareButton">Share Screen</button>').insertAfter("#cancelButton");
+        //$('<button type="button" class="btn btn-default" id="shareButton">Share Screen</button>').insertAfter("#cancelButton");
       } else {
         $('#callButton').replaceWith('<button type="button" class="btn btn-danger" id="cancelButton">Disconnect</button>');
-        $('<button type="button" class="btn btn-default" id="shareButton">Share Screen</button>').insertAfter("#cancelButton");
+        //$('<button type="button" class="btn btn-default" id="shareButton">Share Screen</button>').insertAfter("#cancelButton");
         $('#cancelButton').click(function() {
           currentCall.hangup();
         });
