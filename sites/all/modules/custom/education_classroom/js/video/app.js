@@ -8,6 +8,11 @@
       createCall();
     });
 
+    $('#cancelButton').click(function() {
+      //currentCall.hangup();
+      disconnectCall();
+    });
+
 
 
     // TODO
