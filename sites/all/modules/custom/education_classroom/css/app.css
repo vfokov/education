@@ -105,3 +105,8 @@ div.panel-body {
 .page-classroom .field-name-field-current-editor-uid {
   display: none;
 }
+
+/*temp*/
+#shareButton {
+  display: none;
+}

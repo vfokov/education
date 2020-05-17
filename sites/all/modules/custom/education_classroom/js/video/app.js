@@ -1,11 +1,14 @@
 (function ($) {
   $(document).ready(function($) {
 
+
     $('#callButton').click(function() {
       //currentCall.hangup();
       console.log('cllll');
       createCall();
     });
+
+
 
     // TODO
     // 1. Сделать автоматическую авторизацию
@@ -356,7 +359,9 @@
 
 // Start/stop sending video
     function sendVideo(flag) {
-      voxAPI.sendVideo(flag);
+      //voxAPI.sendVideo(flag);
+      //voxAPI.sendVideo(flag);
+      currentCall.sendVideo(flag)
     }
 
 // Enable fullscreen
