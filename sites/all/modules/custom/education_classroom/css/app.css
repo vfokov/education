@@ -41,12 +41,15 @@ div.panel-body {
 
 #controls button {
   float: none;
+  height: 45px;
 }
 
 #voximplantlocalvideo {
   float: left;
   width: 320px;
   height: 240px;
+  margin-left: 10px;
+  margin-bottom: 20px;
 }
 
 .vertical-center {
@@ -75,6 +78,7 @@ div.panel-body {
 
 #block-education-classroom-classroom-video {
   float: left;
+  width: 27%;
 }
 
 #block-education-classroom-classroom-video #video-content {
