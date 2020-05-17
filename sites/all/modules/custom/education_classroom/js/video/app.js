@@ -221,21 +221,17 @@
 // Call connected
     function onCallConnected(e) {
       //log("CallConnected: "+currentCall.id());
-      /*
       if ($('#cancelButton').length) {
         $('#cancelButton').html('Disconnect');
         $('<button type="button" class="btn btn-default" id="shareButton">Share Screen</button>').insertAfter("#cancelButton");
       }
-      */
-       
-
-      //else {
+      else {
         $('#callButton').replaceWith('<button type="button" class="btn btn-danger" id="cancelButton">Disconnect</button>');
         $('<button type="button" class="btn btn-default" id="shareButton">Share Screen</button>').insertAfter("#cancelButton");
         $('#cancelButton').click(function() {
           currentCall.hangup();
         });
-      //}
+      }
       $('#shareButton').click(function() {
         currentCall.shareScreen(true);
       });
