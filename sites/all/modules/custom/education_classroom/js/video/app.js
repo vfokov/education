@@ -7,6 +7,12 @@
       createCall();
     });
 
+    $('#callButton').click(function() {
+      //currentCall.hangup();
+      console.log('cllll');
+      createCall();
+    });
+
 
     /*
     $('#callButton').click(function() {
