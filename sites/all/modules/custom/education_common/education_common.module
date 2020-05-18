@@ -286,11 +286,17 @@ function education_common_init() {
     if (user_has_role(TEACHER_ROLE)) {
       drupal_goto('tutor-setup');
     }
+    if (user_is_anonymous()) {
+      drupal_goto('/');
+    }
   }
 
   if (request_uri() == '/tutor-setup' ) {
     if (user_has_role(STUDENT_ROLE)) {
       drupal_goto('pupil/profile');
+    }
+    if (user_is_anonymous()) {
+      drupal_goto('/');
     }
   }
 

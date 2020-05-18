@@ -2,9 +2,10 @@
 hide($form['mimemail']);
 hide($form['field_not_available_dates']);
 
-if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE)) {
+if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE) || user_is_anonymous()) {
   hide($form['field_vox_username']);
   hide($form['field_vox_password']);
+  hide($form['field_balance']);
 }
 
 ?>
