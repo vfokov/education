@@ -53,6 +53,33 @@
    $to_call = 'ladovod';
  }
 
+ $classroom_node = node_load(arg(1));
+
+ $order_id = $classroom_node->field_order_id[LANGUAGE_NONE][0]['value'];
+ $order = commerce_order_load($order_id);
+
+if (user_has_role(STUDENT_ROLE)) {
+  $teacher = user_load($order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid']);
+  if (isset($teacher->field_vox_username[LANGUAGE_NONE])) {
+    $to_call = $teacher->field_vox_username[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    // test acc
+    $to_call = 'ladovod';
+  }
+}
+
+if (user_has_role(TEACHER_ROLE)) {
+  $student = user_load($order->uid);
+  if (isset($student->field_vox_username[LANGUAGE_NONE])) {
+    $to_call = $student->field_vox_username[LANGUAGE_NONE][0]['value'];
+  }
+  else {
+    // test acc
+    $to_call = 'ladovod3';
+  }
+}
+
 ?>
 
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->

@@ -1236,8 +1236,87 @@ function lesson_pay_form_submit($form, &$form_state) {
       // set field_classroom to lesson product display
       $product_display->field_classroom[LANGUAGE_NONE][0]['nid'] = $node_classroom->nid;
       node_save($product_display);
+
+      //TODO создать в vox два юзера, предварительно проверив поля vox
+      // ТИЧЕР $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid']
+       $teacher = user_load($order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid']);
+       $teacher_name = $teacher->name;
+       $student_name =  $user->name;
+
+      vox_create_user($teacher);
+      vox_create_user($user);
+      //->field_vox_username[LANGUAGE_NONE]
+      /*
+      $data = array(
+        'account_id' => '3616974',
+        'api_key' => '4e3b7b77-95db-4072-9860-6c3ab747f18a',
+        'user_name' => '',
+        'user_display_name' => '',
+        'user_password' => '',
+        'application_id' => '10229034',
+      );
+
+      $options = array(
+        'method' => 'GET',
+        'data' => drupal_http_build_query($data),
+        'timeout' => 15,
+      );
+
+      $result = drupal_http_request('https://api.voximplant.com/platform_api/AddUser/', $options);
+      */
+
+      // drupal_http_build_query
+      // https://api.voximplant.com/platform_api/AddUser/?account_id=3616974&api_key=4e3b7b77-95db-4072-9860-6c3ab747f18a&user_name=iden1&user_display_name=iden1&user_password=1234567&application_id=10229034
     }
     commerce_order_save($order);
+  }
+}
+
+function vox_create_user($user) {
+  $user_account = user_load($user->uid);
+  if (isset($user_account->field_vox_username[LANGUAGE_NONE]) && !empty($user_account->field_vox_username[LANGUAGE_NONE][0])) {
+    //return;
+  }
+  else {
+
+    $edit = array(
+      'field_vox_username' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => 'vox_'. $user->name,
+          ),
+        ),
+      ),
+      'field_vox_password' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => 'vox_'. $user->name,
+          ),
+        ),
+      ),
+    );
+
+    $data = array(
+      'account_id' => '3616974',
+      'api_key' => '4e3b7b77-95db-4072-9860-6c3ab747f18a',
+      'user_name' => 'vox_'. $user->name,
+      'user_display_name' => 'vox_'. $user->name,
+      'user_password' => 'vox_'. $user->name,
+      'application_id' => '10229034',
+    );
+
+    /*
+    $options = array(
+      'method' => 'GET',
+      'data' => drupal_http_build_query($data),
+      'timeout' => 15,
+    );
+
+    $result = drupal_http_request('https://api.voximplant.com/platform_api/AddUser/', $options);
+    */
+
+    $result = file_get_contents('https://api.voximplant.com/platform_api/AddUser/?' . drupal_http_build_query($data));
+    user_save($user, $edit);
   }
 }
 

@@ -1,8 +1,11 @@
 <?php
 hide($form['mimemail']);
 hide($form['field_not_available_dates']);
-hide($form['field_vox_username']);
-hide($form['field_vox_password']);
+
+if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE)) {
+  hide($form['field_vox_username']);
+  hide($form['field_vox_password']);
+}
 
 ?>
 
