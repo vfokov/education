@@ -44,6 +44,10 @@
  * @ingroup themeable
  */
 
+if (!user_is_anonymous()) {
+
+
+
  // Temporary after vox user creation need to replace for real vox data
  if (user_has_role(TEACHER_ROLE)) {
    $to_call = 'ladovod3';
@@ -54,6 +58,8 @@
  }
 
  $classroom_node = node_load(arg(1));
+
+//var_dump($classroom_node); die();
 
  $order_id = $classroom_node->field_order_id[LANGUAGE_NONE][0]['value'];
  $order = commerce_order_load($order_id);
@@ -115,3 +121,5 @@ if (user_has_role(TEACHER_ROLE)) {
     </div>
   </div>
 </div>
+
+<?php } ?>
