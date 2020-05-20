@@ -481,7 +481,7 @@ h1#site-name {
 #main-menu {
     /* clear: both; */
     float: left;
-    margin-top: 15px;
+    margin-top: 23px;
 }
 #main-menu-links {
     font-size: 0.929em;
@@ -497,7 +497,7 @@ h1#site-name {
     width: 100%;
 }
 #main-menu-links a {
-    color: #fff;
+    color: #777;
     background: #ccc;
     background: no-repeat;
     float: none;
@@ -509,7 +509,8 @@ h1#site-name {
     border-bottom-left-radius: 8px;
     margin-bottom: 4px;
     padding: 0.9em 0 0.9em 10px;
-    font-size: 19px;
+    font-size: 14px;
+    text-transform: uppercase;
 }
 #main-menu-links a:hover,
 #main-menu-links a:focus {
@@ -2412,7 +2413,7 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     background-color: #cecece;
     cursor: pointer;
     position: absolute;
-    right: 79px;
+    right: 0px;
     top: 10px;
 }
 

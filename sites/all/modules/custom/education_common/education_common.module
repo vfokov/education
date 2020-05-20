@@ -197,6 +197,13 @@ function education_common_finish_lesson_ajax_callback(&$form, &$form_state) {
 function education_common_menu() {
   $items = array();
 
+  $items['how-does-it-works'] = array(
+    'title' => 'How does it works',
+    'page callback' => 'education_common_works',
+    'access callback' => TRUE,
+    //'page arguments' => array(1),
+  );
+
   $items['recharge-balance'] = array(
     'title' => 'Recharge balance',
     'page callback' => 'education_recharge_balance',
@@ -214,6 +221,11 @@ function education_common_menu() {
   );
 
   return $items;
+}
+
+function education_common_works($arg) {
+
+  return '';
 }
 
 function education_common_class_room($arg) {
@@ -446,12 +458,20 @@ function education_common_theme() {
       'template' => 'user-profile',
     ),
 
-
     'lesson_pay_formm' => array(
       'render element'=>'form',
       'path' => drupal_get_path('module', 'education_common') . '/templates',
       'template' => 'lesson-pay-form',
     ),
+
+   'education_common_anonymous_menu' => array(
+     'variables' => array(
+       'menu_items' => NULL,
+     ),
+     'path' => drupal_get_path('module', 'education_common') . '/templates',
+     'template' => 'education-common-anonymous-menu',
+   ),
+
 
   );
 
@@ -783,11 +803,8 @@ function education_common_preprocess_page(&$variables) {
 
       drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom.js');
 
-
       //////////////////////////////////
       // For video block
-
-
       drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/bootstrap.min.css');
       drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/bootstrap-dialog.css');
       drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/app.css');
@@ -796,14 +813,29 @@ function education_common_preprocess_page(&$variables) {
       drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/bootstrap-dialog.js');
       drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/voximplant.min.js');
 
-
       drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/app.js');
-
       drupal_add_js(array('classroom_nid' => arg(1)), 'setting');
 
-      global $user;
       drupal_add_js(array('classroom_uid' => $user->uid), 'setting');
     }
+  }
+
+  $variables['show_anonymous_menu'] = FALSE;
+  if (user_is_anonymous()) {
+    $anonymous_menu = menu_tree('menu-anonymous-menu');
+    $menu_items = array();
+    foreach ($anonymous_menu as $key => $anonymous_menu_item) {
+      if (is_numeric($key)) {
+        $menu_items[] = array(
+          'href' => $anonymous_menu_item['#href'] == '<front>' ? '/' : $anonymous_menu_item['#href'],
+          'title' =>  $anonymous_menu_item['#title'],
+        );
+      }
+    }
+
+    $variables['show_anonymous_menu'] = TRUE;
+    $variables['education_common_anonymous_menu'] = theme('education_common_anonymous_menu', array('menu_items' => $menu_items));
+
   }
 
 }

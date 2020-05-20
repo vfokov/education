@@ -171,6 +171,11 @@
           <?php print $education_tutor_tutor_menu; ?>
         <?php endif; ?>
 
+        <?php if ($show_anonymous_menu): ?>
+          <!--<div class="b-topnav__icon"><span>&nbsp;</span></div>-->
+          <?php print $education_common_anonymous_menu; ?>
+        <?php endif; ?>
+
       </div></header> <!-- /.section, /#header -->
 
     <?php if ($messages): ?>

@@ -28,12 +28,13 @@ body.overlay {
   border-bottom: 1px solid #ffffff;
 }
 #header {
-  /*background-color: #1d84c3;*/
-  background-color: #0093c9;
-    /*
-  background-image: -webkit-linear-gradient(top, #055a8e 0%, #1d84c3 100%);
-  background-image: linear-gradient(to bottom, #055a8e 0%, #1d84c3 100%);
-  */
+  background-color: #fff;
+  position: fixed;
+  z-index: 101;
+  width: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 20px rgba(0,0,0,.1);
 }
 a {
   color: #0071B3;

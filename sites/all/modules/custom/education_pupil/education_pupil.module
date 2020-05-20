@@ -30,7 +30,6 @@ function education_pupil_preprocess_page(&$variables) {
   }
 
   $pupils_menu = menu_tree('menu-pupils-menu');
-
   $menu_items = array();
   foreach ($pupils_menu as $key => $pupils_menu_item) {
     if (is_numeric($key)) {
@@ -42,6 +41,7 @@ function education_pupil_preprocess_page(&$variables) {
   }
 
   $variables['education_pupil_pupil_menu'] = theme('education_pupil_pupil_menu', array('menu_items' => $menu_items));
+
 }
 
 
