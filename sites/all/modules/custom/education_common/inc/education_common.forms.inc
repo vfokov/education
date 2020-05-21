@@ -1283,14 +1283,14 @@ function vox_create_user($user) {
       'field_vox_username' => array(
         LANGUAGE_NONE => array(
           0 => array(
-            'value' => 'vox_'. $user->name,
+            'value' => clean_vox_name('vox_'. $user->name),
           ),
         ),
       ),
       'field_vox_password' => array(
         LANGUAGE_NONE => array(
           0 => array(
-            'value' => 'vox_'. $user->name,
+            'value' => clean_vox_name('vox_'. $user->name),
           ),
         ),
       ),
