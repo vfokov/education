@@ -1299,26 +1299,22 @@ function vox_create_user($user) {
     $data = array(
       'account_id' => '3616974',
       'api_key' => '4e3b7b77-95db-4072-9860-6c3ab747f18a',
-      'user_name' => 'vox_'. $user->name,
-      'user_display_name' => 'vox_'. $user->name,
-      'user_password' => 'vox_'. $user->name,
+      'user_name' => 'vox_'. clean_vox_name($user->name),
+      'user_display_name' => 'vox_'. clean_vox_name($user->name),
+      'user_password' => 'vox_'. clean_vox_name($user->name),
       'application_id' => '10229034',
     );
-
-    /*
-    $options = array(
-      'method' => 'GET',
-      'data' => drupal_http_build_query($data),
-      'timeout' => 15,
-    );
-
-    $result = drupal_http_request('https://api.voximplant.com/platform_api/AddUser/', $options);
-    */
 
     $result = file_get_contents('https://api.voximplant.com/platform_api/AddUser/?' . drupal_http_build_query($data));
     user_save($user, $edit);
   }
 }
+
+function clean_vox_name($s) {
+  $s = preg_replace( "/[^a-zA-Z0-9]/", '', $s );
+  return $s;
+}
+
 
 function get_product_display_by_product_id($product_id, $bundle = 'product_display', $field_name = 'field_product') {
   $query = new EntityFieldQuery();
