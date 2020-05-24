@@ -61,7 +61,8 @@ if (!user_is_anonymous()) {
 
 //var_dump($classroom_node); die();
 
- $order_id = $classroom_node->field_order_id[LANGUAGE_NONE][0]['value'];
+ $order_id = isset($classroom_node->field_order_id[LANGUAGE_NONE]) ?
+   $classroom_node->field_order_id[LANGUAGE_NONE][0]['value'] : '';
  $order = commerce_order_load($order_id);
 
 if (user_has_role(STUDENT_ROLE)) {
@@ -75,7 +76,7 @@ if (user_has_role(STUDENT_ROLE)) {
   }
 }
 
-if (user_has_role(TEACHER_ROLE)) {
+if ($order_id && user_has_role(TEACHER_ROLE)) {
   $student = user_load($order->uid);
   if (isset($student->field_vox_username[LANGUAGE_NONE])) {
     $to_call = $student->field_vox_username[LANGUAGE_NONE][0]['value'];
