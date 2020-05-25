@@ -680,7 +680,7 @@ function education_common_preprocess_node(&$variables) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
-
+  
  // $l_node = node_load(31);
  // var_dump($l_node); die();
 
