@@ -103,7 +103,7 @@
                 timer = setTimeout(function () {
                   var uid = Drupal.settings.classroom_uid;
                   sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-                }, 700);
+                }, 300);
                 //console.log('drawChange')
               });
 
@@ -229,7 +229,7 @@
         timer = setTimeout(function(){
           var uid = Drupal.settings.classroom_uid;
           sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-        }, 00);
+        }, 300);
         console.log('Clear')
       });
 
