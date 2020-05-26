@@ -28,7 +28,7 @@
         success: function (msg) {
           setTimeout(function () {
             lock = 0;
-          }, 1000)
+          }, 800)
 
           //console.log('saved');
           /*
@@ -118,7 +118,7 @@
                 timer = setTimeout(function () {
                   var uid = Drupal.settings.classroom_uid;
                   sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-                }, 700);
+                }, 400);
                 console.log('Clear')
               });
 
@@ -133,7 +133,7 @@
                 timer = setTimeout(function () {
                   var uid = Drupal.settings.classroom_uid;
                   sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-                }, 700);
+                }, 400);
                 console.log('toolChange')
               });
 
@@ -175,7 +175,7 @@
           if (editor_uid != Drupal.settings.classroom_uid) {
             setTimeout(function () {
               ///////////sendUpdateRequest(classroom_nid); //this will send request again and again;
-            }, 2000);
+            }, 1000);
           }
 
 
@@ -214,7 +214,7 @@
         timer = setTimeout(function(){
           var uid = Drupal.settings.classroom_uid;
           sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-          }, 700);
+          }, 400);
           //console.log('drawChange')
       });
 
@@ -229,7 +229,7 @@
         timer = setTimeout(function(){
           var uid = Drupal.settings.classroom_uid;
           sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-        }, 700);
+        }, 00);
         console.log('Clear')
       });
 
@@ -244,7 +244,7 @@
         timer = setTimeout(function(){
           var uid = Drupal.settings.classroom_uid;
           sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-        }, 700);
+        }, 400);
         console.log('toolChange')
       });
       lc.on('primaryColorChange', function() {
@@ -294,7 +294,7 @@
       //console.log(Drupal.settings.classroom_nid);
       //console.log('lock = ' + lock);
       sendUpdateRequest(Drupal.settings.classroom_nid); //this will send request again and again;
-    }, 3000);
+    }, 1800);
 
     $('.field-desk-add-more-wrapper').mouseup(function(){
       //console.log('mouseup');
