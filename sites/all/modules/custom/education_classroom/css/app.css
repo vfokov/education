@@ -110,3 +110,7 @@ div.panel-body {
 #shareButton {
   display: none;
 }
+
+#voximplant_container audio {
+  height: 15px !important;
+}
