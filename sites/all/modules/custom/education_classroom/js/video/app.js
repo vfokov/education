@@ -1,9 +1,8 @@
 (function ($) {
   $(document).ready(function($) {
-    
+
     $('#callButton').click(function() {
       //currentCall.hangup();
-      console.log('cllll');
       createCall();
     });
 
@@ -87,7 +86,7 @@
     voxAPI.on(VoxImplant.Events.MicAccessResult, onMicAccessResult);
     voxAPI.on(VoxImplant.Events.SourcesInfoUpdated, onSourcesInfoUpdated);
 
-    console.log(voxAPI);
+    //console.log(voxAPI);
 
 // initialize SDK
     try {

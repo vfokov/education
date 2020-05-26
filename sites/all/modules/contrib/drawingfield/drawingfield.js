@@ -30,7 +30,7 @@
             lock = 0;
           }, 1000)
 
-          console.log('saved');
+          //console.log('saved');
           /*
           $('.info').text('Saved');
           setTimeout(function(){
@@ -47,7 +47,7 @@
   }
 
   function sendUpdateRequest(classroom_nid){
-    console.log('lll_lock =' + lock);
+    //console.log('lll_lock =' + lock);
     if (lock == 0) {
 
       $.ajax({
@@ -104,7 +104,7 @@
                   var uid = Drupal.settings.classroom_uid;
                   sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
                 }, 700);
-                console.log('drawChange')
+                //console.log('drawChange')
               });
 
               // Clear image
@@ -215,7 +215,7 @@
           var uid = Drupal.settings.classroom_uid;
           sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
           }, 700);
-          console.log('drawChange')
+          //console.log('drawChange')
       });
 
       // Clear image
@@ -272,7 +272,7 @@
         lock = 0;
       });
       lc.on('pointerup', function() { //http://literallycanvas.com/api/events.html
-        console.log('p_UP');
+        //console.log('p_UP');
         lock = 0;
       });
 
@@ -291,13 +291,13 @@
 
   $(document).ready(function($) {
     setInterval(function () {
-      console.log(Drupal.settings.classroom_nid);
-      console.log('lock = ' + lock);
+      //console.log(Drupal.settings.classroom_nid);
+      //console.log('lock = ' + lock);
       sendUpdateRequest(Drupal.settings.classroom_nid); //this will send request again and again;
     }, 3000);
 
     $('.field-desk-add-more-wrapper').mouseup(function(){
-      console.log('mouseup');
+      //console.log('mouseup');
     });
   })
 
