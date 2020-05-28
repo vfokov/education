@@ -236,8 +236,16 @@
       $('#shareButton').click(function() {
         currentCall.shareScreen(true);
       });
-      sendVideo(true);
-      showRemoteVideo(true);
+
+
+      setTimeout(function() {
+        sendVideo(true);
+      }, 1000);
+
+      setTimeout(function() {
+        showRemoteVideo(true);
+      }, 1000);
+
     }
 
 // Call disconnected
