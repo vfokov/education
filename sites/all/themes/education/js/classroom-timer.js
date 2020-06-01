@@ -1,5 +1,7 @@
 (function ($) {
 
+  var lock;
+
   function getTimerFromServer() {
     var classroom_nid = $('input[name="classroom_nid"]').val();
     var timer_editor_uid = $('input[name="timer_editor_uid"]').val();
@@ -37,10 +39,12 @@
                 $('#pauseResume').text('Resume');
               }
               else {
-                start(false)
-                $('#pauseResume').removeClass('resume')
-                $('#pauseResume').addClass('pause');
-                $('#pauseResume').text('Pause');
+                if (!lock) {
+                  start(false)
+                  $('#pauseResume').removeClass('resume')
+                  $('#pauseResume').addClass('pause');
+                  $('#pauseResume').text('Pause');
+                }
               }
             }
           }
@@ -57,6 +61,7 @@
     var classroom_nid = $('input[name="classroom_nid"]').val();
     var timer_editor_uid = $('input[name="timer_editor_uid"]').val();
     if (editor) {
+      lock = 1;
       $.ajax({
         type: 'POST',
         url: '/start-timer',
