@@ -29,10 +29,10 @@
 
               console.log('Will be updated');
 
-              if (!lock) {
+              //if (!lock) {
                 $('#classroom-timer').countdown('destroy');
                 $('#classroom-timer').countdown({until: time_st, compact: true, description: ''});
-              }
+              //}
 
               if (is_paused == '1') {
                 pause(false);
@@ -41,12 +41,12 @@
                 $('#pauseResume').text('Resume');
               }
               else {
-                if (!lock) {
+                //if (!lock) {
                   start(false)
                   $('#pauseResume').removeClass('resume')
                   $('#pauseResume').addClass('pause');
                   $('#pauseResume').text('Pause');
-                }
+                //}
               }
             }
           }
@@ -63,9 +63,12 @@
     var classroom_nid = $('input[name="classroom_nid"]').val();
     var timer_editor_uid = $('input[name="timer_editor_uid"]').val();
 
+    /*
     if (!editor) {
       lock = 1;
     }
+     */
+
     if (editor) {
 
       $.ajax({
