@@ -265,7 +265,7 @@ function education_common_class_room($arg) {
       $now = 0;
       $time_stared = isset($node->field_time_started[LANGUAGE_NONE]) ?
         //$node->field_time_started[LANGUAGE_NONE][0]['value'] + time() : time();
-        $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0
+        $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0;
       if ($time_stared) {
         //$now = 40 * 60 - (time() - $time_stared);
         $now = $time_stared;
