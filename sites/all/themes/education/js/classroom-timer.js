@@ -30,9 +30,26 @@
               console.log('Will be updated');
 
               //if (!lock) {
+              // TODO if time from server >
+
+              var destroy_timer = true;
+              if (is_paused == '0') {
+                var periods = $('#classroom-timer').countdown('getTimes');
+                var minutes = periods[5];
+                var seconds = periods[6];
+
+                seconds = parseInt(seconds) + parseInt(minutes) * 60;
+
+                if (seconds != msg.seconds) {
+                  destroy_timer = false;
+                }
+                //destroy_timer = false;
+              }
+
+              if (destroy_timer) {
                 $('#classroom-timer').countdown('destroy');
                 $('#classroom-timer').countdown({until: time_st, compact: true, description: ''});
-              //}
+              }
 
               if (is_paused == '1') {
                 pause(false);
