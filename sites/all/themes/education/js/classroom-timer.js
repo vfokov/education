@@ -62,7 +62,10 @@
     $('#classroom-timer').countdown('resume');
     var classroom_nid = $('input[name="classroom_nid"]').val();
     var timer_editor_uid = $('input[name="timer_editor_uid"]').val();
-    lock = 1;
+
+    if (!editor) {
+      lock = 1;
+    }
     if (editor) {
 
       $.ajax({
