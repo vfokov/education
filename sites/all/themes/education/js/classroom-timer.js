@@ -22,7 +22,7 @@
             console.log('liftoffTime=' + liftoffTime);
             //console.log('liftoffTime=' + liftoffTime);
 
-            if (is_paused == '1' && msg.timer_editor_uid != timer_editor_uid) {
+            if (msg.timer_editor_uid != timer_editor_uid) {
             //if (msg.timer_editor_uid != timer_editor_uid) {
 
               console.log('Will be updated');
@@ -30,10 +30,18 @@
               $('#classroom-timer').countdown('destroy');
               $('#classroom-timer').countdown({until: time_st, compact: true, description: ''});
 
-              pause(false);
-              $('#pauseResume').removeClass('pause')
-              $('#pauseResume').addClass('resume');
-              $('#pauseResume').text('Resume');
+              if (is_paused == '1') {
+                pause(false);
+                $('#pauseResume').removeClass('pause')
+                $('#pauseResume').addClass('resume');
+                $('#pauseResume').text('Resume');
+              }
+              else {
+                start(false)
+                $('#pauseResume').removeClass('resume')
+                $('#pauseResume').addClass('pause');
+                $('#pauseResume').text('Pause');
+              }
             }
           }
         }
@@ -44,25 +52,27 @@
     });
   }
 
-  function start() {
+  function start(editor) {
     $('#classroom-timer').countdown('resume');
     var classroom_nid = $('input[name="classroom_nid"]').val();
     var timer_editor_uid = $('input[name="timer_editor_uid"]').val();
-    $.ajax({
-      type: 'POST',
-      url: '/start-timer',
-      data: {
-        //seconds: seconds,
-        classroom_nid: classroom_nid,
-        timer_editor_uid: timer_editor_uid,
-      },
-      success: function (msg) {
+    if (editor) {
+      $.ajax({
+        type: 'POST',
+        url: '/start-timer',
+        data: {
+          //seconds: seconds,
+          classroom_nid: classroom_nid,
+          timer_editor_uid: timer_editor_uid,
+        },
+        success: function (msg) {
 
-      },
-      error: function () {
+        },
+        error: function () {
 
-      }
-    });
+        }
+      });
+    }
   }
   function pause(editor) {
     $('#classroom-timer').countdown('pause');
@@ -132,7 +142,7 @@
         $(this).removeClass('resume');
         $(this).addClass('pause');
         $(this).text('Pause');
-        start();
+        start(true);
       }
 
     });
