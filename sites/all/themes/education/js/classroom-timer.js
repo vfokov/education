@@ -29,8 +29,10 @@
 
               console.log('Will be updated');
 
-              $('#classroom-timer').countdown('destroy');
-              $('#classroom-timer').countdown({until: time_st, compact: true, description: ''});
+              if (!lock) {
+                $('#classroom-timer').countdown('destroy');
+                $('#classroom-timer').countdown({until: time_st, compact: true, description: ''});
+              }
 
               if (is_paused == '1') {
                 pause(false);
