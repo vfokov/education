@@ -22,7 +22,8 @@
             console.log('liftoffTime=' + liftoffTime);
             //console.log('liftoffTime=' + liftoffTime);
 
-            if (is_paused == '1' && msg.timer_editor_uid != timer_editor_uid) {
+            //if (is_paused == '1' && msg.timer_editor_uid != timer_editor_uid) {
+            if (msg.timer_editor_uid != timer_editor_uid) {
 
               console.log('Will be updated');
 
