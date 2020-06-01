@@ -48,12 +48,26 @@ function education_common_form_lesson_node_form_alter(&$form, &$form_state, $for
 function education_common_form_classroom_node_form_alter(&$form, &$form_state, $form_id) {
   // Alter the 'classroom' form here.
   if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE)) {
+    global $user;
     $form['title']['#access'] = FALSE;
     $form['field_desk'][LANGUAGE_NONE][0]['#title'] = '';
     $form['field_desk'][LANGUAGE_NONE][0]['data']['#title'] = '';
 
     $form['timer'] = array(
       '#markup' =>  '<div id="classroom-timer"></div>'
+    );
+
+    $form['classroom_nid'] = array(
+      '#type' =>  'hidden',
+      '#default_value' =>  arg(1),
+    );
+
+    $form['timer_editor_uid'] = array(
+      '#type' =>  'hidden',
+      '#default_value' =>  $user->uid,
+    );
+    $form['timer_pause'] = array(
+      '#markup' =>  '<a id="pauseResume" class="pause" href="#">Pause</a>'
     );
 
     //$a = 1;
@@ -250,9 +264,14 @@ function education_common_class_room($arg) {
       $time_stared = 0;
       $now = 0;
       $time_stared = isset($node->field_time_started[LANGUAGE_NONE]) ?
-        $node->field_time_started[LANGUAGE_NONE][0]['value'] : 0;
+        //$node->field_time_started[LANGUAGE_NONE][0]['value'] + time() : time();
+        $node->field_time_started[LANGUAGE_NONE][0]['value'] : time();
       if ($time_stared) {
-        $now = 40 * 60 - (time() - $time_stared);
+        //$now = 40 * 60 - (time() - $time_stared);
+        $now = $time_stared;
+      }
+      else {
+        $now = 40 * 60;
       }
 
       drupal_add_js(array('time_stared' => $now), 'setting');

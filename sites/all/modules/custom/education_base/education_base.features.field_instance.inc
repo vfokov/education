@@ -93,6 +93,49 @@ function education_base_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-classroom-field_lesson_paused'.
+  $field_instances['node-classroom-field_lesson_paused'] = array(
+    'bundle' => 'classroom',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_lesson_paused',
+    'label' => 'Lesson paused',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 37,
+    ),
+  );
+
   // Exported field_instance: 'node-classroom-field_lesson_started'.
   $field_instances['node-classroom-field_lesson_started'] = array(
     'bundle' => 'classroom',
@@ -225,6 +268,47 @@ function education_base_field_default_field_instances() {
       'settings' => array(),
       'type' => 'number',
       'weight' => 35,
+    ),
+  );
+
+  // Exported field_instance: 'node-classroom-field_timer_editor_uid'.
+  $field_instances['node-classroom-field_timer_editor_uid'] = array(
+    'bundle' => 'classroom',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'user_reference',
+        'settings' => array(),
+        'type' => 'user_reference_default',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_timer_editor_uid',
+    'label' => 'Timer editor uid',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'user_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'user_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'user_reference_autocomplete',
+      'weight' => 38,
     ),
   );
 
@@ -746,6 +830,7 @@ function education_base_field_default_field_instances() {
   t('Desk');
   t('Lesson commerce_product reference');
   t('Lesson date');
+  t('Lesson paused');
   t('Lesson started');
   t('Lesson subject');
   t('Order Id');
@@ -755,6 +840,7 @@ function education_base_field_default_field_instances() {
   t('Student age category');
   t('Terms of service');
   t('Time started');
+  t('Timer editor uid');
   t('Vox_password');
   t('Vox_username');
 

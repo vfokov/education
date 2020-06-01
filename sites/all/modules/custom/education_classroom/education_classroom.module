@@ -20,8 +20,65 @@ function education_classroom_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['get-timer-from-server'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_get_timer',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['pause-timer'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_pause_timer',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['start-timer'] = array(
+    'title' => '',
+    'page callback' => 'education_classroom_start_timer',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
 
   return $items;
+}
+
+function education_classroom_start_timer() {
+  if (isset($_POST['classroom_nid'])) {
+    $node = node_load($_POST['classroom_nid']);
+    //$node->field_time_started[LANGUAGE_NONE][0]['value'] = $_POST['seconds'];
+    $node->field_lesson_paused[LANGUAGE_NONE][0]['value'] = 0;
+    $node->field_timer_editor_uid[LANGUAGE_NONE][0]['uid'] = $_POST['timer_editor_uid'];
+    node_save($node);
+  }
+}
+
+function education_classroom_pause_timer() {
+  if (isset($_POST['seconds'])) {
+    $node = node_load($_POST['classroom_nid']);
+    $node->field_time_started[LANGUAGE_NONE][0]['value'] = $_POST['seconds'];
+    $node->field_lesson_paused[LANGUAGE_NONE][0]['value'] = 1;
+    $node->field_timer_editor_uid[LANGUAGE_NONE][0]['uid'] = $_POST['timer_editor_uid'];
+    node_save($node);
+  }
+}
+
+function education_classroom_get_timer() {
+  if (isset($_POST['classroom_nid'])) {
+    $node = node_load($_POST['classroom_nid']);
+    $seconds = !empty($node->field_time_started[LANGUAGE_NONE]) ? $node->field_time_started[LANGUAGE_NONE][0]['value'] : 2400;
+    $is_paused = !empty($node->field_lesson_paused[LANGUAGE_NONE]) ? $node->field_lesson_paused[LANGUAGE_NONE][0]['value'] : 0;
+    $timer_editor_uid = !empty($node->field_timer_editor_uid[LANGUAGE_NONE]) ? $node->field_timer_editor_uid[LANGUAGE_NONE][0]['uid'] : 0;
+    echo json_encode(
+      array(
+        'seconds' => $seconds,
+        'is_paused' => $is_paused,
+        'timer_editor_uid' => $timer_editor_uid,
+      )
+    );
+  }
 }
 
 function education_classroom_save_onchange() {
@@ -70,7 +127,6 @@ function education_classroom_get_changes() {
     );
   }
 }
-
 
 /**
  * Implements hook_block_info
