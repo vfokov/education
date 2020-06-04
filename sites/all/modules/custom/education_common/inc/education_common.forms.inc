@@ -1237,6 +1237,8 @@ function lesson_pay_form_submit($form, &$form_state) {
       $product_display->field_classroom[LANGUAGE_NONE][0]['nid'] = $node_classroom->nid;
       node_save($product_display);
 
+      // TODO COMMENT vox creating
+      /*
       //TODO создать в vox два юзера, предварительно проверив поля vox
       // ТИЧЕР $order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid']
        $teacher = user_load($order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid']);
@@ -1245,6 +1247,8 @@ function lesson_pay_form_submit($form, &$form_state) {
 
       vox_create_user($teacher);
       vox_create_user($user);
+      */
+
       //->field_vox_username[LANGUAGE_NONE]
       /*
       $data = array(

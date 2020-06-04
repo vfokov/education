@@ -99,6 +99,8 @@ if ($order_id && user_has_role(TEACHER_ROLE)) {
   <?php endif;?>
   <?php print render($title_suffix); ?>
 
+  <!--<iframe class="video-frame" src="" id="raz2"></iframe> -->
+
   <div class="content"<?php print $content_attributes; ?>>
     <div id="video-content" class="panel-body">
       <div id="voximplant_container"></div>

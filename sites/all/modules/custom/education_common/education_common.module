@@ -50,6 +50,9 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
   if (user_has_role(STUDENT_ROLE) || user_has_role(TEACHER_ROLE)) {
     global $user;
     $form['title']['#access'] = FALSE;
+    $form['field_current_editor_uid']['#access'] = FALSE;
+    $form['field_timer_editor_uid']['#access'] = FALSE;
+    $form['field_lesson_paused']['#access'] = FALSE;
     $form['field_desk'][LANGUAGE_NONE][0]['#title'] = '';
     $form['field_desk'][LANGUAGE_NONE][0]['data']['#title'] = '';
 
@@ -820,10 +823,11 @@ function education_common_preprocess_page(&$variables) {
       drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.countdown.js');
       drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom-timer.js');
 
-      drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom.js');
+      //drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom.js');
 
       //////////////////////////////////
       // For video block
+      /*
       drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/bootstrap.min.css');
       drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/bootstrap-dialog.css');
       drupal_add_css(drupal_get_path('module', 'education_classroom') . '/css/app.css');
@@ -833,9 +837,11 @@ function education_common_preprocess_page(&$variables) {
       drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/voximplant.min.js');
 
       drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/app.js');
+      */
       drupal_add_js(array('classroom_nid' => arg(1)), 'setting');
 
       drupal_add_js(array('classroom_uid' => $user->uid), 'setting');
+      drupal_add_js(drupal_get_path('module', 'education_classroom') . '/js/video/classroom.js');
     }
   }
 
