@@ -821,7 +821,7 @@ function education_common_preprocess_page(&$variables) {
 
       drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.plugin.js');
       drupal_add_js(drupal_get_path('theme', 'education') . '/js/jquery.countdown/js/jquery.countdown.js');
-      drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom-timer.js');
+      //drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom-timer.js');
 
       //drupal_add_js(drupal_get_path('theme', 'education') . '/js/classroom.js');
 
