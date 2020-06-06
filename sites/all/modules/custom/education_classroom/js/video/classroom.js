@@ -33,7 +33,21 @@
       'location=yes,height='+height+',width='+width+',top='+top+',left='+left+',scrollbars=yes,status=yes'
     );
   };
+
+  Drupal.behaviors.classroomVideoLink = {
+    attach: function(context, settings) {
+
+    }
+  };
+
   $(document).ready(function($) {
+
+    $('.classroom-video-link').click(function(e){
+      e.preventDefault();
+      var classroom_nid = Drupal.settings.classroom_nid;
+      OpenVideo(classroom_nid);
+    });
+
 
    var classroom_nid = Drupal.settings.classroom_nid;
     OpenVideo(classroom_nid);

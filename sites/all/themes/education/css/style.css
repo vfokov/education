@@ -2866,6 +2866,10 @@ input[type="submit"]:before {
   margin-top: 73px;
 }
 
+.page-classroom #block-system-main, #block-education-classroom-classroom-video {
+  float: left;
+}
+
 /* seacrh form front tabs*/
 
 #front__logos .item {

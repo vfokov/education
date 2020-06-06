@@ -57,8 +57,7 @@ if (!user_is_anonymous()) {
    $to_call = 'ladovod';
  }
 
-  $classroom_node = node_load(arg(1));
-  $classroom_nid = arg(1);
+ $classroom_node = node_load(arg(1));
 
 //var_dump($classroom_node); die();
 
@@ -103,7 +102,27 @@ if ($order_id && user_has_role(TEACHER_ROLE)) {
   <!--<iframe class="video-frame" src="" id="raz2"></iframe> -->
 
   <div class="content"<?php print $content_attributes; ?>>
-    <a class="classroom-video-link" href="https://talky.io/educt_<?php print $classroom_nid; ?>#size-window">Open Video</a>
+    <div id="video-content" class="panel-body">
+      <div id="voximplant_container"></div>
+      <div id="controls" style="display:none">
+        <div class="input-wrapper">
+          <div class="input-group">
+            <!--<span class="input-group-addon">@</span> -->
+            <!--<input id="phonenum" type="text" class="form-control" placeholder="Username" value="<?php //print $to_call; ?>"> -->
+            <input id="phonenum" type="hidden" class="form-control" placeholder="Username" value="<?php print $to_call; ?>">
+          </div>
+        </div>
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group">
+            <button type="button" class="btn btn-success" id="callButton">Connect</button>
+            <!--<button type="button" class="btn btn-default" id="fsButton">Enter fullscreen</button>-->
+          </div>
+        </div>
+      </div>
+      <div id="log" class="well hidden">
+      </div>
+    </div>
+  </div>
 </div>
 
 <?php } ?>

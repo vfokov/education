@@ -5,46 +5,12 @@
 
 (function ($) {
 
+  //TODO ws
+  // создать подключение
+  var socket = new WebSocket("ws://localhost:8081");
+  var user_id = Math.random().toString(36).substr(2, 5);
+
   var lock = 0;
-
-  // send changes to server via ajax
-  function sendChangesToServer(text, classroom_nid, uid) {
-    window.setTimeout(function () {
-      //$('.info').addClass('show');
-      //$('.info').text('Saving...');
-      //console.log(text);
-      $.ajax({
-        type: 'POST',
-        url: '/save-onchange',
-        ////dataType: "html",
-        //processData: false,
-        //contentType: 'application/json',
-        //data: JSON.stringify(data),
-        data: {
-          text: text,
-          nid: classroom_nid,
-          uid: uid,
-        },
-        success: function (msg) {
-          setTimeout(function () {
-            lock = 0;
-          }, 800)
-
-          //console.log('saved');
-          /*
-          $('.info').text('Saved');
-          setTimeout(function(){
-            $('.info').removeClass('show');
-          }, 1000);
-          */
-
-        },
-        error: function () {
-          //console.log('err');
-        }
-      });
-    });
-  }
 
   function sendUpdateRequest(classroom_nid){
     //console.log('lll_lock =' + lock);
@@ -185,6 +151,45 @@
         }
       });
     }
+  }
+
+  // send changes to server via ajax
+  function sendChangesToServer(text, classroom_nid, uid) {
+    window.setTimeout(function () {
+      //$('.info').addClass('show');
+      //$('.info').text('Saving...');
+      //console.log(text);
+      $.ajax({
+        type: 'POST',
+        url: '/save-onchange',
+        ////dataType: "html",
+        //processData: false,
+        //contentType: 'application/json',
+        //data: JSON.stringify(data),
+        data: {
+          text: text,
+          nid: classroom_nid,
+          uid: uid,
+        },
+        success: function (msg) {
+          setTimeout(function () {
+            lock = 0;
+          }, 800)
+
+          //console.log('saved');
+          /*
+          $('.info').text('Saved');
+          setTimeout(function(){
+            $('.info').removeClass('show');
+          }, 1000);
+          */
+
+        },
+        error: function () {
+          //console.log('err');
+        }
+      });
+    });
   }
 
   Drupal.behaviors.drawingfield = {
