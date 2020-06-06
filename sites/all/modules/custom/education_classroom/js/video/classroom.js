@@ -28,7 +28,8 @@
     var left = screen.availWidth-width;
     window.open(
       //'https://meet.jit.si/classroom' + classroom_nid,
-      'https://talky.io/educt_'+ classroom_nid + '#size-window' ,
+      //'https://talky.io/educt_'+ classroom_nid + '#size-window' ,
+      'https://meet.jit.si/classroom' + classroom_nid ,
       '',
       'location=yes,height='+height+',width='+width+',top='+top+',left='+left+',scrollbars=yes,status=yes'
     );
