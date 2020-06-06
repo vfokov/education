@@ -240,7 +240,7 @@ function education_common_menu() {
   return $items;
 }
 
-function education_common_works($arg) {
+function education_common_works() {
 
   return '';
 }
