@@ -1,0 +1,629 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall hooks for the Zoom API module.
+ *
+ * @todo add requirement hooks to test for libraries.
+ */
+
+/**
+ * Generate the Zoom API meeting tracker tables.
+ */
+function zoomapi_update_7101() {
+  $schema = zoomapi_schema();
+  foreach ($schema as $table_name => $info) {
+    if (!db_table_exists($table_name)) {
+      db_create_table($table_name, $info);
+    }
+  }
+}
+
+/**
+ * Add uuid column to meeting tracker table.
+ */
+function zoomapi_update_7102() {
+  if (!db_field_exists('zoomapi_meeting_tracker', 'uuid')) {
+    $schema = zoomapi_schema();
+    $field = $schema['zoomapi_meeting_tracker']['fields']['uuid'];
+    db_add_field('zoomapi_meeting_tracker', 'uuid', $field, [
+      'indexes' => [
+        'uuid' => ['uuid'],
+      ],
+    ]);
+  }
+}
+
+/**
+ * Add uuid data to meeting tracker table.
+ */
+function zoomapi_update_7103() {
+  $sql = 'SELECT meeting_id, host_zoom_user_id, data FROM {zoomapi_meeting_tracker}';
+  $results = db_query($sql)->fetchAll();
+
+  foreach ($results as $result) {
+    $zoom_meeting = unserialize($result->data);
+
+    if (!empty($zoom_meeting['uuid'])) {
+      db_update('zoomapi_meeting_tracker')
+        ->fields([
+          'uuid' => $zoom_meeting['uuid'],
+        ])
+        ->condition('meeting_id', $result->meeting_id)
+        ->condition('host_zoom_user_id', $result->host_zoom_user_id)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Change to zoomapi meeting tracker primary key and indexes.
+ */
+function zoomapi_update_7104() {
+  db_drop_primary_key('zoomapi_meeting_tracker');
+  db_add_primary_key('zoomapi_meeting_tracker', ['uuid']);
+
+  $indexes = [
+    'uuid',
+    'meeting_id',
+    'host_zoom_user_id',
+    'meeting_type',
+    'start_time',
+    'created',
+    'entity_type',
+    'entity_id',
+    'expires',
+  ];
+
+  foreach ($indexes as $index) {
+    db_drop_index('zoomapi_meeting_tracker', $index);
+    db_add_index('zoomapi_meeting_tracker', "zoomapi_{$index}", [$index]);
+  }
+}
+
+/**
+ * Upgrade to ZoomAPI v2.
+ */
+function zoomapi_update_7200() {
+  global $base_url;
+
+  variable_set('zoomapi_user_create_action_default', 'custCreate');
+
+  db_drop_table('zoomapi_meeting_tracker');
+  _zoomapi_add_missing_tables();
+
+  variable_del('zoomapi_url');
+  db_delete('variable')
+    ->condition('name', 'zoomapi_webhooks_%', 'LIKE')
+    ->execute();
+  variable_del('zoomapi_sendrequests_enabled');
+}
+
+/**
+ * Migrate Zoom API users to v2.
+ */
+function zoomapi_update_7201(&$sandbox) {
+  module_load_include('inc', 'zoomapi', 'zoomapi.migrate');
+
+  if (!isset($sandbox['progress'])) {
+    db_truncate('zoomapi_users')->execute();
+    $sandbox['items'] = db_query('SELECT uid, data FROM {users} WHERE uid > 0 AND data IS NOT NULL')->fetchAllKeyed(0, 1);
+    $sandbox['progress'] = 0;
+    $sandbox['max'] = count($sandbox['items']);
+    $sandbox['current_id'] = 0;
+  }
+
+  reset($sandbox['items']);
+  $uid = key($sandbox['items']);
+  $item = $sandbox['items'][$uid];
+  unset($sandbox['items'][$uid]);
+  $data = unserialize($item);
+  $sandbox['current_id'] = $uid;
+
+  if (!empty($data['zoomapi_user_id'])) {
+    zoomapi_migrate_users_batch_operation_populate_table($uid, $data);
+    zoomapi_migrate_users_batch_operation_clean_data($uid, $data);
+  }
+
+  $sandbox['progress']++;
+  $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['max']) ? TRUE : $sandbox['progress'] / $sandbox['max'];
+
+  if ($sandbox['#finished']) {
+    return t('Completed Zoom API users v1 to v2 migration.');
+  }
+}
+
+/**
+ * Add webhooks log table.
+ */
+function zoomapi_update_7202() {
+  _zoomapi_add_missing_tables();
+}
+
+/**
+ * Add recordings tracker table.
+ */
+function zoomapi_update_7203() {
+  _zoomapi_add_missing_tables();
+}
+
+/**
+ * Add meeting_id to recordings tracker table.
+ */
+function zoomapi_update_7204() {
+  if (!db_field_exists('zoomapi_recordings_download_tracker', 'meeting_id')) {
+    $schema = zoomapi_schema();
+    $field = $schema['zoomapi_recordings_download_tracker']['fields']['meeting_id'];
+    db_add_field('zoomapi_recordings_download_tracker', 'meeting_id', $field, [
+      'indexes' => [
+        'meeting_id' => ['meeting_id'],
+      ],
+    ]);
+  }
+}
+
+/**
+ * Add realm column to all zoomapi tables.
+ */
+function zoomapi_update_7205() {
+  $schema = zoomapi_schema();
+
+  foreach ($schema as $table => $info) {
+    if (db_field_exists($table, 'realm')) {
+      continue;
+    }
+
+    $field = $info['fields']['realm'];
+    db_add_field($table, 'realm', $field, [
+      'indexes' => ['realm' => ['realm']],
+    ]);
+  }
+}
+
+/**
+ * Populate recently added realm columns.
+ */
+function zoomapi_update_7206() {
+  if ($realm = zoomapi_realm()) {
+    $schema = zoomapi_schema();
+
+    foreach ($schema as $table => $info) {
+      if (!db_field_exists($table, 'realm')) {
+        continue;
+      }
+
+      db_update($table)
+        ->fields(['realm' => $realm])
+        ->condition('realm', '')
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Add timezone to zoom user accounts.
+ */
+function zoomapi_update_7207() {
+  composer_manager_register_autoloader();
+
+  $trackers = zoomapi_get_zoom_users_tracker_info();
+  $zoom_users = zoomapi_get_users();
+
+  foreach ($zoom_users as $delta => $zoom_user) {
+    $zoom_email = $zoom_user['email'];
+
+    if (!array_key_exists($zoom_email, $trackers) || !empty($zoom_user['timezone'])) {
+      continue;
+    }
+
+    $zoom_user_id = $zoom_user['id'];
+    $uid = $trackers[$zoom_email]->uid;
+    $timezone = variable_get('date_default_timezone', @date_default_timezone_get());
+    $timezones = db_query("
+      SELECT
+        uid,
+        timezone
+      FROM {users}
+      WHERE timezone IS NOT NULL
+    ")->fetchAllKeyed(0, 1);
+
+    if (!empty($timezones[$uid])) {
+      $timezone = $timezones[$uid];
+    }
+    $params = ['timezone' => $timezone];
+    zoomapi_update_user($uid, $params);
+  }
+}
+
+/**
+ * Fix recording tracker double serialization.
+ */
+function zoomapi_update_7208() {
+  $sql = "
+    SELECT
+      meeting_uuid,
+      data
+    FROM {zoomapi_recordings_download_tracker}
+    WHERE data LIKE 's:%'
+  ";
+  $results = db_query($sql)->fetchAllKeyed(0, 1);
+
+  foreach ($results as $meeting_uuid => $data) {
+    $limit = 10;
+
+    while (is_string($data) && $limit) {
+      $data = unserialize($data);
+      $limit--;
+    }
+
+    if (is_array($data)) {
+      db_update('zoomapi_recordings_download_tracker')
+        ->fields([
+          'data' => serialize($data),
+        ])
+        ->condition('meeting_uuid', $meeting_uuid)
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function zoomapi_uninstall() {
+  $vars = db_query("
+    SELECT name
+    FROM {variable}
+    WHERE name LIKE 'zoomapi_%'
+  ")->fetchCol();
+
+  db_delete('variable')
+    ->condition('name', $vars, 'IN')
+    ->execute();
+
+  cache_clear_all('variables', 'cache_bootstrap');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function zoomapi_schema() {
+  $schema['zoomapi_meetings_index'] = [
+    'description' => 'Retain an index of Zoom meetings for easier lookup not available via APIs.',
+    'fields' => [
+      'uuid' => [
+        'description' => 'The Zoom provided meeting UUID',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'id' => [
+        'description' => 'The Zoom provided meeting ID.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'host_id' => [
+        'description' => 'The meeting host zoom provided user ID.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'topic' => [
+        'description' => 'The meeting topic.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'type' => [
+        'description' => 'The Zoom meeting type. (1 instant, 2 normal scheduled, 3 recurring no fixed time, 8 recurring fixed time.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'start_time' => [
+        'description' => 'The meeting start timestamp.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'duration' => [
+        'description' => 'The meeting duration (minutes). For scheduled meeting only.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'timezone' => [
+        'description' => 'The meeting timezone.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      // @todo need to change 'type' as older mysql versions can't handle the
+      // length.
+      'start_url' => [
+        'description' => 'The meeting host start/join URL.',
+        'type' => 'varchar',
+        'length' => 2000,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      // @todo need to change 'type' as older mysql versions can't handle the
+      // length.
+      'join_url' => [
+        'description' => 'The meeting participant join URL.',
+        'type' => 'varchar',
+        'length' => 2000,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'realm' => [
+        'description' => 'The environment, or realm, for this Zoom / Drupal user relationship.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'created' => [
+        'description' => 'The timestamp when this record was created.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_type' => [
+        'description' => 'The Drupal entity the meeting was created for.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'entity_id' => [
+        'description' => 'The Drupal entity ID the meeting was created for.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'indexes' => [
+      'zoomapi_uuid' => ['uuid'],
+      'zoomapi_meeting_id' => ['id'],
+      'zoomapi_host_zoom_user_id' => ['host_id'],
+      'zoomapi_meeting_type' => ['type'],
+      'zoomapi_start_time' => ['start_time'],
+      'zoomapi_created' => ['created'],
+      'zoomapi_entity_type' => ['entity_type'],
+      'zoomapi_entity_id' => ['entity_id'],
+      'realm' => ['realm'],
+    ],
+    'primary key' => ['uuid'],
+  ];
+
+  $schema['zoomapi_users'] = [
+    'description' => 'Track Zoom users with {users}.uid.',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid for the Zoom user.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'realm' => [
+        'description' => 'The environment, or realm, for this Zoom / Drupal user relationship.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'zoom_user_id' => [
+        'description' => 'The Zoom userId',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'zoom_email' => [
+        'description' => 'The email address used on the Zoom user.',
+        'type' => 'varchar',
+        'length' => 254,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'created' => [
+        'description' => 'The Unix timestamp when this record was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'changed' => [
+        'description' => 'The Unix timestamp when this record was last changed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['zoom_email'],
+    'unique keys' => [
+      'uid_realm' => ['uid', 'realm'],
+    ],
+    'indexes' => [
+      'zoom_user_id' => ['zoom_user_id'],
+      'zoom_email' => ['zoom_email'],
+      'realm' => ['realm'],
+    ],
+  ];
+
+  $schema['zoomapi_webhooks_log'] = [
+    'description' => 'Log of all incoming webhooks.',
+    'fields' => [
+      'id' => [
+        'description' => 'Primary Key: Unique webhook log id.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ],
+      // @todo need to change 'type' as older mysql versions can't handle the
+      // length.
+      'url' => [
+        'description' => 'The full webhook url.',
+        'type' => 'varchar',
+        'length' => 1000,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      // @todo need to change 'type' as older mysql versions can't handle the
+      // length.
+      'url_part' => [
+        'description' => 'The partial url path.',
+        'type' => 'varchar',
+        'length' => 1000,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'ip_address' => [
+        'description' => 'The ip address of the client.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'event' => [
+        'description' => 'The webhook event type.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'data' => [
+        'description' => 'The content (POST) of the webhook call.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ],
+      'realm' => [
+        'description' => 'The environment, or realm, for this Zoom / Drupal user relationship.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'created' => [
+        'description' => 'The Unix timestamp when this record was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'event' => ['event'],
+      'realm' => ['realm'],
+      'created' => ['created'],
+    ],
+  ];
+
+  $schema['zoomapi_recordings_download_tracker'] = [
+    'description' => 'Track meeting recordings to be downloaded.',
+    'fields' => [
+      'meeting_uuid' => [
+        'description' => 'The Zoom meeting UUID.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'meeting_id' => [
+        'description' => 'The Zoom provided meeting ID.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'destination_type' => [
+        'description' => 'Define download destination as path or entity field.',
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      // @todo need to change 'type' as older mysql versions can't handle the
+      // length.
+      'destination' => [
+        'description' => 'The path/uri or entity field information.',
+        'type' => 'varchar',
+        'length' => 1000,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'success' => [
+        'description' => 'Boolean indicator of successful download.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'attempts' => [
+        'description' => 'Number of attempted downloads to allow for retries.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'data' => [
+        'description' => 'The meeting recording data.',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ],
+      'realm' => [
+        'description' => 'The environment, or realm, for this Zoom / Drupal user relationship.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'created' => [
+        'description' => 'The Unix timestamp when this record was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'changed' => [
+        'description' => 'The Unix timestamp when this record was last changed.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['meeting_uuid'],
+    'indexes' => [
+      'realm' => ['realm'],
+      'success' => ['success'],
+      'attempts' => ['attempts'],
+      'created' => ['created'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Helper: Add missing tables.
+ */
+function _zoomapi_add_missing_tables() {
+  $schema = zoomapi_schema();
+
+  foreach ($schema as $table_name => $info) {
+    if (!db_table_exists($table_name)) {
+      db_create_table($table_name, $info);
+    }
+  }
+}

@@ -1,0 +1,1468 @@
+<?php
+
+/**
+ * @file
+ * Main file for the Zoom API module.
+ */
+
+//echo DRUPAL_ROOT; die();
+
+//require_once "../../../../../zoomapi/ZoomAPIClient.php";
+//require_once DRUPAL_ROOT . "\zoomapi\ZoomAPIClient.php";
+//require_once 'zoomapi/ZoomAPIClient.php';
+
+use ZoomAPI\ZoomAPIClient;
+
+define('ZOOMAPI_USER_TYPE_BASIC', 1);
+define('ZOOMAPI_USER_TYPE_PRO', 2);
+define('ZOOMAPI_USER_TYPE_CORP', 3);
+define('ZOOMAPI_USER_TYPE_DEFAULT', ZOOMAPI_USER_TYPE_BASIC);
+
+define('ZOOMAPI_USER_EMAIL_PATTERN_DEFAULT', 'zoomuser_[user:uid]@[site:url-brief]');
+
+define('ZOOMAPI_MEETING_TYPE_INSTANT', 1);
+define('ZOOMAPI_MEETING_TYPE_NORMAL', 2);
+define('ZOOMAPI_MEETING_TYPE_RECURRING_NO_FIXED_TIME', 3);
+define('ZOOMAPI_MEETING_TYPE_RECURRING_FIXED_TIME', 8);
+define('ZOOMAPI_MEETING_TYPE_DEFAULT', ZOOMAPI_MEETING_TYPE_NORMAL);
+
+define('ZOOMAPI_MEETING_TIME_FORMAT_LOCAL', 'Y-m-d\TH:i:s');
+define('ZOOMAPI_MEETING_TIME_FORMAT_DEFAULT', 'Y-m-d\TH:i:s\Z');
+define('ZOOMAPI_MEETING_TIME_FORMAT_TZ', 'GMT');
+
+/**
+ * Implements hook_permission().
+ */
+function zoomapi_permission() {
+  return [
+    'administer zoomapi' => [
+      'title' => t('Administer Zoom API'),
+      'description' => t('Administer the Zoom API settings.'),
+      'restrict access' => TRUE,
+    ],
+    'access zoomapi reports' => [
+      'title' => t('Access Zoom API Reports'),
+      'description' => t('Access the Zoom API reports.'),
+      'restrict access' => TRUE,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_menu().
+ */
+function zoomapi_menu() {
+  // Webhook.
+  // @todo allow for custom webhook urls.
+  $items['zoomapi/webhook'] = [
+    'title' => 'Zoom API Webhook',
+    'description' => 'See https://zoom.github.io/api/#webhooks',
+    'page callback' => 'zoomapi_webhooks_callback',
+    'access callback' => 'zoomapi_webhooks_access',
+    'file' => 'zoomapi.webhooks.inc',
+    'type' => MENU_CALLBACK,
+  ];
+
+  // Admin settings.
+  $items['admin/config/services/zoomapi'] = [
+    'title' => 'Zoom API',
+    'description' => 'Configuration for Zoom API',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['zoomapi_settings_form'],
+    'access arguments' => ['administer zoomapi'],
+    'file' => 'zoomapi.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+  $items['admin/config/services/zoomapi/settings'] = [
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  ];
+
+  // Admin Webhooks.
+  $items['admin/config/services/zoomapi/webhooks'] = [
+    'title' => 'Webhooks',
+    'description' => 'Manage existing and create new webhooks.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['zoomapi_report_custom_list_form', 'webhooks'],
+    'access arguments' => ['administer zoomapi'],
+    'file' => 'zoomapi.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  ];
+
+  // Report Listing.
+  $items['admin/reports/zoomapi'] = [
+    'title' => 'Zoom API',
+    'description' => 'A few basic custom reports and API reports.',
+    'position' => 'left',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => ['access zoomapi reports'],
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+  // Report: Custom Lists.
+  // @todo unable to do this with meetings at the moment and webhooks is
+  // displayed in configuration.
+  foreach (['users'] as $api) {
+    $label = ucfirst($api);
+
+    $items["admin/reports/zoomapi/{$api}"] = [
+      'title' => $label,
+      'description' => "Basic listing of Zoom {$label}.",
+      'page callback' => 'drupal_get_form',
+      'page arguments' => ['zoomapi_report_custom_list_form', $api],
+      'access arguments' => ['access zoomapi reports'],
+      'file' => 'zoomapi.admin.inc',
+      'type' => MENU_NORMAL_ITEM,
+    ];
+  }
+
+  return $items;
+}
+
+/**
+ * Access callback: Zoom API Webhooks.
+ */
+function zoomapi_webhooks_access() {
+  // Only allow POST requests.
+  $http_verb = strtoupper($_SERVER['REQUEST_METHOD']);
+
+  if ($http_verb != 'POST') {
+    return FALSE;
+  }
+
+  // Webhooks not enabled.
+  if (!variable_get('zoomapi_webhooks_enabled', FALSE)) {
+    return FALSE;
+  }
+
+  // Validate basic auth.
+  // @todo validate against different username/pw for each webhook.
+  if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])
+    && $_SERVER['PHP_AUTH_USER'] == variable_get('zoomapi_webhooks_username', FALSE)
+    && $_SERVER['PHP_AUTH_PW'] == variable_get('zoomapi_webhooks_password', FALSE)) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_user_insert().
+ */
+function zoomapi_user_insert(&$edit, $account, $category) {
+  if (!variable_get('zoomapi_create_on_new_user', FALSE)) {
+    return;
+  }
+
+  if (variable_get('zoomapi_create_on_new_user', FALSE) && !zoomapi_user_email_exists($account->mail)) {
+    zoomapi_create_user($account);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function zoomapi_cron() {
+  $meeting_recordings_trackers = zoomapi_get_unsuccessful_recording_download_tracking_info();
+
+  if (!$meeting_recordings_trackers) {
+    return;
+  }
+
+  foreach ($meeting_recordings_trackers as $meeting_uuid => $tracker) {
+    if ($tracker->destination_type != 'entity') {
+      // @todo
+      continue;
+    }
+
+    list($entity_type, $entity_id, $field_name) = explode(':', $tracker->destination);
+
+    try {
+      if ($entity = entity_load_single($entity_type, $entity_id)) {
+        $data = is_array($tracker->data) ? $tracker->data : unserialize($tracker->data);
+        zoomapi_download_meeting_recordings_to_entity($entity, $entity_type, $field_name, $data);
+      }
+    }
+    catch (Exception $e) {
+      watchdog(__FUNCTION__, 'Unable to download pending meeting recordings for meeting (:uuid) to !entity_type entity !entity_id. Error: @e', [
+        ':uuid' => $meeting_uuid,
+        '!entity_type' => $entity_type,
+        '!entity_id' => $entity_id,
+        '@e' => $e->getMessage(),
+      ], WATCHDOG_CRITICAL);
+    }
+  }
+}
+
+/**
+ * Implements hook_zoomapi_user_create().
+ *
+ * The user update api allows for more user properties than the user create api
+ * so we hook into the user create to call the user update immediately
+ * afterwards.
+ */
+function zoomapi_zoomapi_user_create($zoom_user, $account) {
+  $user_info['timezone'] = zoomapi_get_account_timezone($account);
+  zoomapi_update_user($account, $user_info);
+}
+
+/**
+ * Get ZoomAPI client.
+ */
+function zoomapi_client() {
+  $api_key = variable_get('zoomapi_key', '');
+  $api_secret = variable_get('zoomapi_secret', '');
+  $zoom_client = new ZoomAPIClient($api_key, $api_secret);
+  return $zoom_client;
+}
+
+/**
+ * Check if email in use.
+ *
+ * Checks against local table, however option to check against API.
+ */
+function zoomapi_user_email_exists($email, $api_check = FALSE) {
+  $exists = FALSE;
+
+  if (!$api_check) {
+    $user_info = zoomapi_get_zoom_user_tracker_info($email);
+    $exists = !empty($user_info['email']);
+  }
+  else {
+    $zoom_client = zoomapi_client();
+    $exists = $zoom_client->users()->emailExists($email);
+  }
+
+  return $exists;
+}
+
+/**
+ * Create Zoom user.
+ *
+ * Simple wrapper to the API so we can track drupal/zoom user account
+ * relationship.
+ */
+function zoomapi_create_user($account, array $user_info = [], $create_action = '') {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+
+  if (empty($user_info['type'])) {
+    $user_info['type'] = variable_get('zoomapi_user_create_type_default', ZOOMAPI_USER_TYPE_DEFAULT);
+  }
+  if (empty($user_info['email'])) {
+    $account = is_numeric($account) ? user_load($account) : $account;
+
+    if (variable_get('zoomapi_use_account_email', FALSE)) {
+      $user_info['email'] = $account->mail;
+    }
+    else {
+      $user_info['email'] = zoomapi_generate_user_email($account);
+    }
+  }
+
+  $params['action'] = $create_action ?: variable_get('zoomapi_user_create_action_default', 'custCreate');
+  $params['user_info'] = $user_info;
+
+  drupal_alter('zoomapi_create_user', $params, $uid);
+
+  if (zoomapi_user_email_exists($params['user_info']['email'])) {
+    watchdog(__FUNCTION__, 'Unable to create a Zoom user. The email @email is already in use.', [
+      '@email' => $params['user_info']['email'],
+    ], WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  try {
+    $zoom_user = $zoom_client->api('user')->create($params);
+    zoomapi_track_user($uid, $zoom_user);
+    module_invoke_all('zoomapi_user_create', $zoom_user, $account);
+    return $zoom_user;
+  }
+  catch (Exception $e) {
+    watchdog(__FUNCTION__, 'Error creating zoom user for uid @id. Exception @e', [
+      '@id' => $uid,
+      '@e' => $e->getMessage(),
+    ], WATCHDOG_CRITICAL);
+    return FALSE;
+  }
+}
+
+/**
+ * Generate zoom user email.
+ */
+function zoomapi_generate_user_email($account) {
+  $account = is_numeric($account) ? user_load($account) : $account;
+  $mail_pattern = variable_get('zoomapi_user_email_pattern', ZOOMAPI_USER_EMAIL_PATTERN_DEFAULT);
+  $token_data = ['user' => $account];
+  $email = token_replace($mail_pattern, $token_data);
+  return $email;
+}
+
+/**
+ * Get Zoom users.
+ */
+function zoomapi_get_users() {
+  $zoom_client = zoomapi_client();
+  $zoom_users = $zoom_client->users()->fetchAll();
+  return $zoom_users;
+}
+
+/**
+ * Get Zoom user.
+ */
+function zoomapi_get_user($account, $autocreate = NULL) {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+  $zoom_user_id = zoomapi_get_zoom_user_id($uid);
+  $zoom_user = [];
+
+  $autocreate = !is_null($autocreate) ? $autocreate : variable_get('zoomapi_autocreate_on_get', FALSE);
+
+  if (!$zoom_user_id) {
+    $zoom_email = zoomapi_generate_user_email($account);
+
+    if (zoomapi_user_email_exists($zoom_email, TRUE)) {
+      try {
+        $zoom_user = $zoom_client->api('user')->fetch($zoom_email);
+        zoomapi_track_user($uid, $zoom_user);
+      }
+      catch (Exception $e) {
+        watchdog(__FUNCTION__, 'Error retrieving zoom user with zoom email @email and uid @id. Exception @e', [
+          '@id' => $uid,
+          '@email' => $zoom_email,
+          '@e' => $e->getMessage(),
+        ], WATCHDOG_CRITICAL);
+      }
+    }
+    elseif ($autocreate) {
+      $zoom_user = zoomapi_create_user($account);
+    }
+  }
+  else {
+    try {
+      $zoom_user = $zoom_client->api('user')->fetch($zoom_user_id);
+    }
+    catch (Exception $e) {
+      watchdog(__FUNCTION__, 'Error retrieving zoom user with zoom id @id and uid @uid. Exception @e', [
+        '@id' => $zoom_user_id,
+        '@uid' => $uid,
+        '@e' => $e->getMessage(),
+      ], WATCHDOG_CRITICAL);
+    }
+  }
+
+  return $zoom_user;
+}
+
+/**
+ * Update Zoom user.
+ */
+function zoomapi_update_user($account, array $user_info) {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+  drupal_alter('zoomapi_update_user', $user_info, $uid);
+
+  if ($zoom_user_id = zoomapi_get_zoom_user_id($uid)) {
+    $zoom_client->api('user')->update($zoom_user_id, $user_info);
+
+    if (!empty($user_info['email'])) {
+      $zoom_user = $zoom_client->api('user')->fetch($zoom_user_id);
+      zoomapi_track_user($uid, $zoom_user);
+    }
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Update Zoom user email.
+ *
+ * @todo "Domain name doesn't match, please contact Zoom customer support to set
+ * managed domains for your account"
+ */
+function zoomapi_update_user_email($account, $email) {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+
+  if ($zoom_user = zoomapi_get_user($account, FALSE)) {
+    try {
+      $zoom_client->api('user')->email($zoom_user['id'], $email);
+      db_update('zoomapi_users')
+        ->fields(['zoom_email' => $email])
+        ->condition('zoom_email', $zoom_user['email'])
+        ->condition('realm', zoomapi_realm())
+        ->execute();
+
+      return TRUE;
+    }
+    catch (Exception $e) {
+      watchdog(__FUNCTION__, 'Unable to change zoom email to @email for user !uid (zoom user id: !zoom_user_id). Exception: @e', [
+        '@email' => $email,
+        '!uid' => $uid,
+        '!zoom_user_id' => $zoom_user['id'],
+        '@e' => $e->getMessage(),
+      ], WATCHDOG_CRITICAL);
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Track Drupal / Zoom user account relationship.
+ */
+function zoomapi_track_user($uid, array $zoom_user) {
+  $realm = zoomapi_realm();
+
+  $record = [
+    'uid' => $uid,
+    'realm' => $realm,
+    'zoom_user_id' => $zoom_user['id'],
+    'zoom_email' => $zoom_user['email'],
+  ];
+
+  $exists = db_query("
+    SELECT
+      uid,
+      realm,
+      zoom_user_id,
+      zoom_email
+    FROM {zoomapi_users}
+    WHERE zoom_email = :email
+    AND realm = :realm
+  ", [
+    ':email' => $record['zoom_email'],
+    ':realm' => $realm,
+  ])->fetchAssoc();
+
+  if ($exists) {
+    if ($record !== $exists) {
+      $record['changed'] = REQUEST_TIME;
+      drupal_write_record('zoomapi_users', $record, ['email']);
+    }
+  }
+  else {
+    $record['created'] = REQUEST_TIME;
+    $record['changed'] = REQUEST_TIME;
+    drupal_write_record('zoomapi_users', $record);
+  }
+}
+
+/**
+ * Get Zoom Users Tracker Info.
+ */
+function zoomapi_get_zoom_users_tracker_info(array $uids_or_emails = []) {
+  $realm = zoomapi_realm();
+
+  $sql = "
+    SELECT
+      uid,
+      realm,
+      zoom_user_id,
+      zoom_email
+    FROM {zoomapi_users}
+    WHERE realm = :realm
+  ";
+  $sql_args = [
+    ':realm' => $realm,
+  ];
+
+  if ($uids_or_emails) {
+    $sql .= "
+      AND (
+        uid IN (:uids)
+        OR zoom_email IN (:emails)
+      )
+    ";
+    $sql_args += [
+      ':uids' => $uids_or_emails,
+      ':emails' => $uids_or_emails,
+    ];
+  }
+
+  $results = db_query($sql, $sql_args)->fetchAllAssoc('zoom_email');
+  return $results;
+}
+
+/**
+ * Get Drupal uid from Zoom user ID.
+ */
+function zoomapi_get_user_from_zoom_userid($zoom_user_id) {
+  $uid = db_query("
+    SELECT
+      uid
+    FROM {zoomapi_users}
+    WHERE zoom_user_id = :zoom_user_id
+    AND realm = :realm
+  ", [
+    ':zoom_user_id' => $zoom_user_id,
+    ':realm' => zoomapi_realm(),
+  ])->fetchField();
+
+  return $uid ?: 0;
+}
+
+/**
+ * Get Zoom User Tracker Info.
+ */
+function zoomapi_get_zoom_user_tracker_info($uid_or_email) {
+  $info = zoomapi_get_zoom_users_tracker_info([$uid_or_email]);
+  return $info ? (array) reset($info) : FALSE;
+}
+
+/**
+ * Get Zoom User ID.
+ */
+function zoomapi_get_zoom_user_id($uid) {
+  $info = zoomapi_get_zoom_user_tracker_info($uid);
+  return !empty($info['zoom_user_id']) ? $info['zoom_user_id'] : FALSE;
+}
+
+/**
+ * Get Zoom User Email.
+ */
+function zoomapi_get_zoom_user_email($uid) {
+  $info = zoomapi_get_zoom_user_tracker_info($uid);
+  return !empty($info['zoom_email']) ? $info['zoom_email'] : FALSE;
+}
+
+/**
+ * Get Zoom User settings.
+ */
+function zoomapi_get_user_settings($account) {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+  $zoom_user_id = zoomapi_get_zoom_user_id($uid);
+  $settings = [];
+
+  if ($zoom_user_id) {
+    $settings = $zoom_client->api('user')->settings($zoom_user_id);
+  }
+
+  return $settings;
+}
+
+/**
+ * Update Zoom User settings.
+ */
+function zoomapi_update_user_settings($account, array $settings) {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+  $zoom_user_id = zoomapi_get_zoom_user_id($uid);
+
+  if (!$zoom_user_id) {
+    watchdog(__FUNCTION__, 'Unable to update settings for user !uid. No zoom user ID found.', [
+      '!uid' => $uid,
+    ], WATCHDOG_ERROR);
+    // @todo additional handling.
+    return FALSE;
+  }
+
+  return $zoom_client->api('user')->settings($zoom_user_id, $settings);
+}
+
+/**
+ * Create Zoom Meeting.
+ */
+function zoomapi_create_meeting($uid, array $params, array $context = []) {
+  $zoom_client = zoomapi_client();
+
+  if (empty($params['type'])) {
+    $params['type'] = ZOOMAPI_MEETING_TYPE_DEFAULT;
+  }
+
+  if (empty($params['start_time']) || empty($params['duration'])) {
+    unset($params['start_time']);
+    unset($params['duration']);
+    $params['type'] = ZOOMAPI_MEETING_TYPE_INSTANT;
+  }
+  else {
+    if (is_numeric($params['start_time'])) {
+      // If a timezone is provided the format the start timestamp using that
+      // timezone. Otherwise use the server timezone.
+      // @todo configuration to use host timezone?
+      $params['timezone'] = !empty($params['timezone']) ? $params['timezone'] : variable_get('date_default_timezone', @date_default_timezone_get());
+      $params['start_time'] = zoomapi_format_timestamp($params['start_time'], $params['timezone']);
+    }
+  }
+
+  drupal_alter('zoomapi_create_meeting', $params, $context);
+
+  if ($params['user_id'] = zoomapi_get_zoom_user_id($uid)) {
+    $zoom_meeting = $zoom_client->api('meeting')->create($params);
+    list($entity_type, $entity_id) = zoomapi_extract_entity_info_from_meeting_context($context);
+    zoomapi_track_meeting($zoom_meeting, $entity_type, $entity_id);
+
+    module_invoke_all('zoomapi_meeting_create', $zoom_meeting, $context);
+
+    return $zoom_meeting;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Create Meeting for Entity.
+ */
+function zoomapi_create_meeting_for_entity($entity, $entity_type, array $params = [], $uid = 0) {
+  if (is_numeric($entity)) {
+    $entity = entity_load_single($entity_type, $entity);
+  }
+
+  $context = [
+    'entity_type' => $entity_type,
+    'entity' => $entity,
+    'uid' => $uid ?: $entity->uid,
+  ];
+
+  if (empty($params['topic'])) {
+    $entity_wrapper = entity_metadata_wrapper($entity_type, $entity);
+    $params['topic'] = $entity_wrapper->label();
+  }
+
+  drupal_alter('zoomapi_create_meeting_for_entity', $params, $context);
+
+  return zoomapi_create_meeting($context['uid'], $params, $context);
+}
+
+/**
+ * Create Instant Meeting for User.
+ */
+function zoomapi_create_instant_meeting_for_user($account_uid, array $params = []) {
+  $params['type'] = ZOOMAPI_MEETING_TYPE_INSTANT;
+  return zoomapi_create_meeting_for_entity($account_uid, 'user', $params);
+}
+
+/**
+ * Get Meeting.
+ */
+function zoomapi_get_meeting($meeting_id) {
+  $zoom_client = zoomapi_client();
+  $zoom_meeting = $zoom_client->api('meeting')->fetch($meeting_id);
+  return $zoom_meeting;
+}
+
+/**
+ * Get Meeting for Entity.
+ *
+ * @param string $entity_type
+ *   The type (node, user, etc.) of entity.
+ * @param int|object $entity_id
+ *   The entity (or entity_id) the meeting is being created for.
+ *
+ * @return array
+ *   An array of the meeting setup.
+ */
+function zoomapi_get_meeting_for_entity($entity_type, $entity_id, $api_refresh = FALSE) {
+  if (!is_numeric($entity_id)) {
+    list($entity_id,,) = entity_extract_ids($entity_type, $entity_id);
+  }
+
+  // We only expect a single record for any entity_type/entity_id. Just in case
+  // that is a false assumption, sort by the created date DESC so we grab the
+  // most recent record.
+  $data = db_query("
+    SELECT
+      *
+    FROM {zoomapi_meetings_index}
+    WHERE entity_type = :entity_type
+    AND entity_id = :entity_id
+    AND realm = :realm
+    ORDER BY created DESC
+  ", [
+    ':entity_type' => $entity_type,
+    ':entity_id' => $entity_id,
+    ':realm' => zoomapi_realm(),
+  ])->fetchAssoc();
+
+  if ($api_refresh && !empty($data['id'])) {
+    $data = zoomapi_get_meeting($data['id']);
+  }
+
+  return $data;
+}
+
+/**
+ * Get entity from meeting.
+ */
+function zoomapi_get_entity_from_meeting($meeting_id) {
+  $results = db_query("
+    SELECT
+      entity_type,
+      entity_id
+    FROM {zoomapi_meetings_index}
+    WHERE realm = :realm
+    AND (
+      uuid = :meeting_id
+      OR id = :meeting_id
+    )
+    ORDER BY created DESC
+  ", [
+    ':meeting_id' => $meeting_id,
+    ':realm' => zoomapi_realm(),
+  ])->fetchAssoc();
+
+  return $results ? [$results['entity_type'], $results['entity_id']] : ['', 0];
+}
+
+/**
+ * Join Meeting.
+ *
+ * @param array|string $zoom_meeting
+ *   The meeting_id or array.
+ */
+function zoomapi_join_meeting($zoom_meeting) {
+  global $user;
+
+  if (is_numeric($zoom_meeting)) {
+    $zoom_meeting = zoomapi_get_meeting($zoom_meeting);
+  }
+
+  if ($zoom_user_id = zoomapi_get_zoom_user_id($user->uid)) {
+    $url = ($zoom_user_id && $zoom_user_id == $zoom_meeting['host_id']) ? $zoom_meeting['start_url'] : $zoom_meeting['join_url'];
+
+    watchdog(__FUNCTION__, 'User (uid: !uid) joined meeting "@topic" (id: !meeting_id).', [
+      '!uid' => $user->uid,
+      '@topic' => $zoom_meeting['topic'],
+      '!meeting_id' => $zoom_meeting['id'],
+    ], WATCHDOG_INFO);
+
+    drupal_goto($url, ['external' => TRUE]);
+  }
+
+  drupal_goto();
+}
+
+/**
+ * Zoom Meeting Tracker.
+ *
+ * Track basic meeting information in case a user disconnects and we need to
+ * attempt to lookup that meeting info.
+ */
+function zoomapi_track_meeting(array $zoom_meeting, $entity_type = '', $entity_id = 0) {
+  $defaults = [
+    'uuid' => '',
+    'id' => '',
+    'host_id' => '',
+    'topic' => '',
+    'type' => 0,
+    'start_time' => '',
+    'duration' => 0,
+    'timezone' => '',
+    'start_url' => '',
+    'join_url' => '',
+    'created' => REQUEST_TIME,
+    'realm' => zoomapi_realm(),
+    'entity_type' => $entity_type,
+    'entity_id' => $entity_id,
+  ];
+  $record = array_merge($defaults, array_intersect_key($zoom_meeting, $defaults));
+
+  db_merge('zoomapi_meetings_index')
+    ->key(['uuid' => $record['uuid']])
+    ->fields($record)
+    ->execute();
+}
+
+/**
+ * Extract entity type/id from meeting context variable.
+ */
+function zoomapi_extract_entity_info_from_meeting_context($context) {
+  $entity_type = !empty($context['entity_type']) ? $context['entity_type'] : '';
+  $entity_id = !empty($context['entity_id']) ? $context['entity_id'] : 0;
+
+  if (!empty($context['entity'])) {
+    $entity_type = $entity_type ?: $context['entity']->entityType();
+
+    if (!$entity_id) {
+      list($entity_id,,) = entity_extract_ids($entity_type, $context['entity']);
+    }
+  }
+
+  return [$entity_type, $entity_id];
+}
+
+/**
+ * Get User Recordings.
+ */
+function zoomapi_get_user_recordings($account) {
+  $zoom_client = zoomapi_client();
+  $uid = is_numeric($account) ? $account : $account->uid;
+
+  if ($zoom_user_id = zoomapi_get_zoom_user_id($uid)) {
+    $params = ['user_id' => $zoom_user_id];
+    return $zoom_client->recordings()->fetchAll($params);
+  }
+
+  return FALSE;
+}
+
+/**
+ * Get Meeting Recordings.
+ *
+ * Retrieve the Zoom meeting recordings response.
+ */
+function zoomapi_get_meeting_recordings($meeting_id, $refresh = FALSE) {
+  $zoom_meeting_recordings = [];
+
+  if (!$refresh) {
+    $tracker = zoomapi_get_recording_download_tracking_info($meeting_id);
+    $zoom_meeting_recordings = $tracker['data'];
+  }
+
+  if ($refresh || empty($zoom_meeting_recordings)) {
+    $zoom_client = zoomapi_client();
+
+    try {
+      $zoom_meeting_recordings = $zoom_client->api('recordings')->fetchMeetingRecordings($meeting_id);
+    }
+    catch (Exception $e) {
+      $code = $e->getCode();
+
+      if ($code != 404) {
+        watchdog(__FUNCTION__, 'Error retrieving meeting (@id) recordings. Exception @e', [
+          '@id' => $meeting_id,
+          '@e' => $e->getMessage(),
+        ], WATCHDOG_CRITICAL);
+      }
+    }
+  }
+
+  return $zoom_meeting_recordings;
+}
+
+/**
+ * Get Entity Meeting Recordings.
+ *
+ * Retrieves the Zoom meeting recordings response.
+ */
+function zoomapi_get_meeting_recordings_for_entity($entity_type, $entity_id) {
+  if (!is_numeric($entity_id)) {
+    list($entity_id,,) = entity_extract_ids($entity_type, $entity_id);
+  }
+
+  $meeting_info = zoomapi_get_meeting_for_entity($entity_type, $entity_id);
+  $recordings = $meeting_info ? zoomapi_get_meeting_recordings($meeting_info['id']) : [];
+  return $recordings;
+}
+
+/**
+ * Download Meeting Recordings.
+ *
+ * Download the meeting recordings to the specified destination.
+ */
+function zoomapi_download_meeting_recordings($zoom_meeting_recordings, $destination_directory, $context = []) {
+  $filename_prefix = !empty($zoom_meeting_recordings['topic']) ? $zoom_meeting_recordings['topic'] : $zoom_meeting_recordings['id'];
+  $files = [];
+
+  drupal_alter('zoomapi_download_meeting_recordings', $zoom_meeting_recordings, $context);
+
+  foreach ($zoom_meeting_recordings['recording_files'] as $zoom_meeting_recording) {
+    if ($zoom_meeting_recording['status'] != 'completed') {
+      watchdog(__FUNCTION__, 'Unable to download recording !recording_id. The recording has not completed.', [
+        '!recording_id' => $zoom_meeting_recording['id'],
+      ], WATCHDOG_ERROR);
+      $files[$zoom_meeting_recording['id']] = FALSE;
+      continue;
+    }
+
+    $filename = $filename_prefix . '-' . strtotime($zoom_meeting_recording['recording_start']) . '.' . strtolower($zoom_meeting_recording['file_type']);
+    $context['meeting'] = $zoom_meeting_recordings;
+    $context['recording'] = $zoom_meeting_recording;
+    unset($context['meeting']['recording_files']);
+    drupal_alter('zoomapi_meeting_recording_filename', $filename, $context);
+
+    $file = zoomapi_download_recording($zoom_meeting_recording, $destination_directory, $filename, $context);
+    $files[$zoom_meeting_recording['id']] = $file;
+  }
+
+  return $files;
+}
+
+/**
+ * Download meeting recordings for entity.
+ *
+ * Given an entity, lookup any meetings and download any recordings to a
+ * specified location.
+ */
+function zoomapi_download_meeting_recordings_to_entity($entity, $entity_type, $field_name, array $zoom_meeting_recordings = []) {
+  if (is_numeric($entity)) {
+    $entity = entity_load_single($entity_type, $entity);
+  }
+
+  list($entity_id,,) = entity_extract_ids($entity_type, $entity);
+
+  $destination_directory = zoomapi_get_entity_field_location($entity, $entity_type, $field_name);
+  $zoom_meeting_recordings = $zoom_meeting_recordings ?: zoomapi_get_meeting_recordings_for_entity($entity_type, $entity);
+
+  if (!zoomapi_get_recording_download_tracking_info($zoom_meeting_recordings['uuid'])) {
+    $destination_info = "{$entity_type}:{$entity_id}:{$field_name}";
+    zoomapi_start_recording_download_tracking($zoom_meeting_recordings, $destination_info, 'entity');
+  }
+
+  $context = [
+    'entity' => $entity,
+    'entity_id' => $entity_id,
+    'entity_type' => $entity_type,
+    'field_name' => $field_name,
+  ];
+  $files = $zoom_meeting_recordings ? zoomapi_download_meeting_recordings($zoom_meeting_recordings, $destination_directory, $context) : [];
+
+  $success = (count($files) == count(array_filter($files)));
+  zoomapi_update_recording_download_tracking($zoom_meeting_recordings['uuid'], $success);
+  zoomapi_attach_recording_files_to_entity_field($entity, $entity_type, $field_name, $files, $success);
+
+  return $success;
+}
+
+/**
+ * Attach recording files to entity field.
+ */
+function zoomapi_attach_recording_files_to_entity_field($entity, $entity_type, $field_name, array $files, $replace_all_files = FALSE) {
+  if (is_numeric($entity)) {
+    $entity = entity_load_single($entity_type, $entity);
+  }
+
+  $context = [
+    'entity_type' => $entity_type,
+    'field_name' => $field_name,
+    'replace' => $replace_all_files,
+  ];
+  $files = array_values(array_filter($files));
+  drupal_alter('zoomapi_attach_recordings_to_entity', $entity, $files, $context);
+
+  $field_files = !empty($entity->{$field_name}[LANGUAGE_NONE]) ? $entity->{$field_name}[LANGUAGE_NONE] : [];
+  $field_files = $replace_all_files ? $files : array_merge($field_files, $files);
+  $entity->{$field_name}[LANGUAGE_NONE] = $field_files;
+
+  entity_save($entity_type, $entity);
+  return $entity;
+}
+
+/**
+ * Set recording download tracking info.
+ */
+function zoomapi_start_recording_download_tracking(array $meeting_recordings, $destination, $destination_type = 'entity') {
+  $record = [
+    'meeting_uuid' => $meeting_recordings['uuid'],
+    'meeting_id' => $meeting_recordings['id'],
+    'destination_type' => $destination_type,
+    'destination' => $destination,
+    'success' => 0,
+    'attempts' => 0,
+    'data' => is_array($meeting_recordings) ? serialize($meeting_recordings) : $meeting_recordings,
+    'realm' => zoomapi_realm(),
+    'created' => REQUEST_TIME,
+    'changed' => REQUEST_TIME,
+  ];
+  db_merge('zoomapi_recordings_download_tracker')
+    ->key(['meeting_uuid' => $meeting_recordings['uuid']])
+    ->fields($record)
+    ->execute();
+  return $record;
+}
+
+/**
+ * Get recording download tracking info.
+ */
+function zoomapi_get_recording_download_tracking_info($meeting_uuid) {
+  $record = db_query("
+    SELECT
+      *
+    FROM {zoomapi_recordings_download_tracker}
+    WHERE realm = :realm
+    AND (
+      meeting_uuid = :meeting_uuid
+      OR meeting_id = :meeting_uuid
+    )
+  ", [
+    ':realm' => zoomapi_realm(),
+    ':meeting_uuid' => $meeting_uuid,
+  ])->fetchAssoc();
+
+  if (!empty($record)) {
+    $data = is_string($record['data']) ? unserialize($record['data']) : $record['data'];
+
+    if (zoomapi_validate_recording_tracking_info($data)) {
+      $record['data'] = $data;
+    }
+  }
+
+  return $record;
+}
+
+/**
+ * Validate recording data.
+ */
+function zoomapi_validate_recording_tracking_info($info) {
+  // It appears that around April 11th, 2020 the recording data provided in
+  // webhooks is incorrect, causing automated downloads to fail. This also
+  // happens to be around the time Zoom faced many of the security issues
+  // during the Coronavirus outbreak... hence Zoom support has been
+  // unreachable. To work around this, some logic checks are put in place
+  // to attempt to validate the recording data.
+  if (empty($info['total_size'])) {
+    return FALSE;
+  }
+
+  if ($info['recording_count'] !== count($info['recording_files'])) {
+    return FALSE;
+  }
+
+  foreach ($info['recording_files'] as $recording_file) {
+    if (empty($recording_file['file_type'])) {
+      return FALSE;
+    }
+
+    if (empty($recording_file['file_size'])) {
+      return FALSE;
+    }
+
+    if ($recording_file['status'] !== 'completed') {
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+
+/**
+ * Get unsuccessful recording downloads.
+ */
+function zoomapi_get_unsuccessful_recording_download_tracking_info($set_size = NULL, $max_attempts = NULL, $how_far_back = NULL) {
+  $set_size = $set_size ?: variable_get('zoomapi_recordings_download_cron_set_size', 10);
+  $max_attempts = $max_attempts ?: variable_get('zoomapi_recordings_download_max_attempts', 3);
+  $how_far_back = $how_far_back ?: variable_get('zoomapi_recordings_download_how_far_back', '-30 days');
+
+  $recordings = db_query_range("
+    SELECT
+      *
+    FROM {zoomapi_recordings_download_tracker}
+    WHERE realm = :realm
+    AND success = :nosuccess
+    AND :max_attempts > attempts
+    AND created >= :created_after
+  ",
+  0,
+  $set_size, [
+    ':realm' => zoomapi_realm(),
+    ':nosuccess' => 0,
+    ':max_attempts' => $max_attempts,
+    ':created_after' => strtotime($how_far_back),
+  ])->fetchAllAssoc('meeting_uuid');
+
+  foreach ($recordings as &$recording) {
+    $data = is_string($recording->data) ? unserialize($recording->data) : $recording->data;
+
+    if (zoomapi_validate_recording_tracking_info($data)) {
+      $recording->data = $data;
+    }
+  }
+
+  return $recordings;
+}
+
+/**
+ * Update recordings download tracking info.
+ */
+function zoomapi_update_recording_download_tracking($meeting_uuid, $success) {
+  if ($record = zoomapi_get_recording_download_tracking_info($meeting_uuid)) {
+    $record['attempts']++;
+    $record['success'] = (int) $success;
+    $record['changed'] = REQUEST_TIME;
+    $record['data'] = is_array($record['data']) ? serialize($record['data']) : $record['data'];
+    db_merge('zoomapi_recordings_download_tracker')
+      ->key(['meeting_uuid' => $meeting_uuid])
+      ->fields($record)
+      ->execute();
+    return $record;
+  }
+
+  return [];
+}
+
+/**
+ * Get file filed location for entity field.
+ */
+function zoomapi_get_entity_field_location($entity, $entity_type, $field_name) {
+  $field_info = field_info_field($field_name);
+  $uri_scheme = $field_info['settings']['uri_scheme'];
+
+  if (is_numeric($entity)) {
+    $entity = entity_load_single($entity_type, $entity);
+  }
+
+  list(,, $bundle) = entity_extract_ids($entity_type, $entity);
+  $field_instance_info = field_info_instance($entity_type, $field_name, $bundle);
+  $file_directory = $field_instance_info['settings']['file_directory'];
+
+  if (module_exists('filefield_paths') && !empty($field_instance_info['settings']['filefield_paths'])) {
+    $settings = $field_instance_info['settings']['filefield_paths'];
+    $settings['file_path']['options']['context'] = 'file_path';
+    $token_data = [
+      $entity_type => $entity,
+    ];
+    $file_directory = filefield_paths_process_string($settings['file_path']['value'], $token_data, $settings['file_path']['options']);
+  }
+
+  $destination_directory = "{$uri_scheme}://{$file_directory}";
+  return $destination_directory;
+}
+
+/**
+ * Download Recording.
+ *
+ * Downloads a zoom recording to the specified destination / filename.
+ *
+ * @see filefield_source_remote_value()
+ */
+function zoomapi_download_recording($zoom_meeting_recording, $destination_directory, $filename = '', $context = []) {
+  $file_type = strtolower($zoom_meeting_recording['file_type']);
+  $filename = $filename ?: $zoom_meeting_recording['id'] . '_' . strtotime($zoom_meeting_recording['recording_start']) . '.' . $file_type;
+
+  if (empty($context['recording'])) {
+    $context['recording'] = $zoom_meeting_recording;
+  }
+
+  drupal_alter('zoomapi_recording_filename', $filename, $context);
+
+  if (strtolower(substr($filename, -1 * strlen($file_type))) != $file_type) {
+    $filename .= ".{$file_type}";
+  }
+
+  // Check that the destination is writable.
+  $temporary_directory = 'temporary://';
+
+  if (!file_prepare_directory($temporary_directory, FILE_MODIFY_PERMISSIONS)) {
+    watchdog('file', 'The directory %directory is not writable, because it does not have the correct permissions set.', ['%directory' => drupal_realpath($temporary_directory)]);
+    return FALSE;
+  }
+
+  $zoom_client = zoomapi_client();
+  $url = url($zoom_meeting_recording['download_url'], [
+    'query' => [
+      'access_token' => $zoom_client->generateJwt(),
+    ],
+  ]);
+
+  // Check that the destination is writable.
+  $mode = variable_get('file_chmod_directory', 0775);
+  // This first chmod check is for other systems such as S3, which don't work
+  // with file_prepare_directory().
+  if (!drupal_chmod($destination_directory, $mode) && !file_prepare_directory($destination_directory, FILE_CREATE_DIRECTORY)) {
+    watchdog('file', 'File %file could not be copied, because the destination directory %destination is not configured correctly.', ['%file' => $url, '%destination' => drupal_realpath($destination_directory)]);
+    return FALSE;
+  }
+
+  // Check the headers to make sure it exists and is within the allowed size.
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, TRUE);
+  curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  // Causes a warning if PHP safe mode is on.
+  @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+  // Set a user agent - some hosts block requests unless header is present.
+  $curl_version = curl_version();
+  curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-curl/' . $curl_version['version']);
+  curl_exec($ch);
+  $info = curl_getinfo($ch);
+  if ($info['http_code'] != 200) {
+    curl_setopt($ch, CURLOPT_HTTPGET, TRUE);
+    $file_contents = curl_exec($ch);
+    $info = curl_getinfo($ch);
+  }
+  curl_close($ch);
+
+  if ($info['http_code'] != 200) {
+    $replacements = [
+      '@filename' => $filename,
+      '@code' => $info['http_code'],
+    ];
+    switch ($info['http_code']) {
+      case 403:
+        $replacements['reason'] = 'Access to the file was denied.';
+        break;
+
+      case 404:
+        $replacements['reason'] = 'Not found.';
+        break;
+    }
+
+    watchdog(__FUNCTION__, 'The recording @filename for meeting @meeting_id could not be downloaded. HTTP error (@code). Reason !reason', $replacements, WATCHDOG_ERROR);
+    return FALSE;
+  }
+
+  // Update the $url variable to reflect any redirects.
+  $url = $info['url'];
+  $filename = zoomapi_clean_filename($filename);
+  $filepath = file_create_filename($filename, $temporary_directory);
+
+  // Set progress bar information.
+  $options = [
+    'key' => $url,
+    'filepath' => $filepath,
+  ];
+  zoomapi_set_transfer_options($options);
+
+  $transfer_success = FALSE;
+  // If we've already downloaded the entire file because the header-retrieval
+  // failed, just use the contents we have.
+  if (isset($file_contents)) {
+    if ($fp = @fopen($filepath, 'w')) {
+      fwrite($fp, $file_contents);
+      fclose($fp);
+      $transfer_success = TRUE;
+    }
+  }
+  // If we don't have the file contents, download the actual file.
+  else {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_WRITEFUNCTION, 'zoomapi_download_recording_curl_write');
+    // Causes a warning if PHP safe mode is on.
+    @curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+    // Set a user agent - some hosts block requests unless header is present.
+    $curl_version = curl_version();
+    curl_setopt($ch, CURLOPT_USERAGENT, 'PHP-curl/' . $curl_version['version']);
+    $transfer_success = curl_exec($ch);
+    curl_close($ch);
+  }
+
+  if ($transfer_success) {
+    $download_size = filesize($filepath);
+
+    if ($download_size != $zoom_meeting_recording['file_size']) {
+      watchdog(__FUNCTION__, 'The file size (@new_size) for recording @recording_id of meeting @meeting_id did not match the specified file size (@orig_size).', [
+        '@new_size' => $download_size,
+        '@recording_id' => $zoom_meeting_recording['id'],
+        '@meeting_id' => $zoom_meeting_recording['meeting_id'],
+        '@orig_size' => $zoom_meeting_recording['file_size'],
+      ], WATCHDOG_ERROR);
+      $transfer_success = FALSE;
+    }
+  }
+
+  $transfer_success = $transfer_success && $file = zoomapi_save_file($filepath, $destination_directory);
+
+  // Delete the temporary file.
+  if (isset($file) && $filepath !== $file->uri) {
+    @unlink($filepath);
+  }
+
+  return $transfer_success ? (array) $file : FALSE;
+}
+
+/**
+ * Clean up the file name, munging extensions and transliterating.
+ *
+ * @param string $filepath
+ *   A string containing a file name or full path. Only the file name will
+ *   actually be modified.
+ *
+ * @return string
+ *   A file path with a cleaned-up file name.
+ *
+ * @see filefield_sources_clean_filename()
+ */
+function zoomapi_clean_filename($filepath, $extensions = '') {
+  $filename = basename($filepath);
+
+  if (module_exists('transliteration')) {
+    module_load_include('inc', 'transliteration');
+
+    $langcode = NULL;
+    if (!empty($_POST['language'])) {
+      $languages = language_list();
+      $langcode = isset($languages[$_POST['language']]) ? $_POST['language'] : NULL;
+    }
+    $filename = transliteration_clean_filename($filename, $langcode);
+  }
+
+  // Because this transfer mechanism does not use file_save_upload(), we need
+  // to manually munge the filename to prevent dangerous extensions.
+  // See file_save_upload().
+  if (empty($extensions)) {
+    $extensions = 'mp4 m4a';
+  }
+  $filename = file_munge_filename($filename, $extensions);
+  $directory = drupal_dirname($filepath);
+  return ($directory != '.' ? $directory . '/' : '') . $filename;
+}
+
+/**
+ * The cURL write function to save the file to disk.
+ */
+function zoomapi_download_recording_curl_write(&$ch, $data) {
+  $options = zoomapi_get_transfer_options();
+  $data_length = 0;
+
+  if ($fp = @fopen($options['filepath'], 'a')) {
+    fwrite($fp, $data);
+    fclose($fp);
+    $data_length = strlen($data);
+  }
+
+  return $data_length;
+}
+
+/**
+ * Set a transfer key that can be retreived by the progress function.
+ */
+function zoomapi_set_transfer_options($options = NULL) {
+  static $current = FALSE;
+  if (isset($options)) {
+    $current = $options;
+  }
+  return $current;
+}
+
+/**
+ * Get a transfer key that can be retrieved by the progress function.
+ */
+function zoomapi_get_transfer_options() {
+  return zoomapi_set_transfer_options();
+}
+
+/**
+ * Save a file into the database after validating it.
+ */
+function zoomapi_save_file($filepath, $destination_directory, $replace = FILE_EXISTS_REPLACE) {
+  // Begin building file object.
+  $file = new stdClass();
+
+  $file->status   = 1;
+  $file->display  = 1;
+  $file->filename = trim(basename($filepath), '.');
+  $file->uri      = $filepath;
+  $file->filemime = file_get_mimetype($file->filename);
+  $file->filesize = filesize($filepath);
+
+  $extensions = 'mp4 mpa';
+
+  // Munge the filename to protect against possible malicious extension hiding
+  // within an unknown file type (ie: filename.html.foo).
+  $file->filename = file_munge_filename($file->filename, $extensions);
+
+  // Assert that the destination contains a valid stream.
+  $destination_scheme = file_uri_scheme($destination_directory);
+
+  if (!$destination_scheme || !file_stream_wrapper_valid_scheme($destination_scheme)) {
+    watchdog(__FUNCTION__, 'The recording could not be saved, because the destination %destination is invalid.', ['%destination' => $destination_directory]);
+    return FALSE;
+  }
+
+  // A URI may already have a trailing slash or look like "public://".
+  if (substr($destination_directory, -1) != '/') {
+    $destination_directory .= '/';
+  }
+
+  // Ensure the destination is writable.
+  file_prepare_directory($destination_directory, FILE_CREATE_DIRECTORY);
+  $file->destination = file_destination($destination_directory . $file->filename, $replace);
+
+  // Move uploaded files from PHP's upload_tmp_dir to Drupal's temporary
+  // directory. This overcomes open_basedir restrictions for future file
+  // operations.
+  $file->uri = $file->destination;
+
+  if (!file_unmanaged_copy($filepath, $file->uri, $replace)) {
+    watchdog(__FUNCTION__, 'Recording error. Could not move recording file %file to destination %destination.', ['%file' => $file->filename, '%destination' => $file->uri]);
+    return FALSE;
+  }
+
+  // Set the permissions on the new file.
+  drupal_chmod($file->uri);
+
+  // If we are replacing an existing file re-use its database record.
+  if ($replace == FILE_EXISTS_REPLACE) {
+    $existing_files = file_load_multiple(array(), ['uri' => $file->uri]);
+
+    if (count($existing_files)) {
+      $existing = reset($existing_files);
+      $file->fid = $existing->fid;
+    }
+  }
+
+  // If we made it this far it's safe to record this file in the database.
+  if ($file = file_save($file)) {
+    return $file;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Format datetime helper.
+ */
+function zoomapi_format_timestamp($timestamp, $timezone = '') {
+  $format = $timezone ? ZOOMAPI_MEETING_TIME_FORMAT_LOCAL : ZOOMAPI_MEETING_TIME_FORMAT_DEFAULT;
+  $timezone = $timezone ?: ZOOMAPI_MEETING_TIME_FORMAT_TZ;
+  return format_date($timestamp, 'custom', $format, $timezone);
+}
+
+/**
+ * Get realm.
+ */
+function zoomapi_realm($url = '') {
+  global $base_url;
+
+  $realm = variable_get('zoomapi_realm', '');
+
+  if (!$realm || $url) {
+    $url = $url ?: $base_url;
+    $realm = explode('.', parse_url($url)['host'])[0];
+  }
+
+  return $realm;
+}
+
+/**
+ * Format datetime helper.
+ */
+function zoomapi_format_timestamp_local_server($timestamp) {
+  $timezone = variable_get('date_default_timezone', @date_default_timezone_get());
+  return zoomapi_format_timestamp($timestamp, $timezone);
+}
+
+/**
+ * Format datetime helper.
+ */
+function zoomapi_format_timestamp_local_user($timestamp, $account = NULL) {
+  $timezone = zoomapi_get_account_timezone($account);
+  return zoomapi_format_timestamp($timestamp, $timezone);
+}
+
+/**
+ * Get account timezone.
+ */
+function zoomapi_get_account_timezone($account) {
+  $timezone = drupal_get_user_timezone();
+
+  if ($account) {
+    $account = is_numeric($account) ? user_load($account) : $account;
+
+    if (!empty($account->timezone)) {
+      $timezone = $account->timezone;
+    }
+  }
+
+  return $timezone;
+}
+
+/**
+ * Get webhook url part.
+ */
+function _zoomapi_get_webhook_url_part($url) {
+  $prefix = 'zoomapi/webhook';
+  $parsed_url = parse_url($url);
+  $path = trim($parsed_url['path']);
+  $part = (substr($path, 0, strlen($prefix)) == $prefix) ? substr($url, strlen($prefix)) : '';
+  return $part;
+}

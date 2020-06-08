@@ -1,0 +1,13 @@
+<?php
+
+include_once 'inc/education_zoom.variable.inc';
+
+/**
+ * Implements hook_node_presave().
+ */
+function education_zoom_node_presave($node){
+
+  if ($node->type == 'classroom' && $node->is_new ) {
+    //TODO add func-ty to create zoom meeting
+  }
+}

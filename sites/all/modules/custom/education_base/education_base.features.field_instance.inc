@@ -93,6 +93,46 @@ function education_base_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'node-classroom-field_join_lesson_link'.
+  $field_instances['node-classroom-field_join_lesson_link'] = array(
+    'bundle' => 'classroom',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 8,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_join_lesson_link',
+    'label' => 'Join lesson Link',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 39,
+    ),
+  );
+
   // Exported field_instance: 'node-classroom-field_lesson_paused'.
   $field_instances['node-classroom-field_lesson_paused'] = array(
     'bundle' => 'classroom',
@@ -828,6 +868,7 @@ function education_base_field_default_field_instances() {
   t('Classroom');
   t('Current editor uid');
   t('Desk');
+  t('Join lesson Link');
   t('Lesson commerce_product reference');
   t('Lesson date');
   t('Lesson paused');

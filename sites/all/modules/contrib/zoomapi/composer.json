@@ -1,0 +1,16 @@
+{
+    "name": "drupal/zoomapi",
+    "description": "Implements Zoom (zoom.us) API v2 using portaldna/zoomapi library.",
+    "type": "drupal-project",
+    "authors": [
+        {
+            "name": "Craig Aschbrenner",
+            "email": "craig.aschbrenner@portaldna.com"
+        }
+    ],
+    "require": {
+        "portaldna/zoomapi": "dev-master",
+        "php-http/curl-client": "^1.7",
+        "guzzlehttp/psr7": "^1.4"
+    }
+}

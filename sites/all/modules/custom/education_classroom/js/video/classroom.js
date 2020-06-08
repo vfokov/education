@@ -43,15 +43,19 @@
 
   $(document).ready(function($) {
 
+    /*
     $('.classroom-video-link').click(function(e){
       e.preventDefault();
       var classroom_nid = Drupal.settings.classroom_nid;
-      OpenVideo(classroom_nid);
+      //OpenVideo(classroom_nid);
     });
+    */
 
-
+   /*
    var classroom_nid = Drupal.settings.classroom_nid;
     OpenVideo(classroom_nid);
     //$('.video-frame').attr('src', 'https://talky.io/educt_'+ classroom_nid);
+    */
+
   });
 })(jQuery);

@@ -1,0 +1,8 @@
+name = Education zoom
+description = "Provides zoom meeting creation"
+package = Custom
+core = 7.x
+
+version = "7.x-3.0-dev"
+project = "education_zoom"
+datestamp = "1543859984"

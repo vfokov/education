@@ -56,6 +56,10 @@ function education_common_form_classroom_node_form_alter(&$form, &$form_state, $
     $form['field_desk'][LANGUAGE_NONE][0]['#title'] = '';
     $form['field_desk'][LANGUAGE_NONE][0]['data']['#title'] = '';
 
+    if (user_has_role(STUDENT_ROLE)) {
+      $form['field_join_lesson_link']['#access'] = FALSE;
+    }
+
     $form['timer'] = array(
       '#markup' =>  '<div id="classroom-timer"></div>'
     );

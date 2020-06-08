@@ -1,0 +1,12 @@
+name = Zoom API
+description = Basic REST integration with the <a href="https://zoom.us/developer">Zoom API</a> v2.
+core = 7.x
+configure = admin/config/services/zoomapi
+dependencies[] = composer_manager
+files[] = zoomapi/ZoomAPIClient.php
+
+; Information added by Drupal.org packaging script on 2020-05-08
+version = "7.x-2.x-dev"
+core = "7.x"
+project = "zoomapi"
+datestamp = "1588955055"

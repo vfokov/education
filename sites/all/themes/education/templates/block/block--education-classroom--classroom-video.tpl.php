@@ -66,6 +66,9 @@ if (!user_is_anonymous()) {
    $classroom_node->field_order_id[LANGUAGE_NONE][0]['value'] : '';
  $order = commerce_order_load($order_id);
 
+ $zoom_link = isset($classroom_node->field_join_lesson_link[LANGUAGE_NONE]) ?
+   $classroom_node->field_join_lesson_link[LANGUAGE_NONE][0]['value'] : '';
+
 if (user_has_role(STUDENT_ROLE)) {
   $teacher = user_load($order->field_lesson_teacher_uid[LANGUAGE_NONE][0]['uid']);
   if (isset($teacher->field_vox_username[LANGUAGE_NONE])) {
@@ -103,7 +106,10 @@ if ($order_id && user_has_role(TEACHER_ROLE)) {
   <!--<iframe class="video-frame" src="" id="raz2"></iframe> -->
 
   <div class="content"<?php print $content_attributes; ?>>
-    <a class="classroom-video-link" href="https://talky.io/educt_<?php print $classroom_nid; ?>#size-window">Open Video</a>
+    <?php if ($zoom_link): ?>
+      <a class="classroom-video-link" href="<?php print $zoom_link; ?>" target="_blank">Join Lesson link</a>
+    <?php endif; ?>
+    <!--<a class="classroom-video-link" href="https://talky.io/educt_<?php //print $classroom_nid; ?>#size-window">Open Video</a> -->
 </div>
 
 <?php } ?>
