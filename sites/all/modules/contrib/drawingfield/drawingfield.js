@@ -11,6 +11,7 @@
   var user_id = Math.random().toString(36).substr(2, 5);
 
   console.log(socket);
+  console.log(user_id);
 
 
   var lock = 0;
@@ -56,7 +57,8 @@
               var localStorageKey = 'drawing'
               json = msg.drawing_edit_path;
 
-              console.log('json =' + json);
+              console.log('json =');
+              console.log(json);
 
               localStorage.setItem(localStorageKey, json);
               if (localStorage.getItem(localStorageKey)) {
@@ -71,10 +73,10 @@
                 paintId = $(".form-group").find("input.output").attr('id');
                 $("#" + paintId).val(jsonBase64);
                 lock = 1;
-                timer = setTimeout(function () {
+                //timer = setTimeout(function () {
                   var uid = Drupal.settings.classroom_uid;
-                  sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-                }, 300);
+                  sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid, json);
+                //}, 300);
                 //console.log('drawChange')
               });
 
@@ -161,13 +163,20 @@
   //TODO WS
   // обработчик входящих сообщений
   socket.onmessage = function(event) {
+
+
     var incomingMessage = event.data;
 
+    //incomingMessage = JSON.parse(incomingMessage);
     incomingMessage = JSON.parse(incomingMessage);
     console.log('incomingMessage');
+    ///console.log(incomingMessage);
 
 
     settings = Drupal.settings.drawingfield;
+
+    //console.log(settings);
+
     var imageSize = {width: settings.width, height: settings.height};
 
     var lc = LC.init(
@@ -176,18 +185,46 @@
         backgroundColor: settings.backgroundColor,
         imageURLPrefix: settings.imageUrlPrefix
       });
-    var localStorageKey = 'drawing'
+    //var localStorageKey = 'drawing'
 
     var json = incomingMessage.outgoingMessage;
 
-    console.log(json);
+    //console.log(json);
 
     var localStorageKey = 'drawing';
+
+
     localStorage.setItem(localStorageKey, json);
     if (localStorage.getItem(localStorageKey)) {
+
       lc.loadSnapshotJSON(localStorage.getItem(localStorageKey));
       //console.log(lc);
     }
+    var base64 = lc.getImage().toDataURL();
+    var jsonBase64 = json + 'JSON' + base64;
+    paintId = $(".form-group").find("input.output").attr('id');
+    $("#" + paintId).val(jsonBase64);
+
+    
+    lc.on('drawingChange', function() {
+      json = lc.getSnapshotJSON();
+
+      console.log('dr Change');
+      //console.log(json);
+
+      var base64 = lc.getImage().toDataURL();
+      var jsonBase64 = json + 'JSON' + base64;
+      paintId = $(".form-group").find("input.output").attr('id');
+      $("#" + paintId).val(jsonBase64);
+      lock = 1;
+      //timer = setTimeout(function(){
+      var uid = Drupal.settings.classroom_uid;
+      sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid, json);
+      //}, 400);
+      //console.log('drawChange')
+    });
+
+
 
     /*
     var show_mess = '';
@@ -205,23 +242,31 @@
   };
 
   // send changes to server via ajax
-  function sendChangesToServer(text, classroom_nid, uid) {
-    window.setTimeout(function () {
+  function sendChangesToServer(text, classroom_nid, uid, json = '') {
+    //window.setTimeout(function () {
       //$('.info').addClass('show');
       //$('.info').text('Saving...');
       //console.log(text);
 
       //TODO ws
-      outgoingMessage = text;
+
+
+
+      //text = st;
+      outgoingMessage = json;
       outgoingMessage = JSON.stringify({
         outgoingMessage: outgoingMessage,
         user_id: user_id
       });
 
+
+      //console.log(st);
+      //outgoingMessage = '';
+
       //socket.send(outgoingMessage);
       socket.send(outgoingMessage);
 
-
+      /*
       $.ajax({
         type: 'POST',
         url: '/save-onchange',
@@ -240,21 +285,18 @@
           }, 800)
 
           //console.log('saved');
-          /*
-          $('.info').text('Saved');
-          setTimeout(function(){
-            $('.info').removeClass('show');
-          }, 1000);
-          */
 
         },
         error: function () {
           //console.log('err');
         }
       });
-    });
+      */
+
+   // });
   }
 
+  /*
   Drupal.behaviors.drawingfield = {
     attach: function(context, settings) {
       settings = Drupal.settings.drawingfield;
@@ -274,15 +316,19 @@
       // drawingChange
       lc.on('drawingChange', function() {
         json = lc.getSnapshotJSON();
+
+        console.log('dr Change');
+        //console.log(json);
+
         var base64 = lc.getImage().toDataURL();
         var jsonBase64 = json + 'JSON' + base64;
         paintId = $(".form-group").find("input.output").attr('id');
         $("#" + paintId).val(jsonBase64);
         lock = 1;
-        timer = setTimeout(function(){
+        //timer = setTimeout(function(){
           var uid = Drupal.settings.classroom_uid;
-          sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid);
-        }, 400);
+          sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid, json);
+        //}, 400);
         //console.log('drawChange')
       });
 
@@ -356,13 +402,49 @@
 
     }
   }
+  */
 
   $(document).ready(function($) {
-    setInterval(function () {
+    //setInterval(function () {
       //console.log(Drupal.settings.classroom_nid);
       //console.log('lock = ' + lock);
-     // sendUpdateRequest(Drupal.settings.classroom_nid); //this will send request again and again;
-    }, 1800);
+      ////sendUpdateRequest(Drupal.settings.classroom_nid); //this will send request again and again;
+    //}, 1800);
+
+    settings = Drupal.settings.drawingfield;
+    var imageSize = {width: settings.width, height: settings.height};
+    //console.log(imageSize);
+    //console.log(settings);
+
+
+
+    var lc = LC.init(
+      document.getElementsByClassName('drawingfield export')[0],{imageSize: imageSize,backgroundColor: settings.backgroundColor,imageURLPrefix: settings.imageUrlPrefix});
+    var localStorageKey = 'drawing'
+    json = settings.drawingEditPath;
+
+    localStorage.setItem(localStorageKey, json);
+    if (localStorage.getItem(localStorageKey)) {
+      lc.loadSnapshotJSON(localStorage.getItem(localStorageKey));
+    }
+    // drawingChange
+    lc.on('drawingChange', function() {
+      json = lc.getSnapshotJSON();
+
+      console.log('dr Change');
+      //console.log(json);
+
+      var base64 = lc.getImage().toDataURL();
+      var jsonBase64 = json + 'JSON' + base64;
+      paintId = $(".form-group").find("input.output").attr('id');
+      $("#" + paintId).val(jsonBase64);
+      lock = 1;
+      //timer = setTimeout(function(){
+      var uid = Drupal.settings.classroom_uid;
+      sendChangesToServer($("#" + paintId).val(), Drupal.settings.classroom_nid, uid, json);
+      //}, 400);
+      //console.log('drawChange')
+    });
 
     $('.field-desk-add-more-wrapper').mouseup(function(){
       //console.log('mouseup');

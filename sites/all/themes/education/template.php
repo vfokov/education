@@ -254,6 +254,18 @@ function education_process_maintenance_page(&$variables)
  * Override or insert variables into the page template.
  */
 function education_preprocess_page(&$variables) {
+
+  /*
+  $node = node_load(42);
+  //var_dump($node->field_desk[LANGUAGE_NONE][0]['data']); die();
+  $image_data = $node->field_desk[LANGUAGE_NONE][0]['data'];
+
+  $values = unserialize($image_data);
+  $drawing_edit_path = $values['json'];
+  echo $drawing_edit_path; die();
+  */
+
+
   if (drupal_is_front_page()) {
     drupal_set_title('');
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/owl.carousel.min.js');
