@@ -2870,6 +2870,10 @@ input[type="submit"]:before {
   float: left;
 }
 
+.form-group .literally .lc-picker {
+  z-index: 10;
+}
+
 /* seacrh form front tabs*/
 
 #front__logos .item {
