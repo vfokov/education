@@ -3285,6 +3285,28 @@ canvas {
   clear: both;
 }
 
+#block-views-teacher-quizes-block-1 .views-field-title,
+#block-views-teacher-quizes-block-1 .views-field-nothing {
+  float: left;
+}
+
+#block-views-teacher-quizes-block-1 .views-field-nothing {
+  margin-left: 10px;
+}
+
+#block-views-teacher-quizes-block-1 .views-field-nothing a {
+  background: #f17c1e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.929em;
+  font-weight: normal;
+  text-align: center;
+  padding: 7px 22px 9px;
+  border-radius: 1px;
+  margin-top: 0;
+}
+
 @media all and (max-width: 768px) {
 
     #page #featured {
