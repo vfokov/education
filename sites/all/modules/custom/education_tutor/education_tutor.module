@@ -403,3 +403,22 @@ function education_tutor_unique_username($name, $uid = NULL) {
   return $new_name;
 }
 */
+
+
+/**
+ * Implements hook_form_FORM_ID_alter()
+ * user profile (student)
+ */
+function education_tutor_form_quiz_node_form_alter(&$form, &$form_state, $form_id) {
+  //var_dump($form);
+  if (user_has_role(TEACHER_ROLE)) {
+
+    //var_dump($form);
+
+    $form['taking']['#access'] = FALSE;
+    //$form['availability']['#access'] = FALSE;
+    $form['quiz_availability']['#access'] = FALSE;
+    $form['summaryoptions']['#access'] = FALSE;
+    $form['resultoptions']['#access'] = FALSE;
+  }
+}
