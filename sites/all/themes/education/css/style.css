@@ -3281,6 +3281,9 @@ canvas {
   background: #f5b828;
 }
 
+#block-views-teacher-quizes-block-1 {
+  clear: both;
+}
 
 @media all and (max-width: 768px) {
 

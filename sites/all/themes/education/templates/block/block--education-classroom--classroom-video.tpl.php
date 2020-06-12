@@ -111,5 +111,7 @@ if ($order_id && user_has_role(TEACHER_ROLE)) {
     <?php endif; ?>
     <!--<a class="classroom-video-link" href="https://talky.io/educt_<?php //print $classroom_nid; ?>#size-window">Open Video</a> -->
 </div>
+</div>
+
 
 <?php } ?>
