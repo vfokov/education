@@ -658,7 +658,7 @@ function education_common_search_api_query_alter(SearchApiQueryInterface $query)
       $time_slider_from = $_GET['time_slider']['value'];
       $time_slider_to = $_GET['time_slider']['value2'];
 
-      if ($time_slider_from != 0 && $time_slider_to != 23 ) {
+      if ($time_slider_from != 0/* && $time_slider_to != 24*/ ) {
 
         $teacher_lesson_date = !empty($_GET['teacher_date_dates']['date'])
           ? strtotime($_GET['teacher_date_dates']['date']) : time();
@@ -679,33 +679,6 @@ function education_common_search_api_query_alter(SearchApiQueryInterface $query)
         $main_filter->filter($right_filter);
         $query->filter($main_filter);
       }
-      else {
-        if (!empty($_GET['teacher_date_dates']['date'])) {
-          $right_filter = $query->createFilter('AND');
-          $teacher_lesson_date = strtotime($_GET['teacher_date_dates']['date']);
-          $time_min = $teacher_lesson_date;
-          $time_max = $teacher_lesson_date + 23 * 3600;
-
-          //echo 'ttt'; die();
-          //var_dump($query); die();
-
-          $d = 1;
-
-          //echo date('Y-m-d H:i', $time_min) . ' ' . date('Y-m-d H:i', $time_max); die();
-
-          //$t_d_min = date('Y-m-d H:i', $time_min);
-          //$t_d_max = date('Y-m-d H:i', $time_max);
-
-          $right_filter->condition('teacher_lessons_dates', $time_min, '>=');
-          $right_filter->condition('teacher_lessons_dates', $time_max, '<=');
-
-          $main_filter = $query->createFilter('AND');
-          $main_filter->filter($right_filter);
-          $query->filter($main_filter);
-        }
-      }
-
-
     }
   }
 }
