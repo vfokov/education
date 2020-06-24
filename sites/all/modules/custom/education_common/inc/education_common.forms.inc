@@ -105,7 +105,7 @@ function education_common_enable_lesson_date($form, &$form_state) {
     '#default_value' => array('value' => 0.00, 'value2' => 24.00),
     '#range' => TRUE,
     '#min' => 0.00,
-    '#max' => 24.00,
+    '#max' => 23.00,
     '#step' => 1.00,
     '#display_inputs' => FALSE,
     '#display_values' => TRUE,
