@@ -605,7 +605,7 @@ function education_common_form_views_exposed_form_alter(&$form, &$form_state, $f
       $form['teacher_date_dates'] = array(
         '#type' => 'date_popup',
         '#size' => 30,
-        '#default_value' => !drupal_is_front_page() ? date('Y-m-d', time()) : '',
+        //'#default_value' => !drupal_is_front_page() ? date('Y-m-d', time()) : '',
         '#date_format' => 'Y-m-d',
         '#date_year_range' => '-3:+3',
         '#description' => '',
@@ -658,23 +658,26 @@ function education_common_search_api_query_alter(SearchApiQueryInterface $query)
       $time_slider_from = $_GET['time_slider']['value'];
       $time_slider_to = $_GET['time_slider']['value2'];
 
-      $teacher_lesson_date = strtotime($_GET['teacher_date_dates']['date']);
-      //$t_d = date('Y-m-d H:i', $teacher_lesson_date);
+      if ($time_slider_from != 0/* && $time_slider_to != 24*/ ) {
 
-      $right_filter = $query->createFilter('AND');
+        $teacher_lesson_date = strtotime($_GET['teacher_date_dates']['date']);
+        //$t_d = date('Y-m-d H:i', $teacher_lesson_date);
 
-      $time_min = $teacher_lesson_date + $time_slider_from * 3600;
-      $time_max = $teacher_lesson_date + $time_slider_to * 3600;
+        $right_filter = $query->createFilter('AND');
 
-      //$t_d_min = date('Y-m-d H:i', $time_min);
-      //$t_d_max = date('Y-m-d H:i', $time_max);
+        $time_min = $teacher_lesson_date + $time_slider_from * 3600;
+        $time_max = $teacher_lesson_date + $time_slider_to * 3600;
 
-      $right_filter->condition('teacher_lessons_dates', $time_min, '>=');
-      $right_filter->condition('teacher_lessons_dates', $time_max, '<=');
+        //$t_d_min = date('Y-m-d H:i', $time_min);
+        //$t_d_max = date('Y-m-d H:i', $time_max);
 
-      $main_filter = $query->createFilter('AND');
-      $main_filter->filter($right_filter);
-      $query->filter($main_filter);
+        $right_filter->condition('teacher_lessons_dates', $time_min, '>=');
+        $right_filter->condition('teacher_lessons_dates', $time_max, '<=');
+
+        $main_filter = $query->createFilter('AND');
+        $main_filter->filter($right_filter);
+        $query->filter($main_filter);
+      }
     }
   }
 }
