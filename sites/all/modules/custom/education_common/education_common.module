@@ -679,12 +679,19 @@ function education_common_search_api_query_alter(SearchApiQueryInterface $query)
         $main_filter->filter($right_filter);
         $query->filter($main_filter);
       }
-      else {
+      /*else {
         if (!empty($_GET['teacher_date_dates']['date'])) {
           $right_filter = $query->createFilter('AND');
           $teacher_lesson_date = strtotime($_GET['teacher_date_dates']['date']);
           $time_min = $teacher_lesson_date;
           $time_max = $teacher_lesson_date + 23 * 3600;
+
+          //echo 'ttt'; die();
+          //var_dump($query); die();
+
+          $d = 1;
+
+          echo date('Y-m-d H:i', $time_min) . ' ' . date('Y-m-d H:i', $time_max); die();
 
           //$t_d_min = date('Y-m-d H:i', $time_min);
           //$t_d_max = date('Y-m-d H:i', $time_max);
@@ -697,6 +704,8 @@ function education_common_search_api_query_alter(SearchApiQueryInterface $query)
           $query->filter($main_filter);
         }
       }
+      */
+
     }
   }
 }
