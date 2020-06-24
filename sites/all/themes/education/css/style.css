@@ -3308,6 +3308,11 @@ canvas {
   margin-top: 0;
 }
 
+body #messages {
+  margin-top: 50px;
+}
+
+
 @media all and (max-width: 768px) {
 
     #page #featured {
