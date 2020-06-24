@@ -1919,6 +1919,7 @@ a#menu-toggle:after {
     -ms-transform: scale(1, 1) translate3d(-50%, -50%, 0);
     -o-transform: scale(1, 1) translate3d(-50%, -50%, 0);
     transform: scale(1, 1) translate3d(-50%, -50%, 0);
+    z-index: 999;
 }
 
 .popup__overlay {
