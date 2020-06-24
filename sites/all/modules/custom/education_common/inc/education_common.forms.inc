@@ -102,7 +102,7 @@ function education_common_enable_lesson_date($form, &$form_state) {
     '#input_title' => NULL,
     '#input2_title' => NULL,
     '#type' => 'slider',
-    '#default_value' => array('value' => 0.00, 'value2' => 24.00),
+    '#default_value' => array('value' => 0.00, 'value2' => 23.00),
     '#range' => TRUE,
     '#min' => 0.00,
     '#max' => 23.00,
