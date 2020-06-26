@@ -1433,3 +1433,5 @@ function balance_pay_form_ajax_callback(&$form, &$form_state) {
 
   return array('#type' => 'ajax', '#commands' => $commands);
 }
+
+

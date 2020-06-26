@@ -40,6 +40,199 @@ function education_common_form_lesson_node_form_alter(&$form, &$form_state, $for
   if (user_has_role(TEACHER_ROLE)) {
     $form['field_product_reference']['#access'] = FALSE;
   }
+
+  $t = 1;
+
+  //////////Date time range
+  $form['enabled_date'] = array(
+    '#type' => 'container',
+  );
+
+  $form['enabled_date']['enable_lesson_date'] = array(
+    //'#title' => 'Lesson date',
+    '#title' => '',
+    //'#type' => 'textfield',
+    '#type' => 'date_popup',
+    '#default_value' =>'',
+    '#date_format' => 'Y-m-d',
+    '#date_year_range' => '-3:+3',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+  );
+
+  $form['enabled_enable_date_range'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Or select another date for range'),
+  );
+
+  // Date to hidden while enabled_enable_date_range is not checked
+  $form['enabled_date']['enable_lesson_date_to'] = array(
+    '#title' => 'Date to',
+    '#type' => 'date_popup',
+    '#default_value' =>'',
+    '#date_format' => 'Y-m-d',
+    '#date_year_range' => '-3:+3',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_date_range"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+
+  $form['enabled_date']['enable_time'] = array(
+    //'#type' => 'datetime',
+    '#type' => 'date_popup',
+    '#title' => 'Select time for one position',
+    '#size' => 20,
+    '#date_format' => 'H:i',
+    '#date_increment' => 30,
+    '#default_value' => '00:00',
+    '#prefix' => '<div class="form__block">',
+    '#suffix' => '</div>',
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_time_range"]' => array('checked' => FALSE),
+      ),
+    ),
+  );
+
+
+  // Uncheck anonymous field when the name field is filled.
+  $form['enabled_enable_time_range'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Or select time range'),
+  );
+
+  $form['enabled_time_range'] = array(
+    '#input_title' => NULL,
+    '#input2_title' => NULL,
+    '#type' => 'slider',
+    '#default_value' => array('value' => 0.00, 'value2' => 23.00),
+    '#range' => TRUE,
+    '#min' => 0.00,
+    '#max' => 23.00,
+    '#step' => 1.00,
+    '#display_inputs' => FALSE,
+    '#display_values' => TRUE,
+    '#display_values_format' => '%{value}%.00',
+    //'#weight' => 29,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="enabled_enable_time_range"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  //$form["field_lesson_date"]["und"][0]["#default_value"]["value"]
+
+  $form["#validate"][] = 'education_common_validate_dates';
+
+  $t = 1;
+
+}
+
+function education_common_validate_dates(&$form, &$form_state) {
+  //////////////////////////////////////////////////////
+  $enable_lesson_date = $form_state['values']['enable_lesson_date'];
+  $enable_lesson_time = $form_state['values']['enable_time'];
+
+  // collect date ranges when Date to is set
+  $dates_range = array($enable_lesson_date);
+  if (!empty($form_state['values']['enabled_enable_date_range'])) {
+    $date_from = $form_state['values']['enable_lesson_date'];
+    $date_to = $form_state['values']['enable_lesson_date_to'];
+
+    $date_calc = $date_from;
+    $date_calc_time = strtotime($date_calc);
+    $date_to_time = strtotime($date_to);
+    while ($date_calc_time < $date_to_time) {
+      $date_calc = date('Y-m-d', strtotime('+1 day', strtotime($date_calc)) );
+      $dates_range[] = $date_calc;
+      $date_calc_time = strtotime($date_calc);
+    }
+  }
+
+  // if time range selected
+  if (!empty($form_state['values']['enabled_enable_time_range'])) {
+    $new_date_items = array();
+    $time_ranges = $form_state['values']['enabled_time_range'];
+    $range_to = $time_ranges['value2'];
+    $range_from = $time_ranges['value'];
+
+    foreach ($dates_range as $enable_lesson_date) { // dates range
+      for ($i = $range_from; $i <= $range_to; $i++) {
+
+        $hour_value = $i < 10 ? '0' . $i : $i;
+        $enable_lesson_time_item = $hour_value . ':' . '00';
+        $enable_lesson_time_item_half = $hour_value . ':' . '30';
+        $enable_lesson_date_time = $enable_lesson_date . ' ' . $enable_lesson_time_item;
+        if ($i != $range_to) {
+          $enable_lesson_date_time_half = $enable_lesson_date . ' ' . $enable_lesson_time_item_half;
+        }
+
+        //$new_date_items[] = array (
+        $new_date_items_hour = array(
+          'value' => $enable_lesson_date_time,
+          // TODO change
+          'timezone' => 'Asia/Yekaterinburg',
+          'timezone_db' => 'Asia/Yekaterinburg',
+          'date_type' => 'datetime',
+        );
+
+        if (isset($enable_lesson_date_time_half)) {
+          $new_date_items_hour_half = array(
+            'value' => $enable_lesson_date_time_half,
+            // TODO change
+            'timezone' => 'Asia/Yekaterinburg',
+            'timezone_db' => 'Asia/Yekaterinburg',
+            'date_type' => 'datetime',
+          );
+        }
+
+        //if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+          //array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+          //array_unshift($form_state["values"]["field_lesson_date"][LANGUAGE_NONE], $new_date_items_hour);
+          $form_state["values"]["field_lesson_date"][LANGUAGE_NONE][$enable_lesson_date_time] = $new_date_items_hour;
+          if (isset($enable_lesson_date_time_half)) {
+            //array_unshift($form_state["values"]["field_lesson_date"][LANGUAGE_NONE], $new_date_items_hour_half);
+            $form_state["values"]["field_lesson_date"][LANGUAGE_NONE][$enable_lesson_date_time_half] = $new_date_items_hour_half;
+          }
+        //}
+
+      }
+    }
+    /*
+    if ($lesson_node->field_lesson_date['und']) {
+      array_unshift($lesson_node->field_lesson_date['und'], $new_date_items);
+    }
+    */
+  }
+
+  else { // ADD one position
+    foreach ($dates_range as $enable_lesson_date) { // dates range
+      $enable_lesson_date = $enable_lesson_date . ' ' . $enable_lesson_time;
+      $new_date_item = array(
+        'value' => $enable_lesson_date,
+        // TODO change
+        'timezone' => 'Asia/Yekaterinburg',
+        'timezone_db' => 'Asia/Yekaterinburg',
+        'date_type' => 'datetime',
+      );
+
+      // if ($lesson_node->field_lesson_date[LANGUAGE_NONE]) {
+     // array_unshift($form_state["values"]["field_lesson_date"][LANGUAGE_NONE], $new_date_item);
+      $form_state["values"]["field_lesson_date"][LANGUAGE_NONE][$enable_lesson_date] = $new_date_item;
+      // }
+    }
+  }
+
+  //$form_state["values"]["field_lesson_date"][LANGUAGE_NONE] = array_unique($form_state["values"]["field_lesson_date"][LANGUAGE_NONE]);
+
+
+  //$form_state["values"]["field_lesson_date"][LANGUAGE]
 }
 
 /**
