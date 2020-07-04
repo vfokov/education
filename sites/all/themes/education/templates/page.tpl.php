@@ -280,7 +280,16 @@
         </div></div> <!-- /#triptych, /#triptych-wrapper -->
     <?php endif; ?>
 
-    <div id="footer-wrapper"><div class="section">
+    <div id="footer-wrapper">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="widget widget-text">
+              <img class="logo-footer" src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+            </div>
+          </div><!-- /.col-md-12 -->
+        </div>
 
         <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn'] || $page['footer_fourthcolumn']): ?>
           <div id="footer-columns" class="clearfix">
@@ -297,7 +306,8 @@
           </footer> <!-- /#footer -->
         <?php endif; ?>
 
-      </div></div> <!-- /.section, /#footer-wrapper -->
+      </div>
+    </div> <!-- /.section, /#footer-wrapper -->
 
     <div id="popup__overlay" class="popup__overlay" style="display: none;"></div>
 

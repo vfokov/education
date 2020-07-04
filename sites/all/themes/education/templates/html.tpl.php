@@ -80,6 +80,10 @@
 
 <!-- Javascript -->
 
+<a class="go-top show">
+  <i class="fa fa-angle-up"></i>
+</a>
+
 <script type="text/javascript" src="/sites/all/themes/education/javascript/bootstrap.min.js"></script>
 <script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.easing.js"></script>
 <script type="text/javascript" src="/sites/all/themes/education/javascript/imagesloaded.min.js"></script>

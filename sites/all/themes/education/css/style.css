@@ -2309,13 +2309,56 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
     display: none;
 }
 
-#logo img {
+#logo img, .logo-footer {
    /* width: 70%;*/
   width: auto;
   height: 51px;
 }
 
 #header {
+}
+
+.go-top {
+  position: fixed !important;
+  right: -35px;
+  bottom: 15px;
+  width: 46px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #394151;
+  height: 46px;
+  line-height: 45px;
+  text-align: center;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+
+.go-top.show {
+  right: 15px;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
+  opacity: 1;
+  visibility: visible;
+}
+
+.go-top:hover {
+  background-color: #697ea4;
+}
+
+.go-top i {
+  font-size: 18px;
+  color: #fff;
+  padding-bottom: 3px;
+}
+
+.go-top:hover i {
+  color: #fff;
 }
 
 .form-item-enabled-enable-time-range label {
@@ -3419,6 +3462,13 @@ ol, ul {
 }
 
 .header.is-sticky #mainnav > ul > li > a:hover {
+  color: #999999;
+}
+
+#footer-wrapper {
+  font-size: 0.857em;
+  background-color: #2b3341;
+  padding: 50px 0 37px;
   color: #999999;
 }
 

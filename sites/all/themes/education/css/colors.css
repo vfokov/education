@@ -44,10 +44,7 @@ a:active {
   background-color: #f6f6f2;
   border-color: #f9f9f9;
 }
-#page-wrapper,
-#footer-wrapper {
-  background: #292929;
-}
+
 .region-header,
 .region-header a,
 .region-header li a.active,
