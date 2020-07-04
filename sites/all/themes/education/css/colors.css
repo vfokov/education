@@ -28,13 +28,7 @@ body.overlay {
   border-bottom: 1px solid #ffffff;
 }
 #header {
-  background-color: #fff;
-  position: fixed;
-  z-index: 101;
-  width: 100%;
-  top: 0;
-  left: 0;
-  box-shadow: 0 0 20px rgba(0,0,0,.1);
+
 }
 a {
   color: #0071B3;

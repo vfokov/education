@@ -61,7 +61,7 @@
     <script src="<?php print $base_path . $path_to_resbartik; ?>/js/html5-respond.js"></script>
   <![endif]-->
 </head>
-<body class="<?php print $classes; ?>" <?php print $attributes;?>>
+<body class="<?php print $classes; ?> header-sticky" <?php print $attributes;?>>
 
 <script
   src="https://www.paypal.com/sdk/js?client-id=AUV2r-z_ApYr_NFkZBYrSaqPc9eeh88nJUZTxi47OClr38tzMgcvcGRhnHmq_S9lz87vo94P9vrFCM9i"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
@@ -70,11 +70,34 @@
   <div id="skip-link">
     <a href="#main-content" class="element-invisible element-focusable"><?php print t('Skip to main content'); ?></a>
   </div>
+<div class="boxed">
   <?php print $page_top; ?>
   <?php print $page; ?>
   <?php print $page_bottom; ?>
+</div>
 
   <script type="text/javascript" src="/sites/all/modules/custom/education_common/js/tooltip.js"></script>
+
+<!-- Javascript -->
+
+<script type="text/javascript" src="/sites/all/themes/education/javascript/bootstrap.min.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.easing.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/imagesloaded.min.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/owl.carousel.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.mb.YTPlayer.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery-waypoints.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.cookie.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.fitvids.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery-validate.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/parallax.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.countdown.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/switcher.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.sticky.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/smoothscroll.js"></script>
+<script type="text/javascript" src="/sites/all/themes/education/javascript/main.js"></script>
 
 <!-- Start of LiveChat (www.livechatinc.com) code -->
 <script type="text/javascript">
