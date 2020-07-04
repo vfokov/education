@@ -917,8 +917,8 @@ ul.links.inline li a {
     font-size: 0.857em;
 }
 #footer-wrapper a {
-    color: #fcfcfc;
-    color: rgba(255, 255, 255, 0.8);
+   /* color: #fcfcfc;
+    color: rgba(255, 255, 255, 0.8);*/
 }
 #footer-wrapper a:hover,
 #footer-wrapper a:focus {
@@ -2339,6 +2339,47 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
   opacity: 0;
 }
 
+.bottom {
+  background-color: #2b3341;
+}
+
+ul.flat-socials li {
+  display: inline-block;
+  margin-left: 44px;
+}
+.bottom ul.flat-socials li {
+  padding: 36px 0 36px 0;
+}
+
+ul.flat-socials li a i {
+  font-size: 14px;
+  color: #697ea4;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+ul.flat-socials li a:hover i {
+  color: #fff;
+}
+
+.flat-information > li.address:before {
+  content: "\f041";
+}
+
+.flat-information > li > a {
+  display: inline-block;
+  color: #999999;
+  font-size: 12px;
+  font-family: "Karla", sans-serif;
+}
+
+.flat-information > li > a:hover {
+  color: #697ea4;
+}
+
 .go-top.show {
   right: 15px;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
@@ -3470,6 +3511,14 @@ ol, ul {
   background-color: #2b3341;
   padding: 50px 0 37px;
   color: #999999;
+}
+
+#footer-wrapper a:hover {
+  color: #999999;
+}
+
+.logo-footer {
+  margin-bottom: 30px;
 }
 
 /*end aqua*/

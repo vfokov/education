@@ -291,6 +291,21 @@
           </div><!-- /.col-md-12 -->
         </div>
 
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="sidebar-inner-footer">
+              <div class="widget widget-infomation">
+                <ul class="flat-information">
+                  <li class="email"><a href="mailto:education@gmail.com">education@gmail.com</a></li>
+                  <li class="phone"><a href="699999999">+61 9 9999 9999</a></li>
+                  <li class="address">999 King Street, Toronto 3000 Canada</li>
+
+                </ul>
+              </div>
+            </div><!-- /.sidebar-inner-footer -->
+          </div><!-- /.col-md-12 -->
+        </div>
+
         <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn'] || $page['footer_fourthcolumn']): ?>
           <div id="footer-columns" class="clearfix">
             <?php print render($page['footer_firstcolumn']); ?>
@@ -308,6 +323,48 @@
 
       </div>
     </div> <!-- /.section, /#footer-wrapper -->
+
+
+    <!-- BOTTOM -->
+    <div class="bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="line-top"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="container-bottom">
+            <div class="col-md-6">
+              <div class="copyright">
+                <!--
+                <p>© Copyright <a href="#">Alitstudio</a> 2015. All Rights Reserved.</p>
+                -->
+              </div>
+            </div><!-- /.col-md-6 -->
+
+            <div class="col-md-6">
+              <ul class="flat-socials text-right">
+                <li class="facebook">
+                  <a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li class="twitter">
+                  <a href="#"><i class="fa fa-twitter"></i></a>
+                </li>
+                <li class="instagram">
+                  <a href="#"><i class="fa fa-instagram"></i></a>
+                </li>
+                <li class="linkedin">
+                  <a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+              </ul>
+            </div><!-- /.col-md-6 -->
+          </div><!-- /.container-bottom -->
+        </div><!-- /.row -->
+      </div><!-- /.container -->
+    </div>
+    <!-- END BOTTOM -->
+
 
     <div id="popup__overlay" class="popup__overlay" style="display: none;"></div>
 
