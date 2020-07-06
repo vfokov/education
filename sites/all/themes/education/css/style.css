@@ -1870,11 +1870,11 @@ a#menu-toggle:after {
 }
 
 .img-wrapper {
-    margin-right: 5%;
+    /*margin-right: 5%;*/
 }
 
 .content-wrapper {
-    width: 70%;
+    /*width: 70%;*/
 }
 
 .content .profile {
@@ -3352,6 +3352,10 @@ a {
   transition: all 0.3s ease-in-out;
 }
 
+h6 {
+  font: 18px/30px "Georgia", sans-serif;
+}
+
 .top .language {
   position: relative;
   padding: 15px 0 16px;
@@ -3445,6 +3449,10 @@ ol, ul {
   font-family: "Karla", sans-serif;
 }
 
+.courses-topic a {
+  color: #000;
+}
+
 #main-menu > ul > li > a {
   position: relative;
   display: block;
@@ -3519,6 +3527,25 @@ ol, ul {
 
 .logo-footer {
   margin-bottom: 30px;
+}
+
+.flat-row {
+  clear: both;
+  display: block;
+  position: relative;
+  padding: 100px 0;
+}
+
+.pad-top50px {
+  padding-top: 50px;
+}
+
+.pad-bottom0px {
+  padding-bottom: 0;
+}
+
+.pad-bottom50px {
+  padding-bottom: 50px;
 }
 
 /*end aqua*/

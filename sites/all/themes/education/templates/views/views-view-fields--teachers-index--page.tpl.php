@@ -25,7 +25,7 @@
  */
 ?>
 
-<div class="img-wrapper">
+<div class="img-wrapper thumb">
 
 <?php foreach ($fields as $id => $field): ?>
   <?php if ($id == 'field_teachecr_pic'): ?>
@@ -42,7 +42,7 @@
 
 </div>
 
-<div class="content-wrapper">
+<div class="content-wrapper list-content">
 <?php foreach ($fields as $id => $field): ?>
   <?php if ($id != 'field_teachecr_pic'): ?>
     <?php if (!empty($field->separator)): ?>
