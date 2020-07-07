@@ -89,7 +89,38 @@
 ?>
 <div id="page-wrapper"><div id="page">
 
-    <header id="header" role="banner" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?>"><div class="section clearfix">
+
+    <div class="top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="language">
+              <ul class="flat-information">
+                <li class="email"><a href="mailto:AlitStudios@gmail.com">AlitStudios@gmail.com</a></li>
+                <li class="phone"><a href="61383766284">+61 3 8376 6284</a></li>
+              </ul>
+            </div><!-- /.language -->
+          </div><!-- /.col-md-6 -->
+          <div class="col-md-6">
+            <div class="top-navigator">
+              <ul>
+               <!-- <li><a href="/">Register</a></li> -->
+                <?php if (user_is_anonymous()) : ?>
+               <!-- <li><a href="/user">Login</a></li> -->
+                <?php endif; ?>
+              </ul>
+            </div><!-- /.top-navigator -->
+          </div><!-- /.col-md-6 -->
+        </div><!-- /.row -->
+      </div><!-- /.container -->
+    </div>
+
+
+    <header id="header" role="banner" class="<?php print $secondary_menu ? 'with-secondary-menu': 'without-secondary-menu'; ?> header">
+      <div class="header-wrap clearfix">
+        <div class="container">
+        <div class="row">
+
         <?php if (user_is_anonymous()): ?>
           <?php if ($secondary_menu): ?>
             <nav id="secondary-menu" role="navigation" class="navigation">
@@ -110,56 +141,60 @@
         <?php endif; ?>
 
 
-        <?php if ($logo): ?>
-          <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
-            <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
-          </a>
-        <?php endif; ?>
+        <div class="col-md-2">
+          <?php if ($logo): ?>
+            <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
+              <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+            </a>
+          <?php endif; ?>
 
-        <?php if ($site_name || $site_slogan): ?>
-          <div id="name-and-slogan"<?php if ($hide_site_name && $hide_site_slogan) { print ' class="element-invisible"'; } ?>>
+          <?php if ($site_name || $site_slogan): ?>
+            <div id="name-and-slogan"<?php if ($hide_site_name && $hide_site_slogan) { print ' class="element-invisible"'; } ?>>
 
-            <?php if ($site_name): ?>
-              <?php if ($title): ?>
-                <div id="site-name"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
-                  <strong>
+              <?php if ($site_name): ?>
+                <?php if ($title): ?>
+                  <div id="site-name"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
+                    <strong>
+                      <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
+                    </strong>
+                  </div>
+                <?php else: /* Use h1 when the content title is empty */ ?>
+                  <h1 id="site-name"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
                     <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
-                  </strong>
-                </div>
-              <?php else: /* Use h1 when the content title is empty */ ?>
-                <h1 id="site-name"<?php if ($hide_site_name) { print ' class="element-invisible"'; } ?>>
-                  <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
-                </h1>
+                  </h1>
+                <?php endif; ?>
               <?php endif; ?>
-            <?php endif; ?>
 
-            <?php if ($site_slogan): ?>
-              <div id="site-slogan"<?php if ($hide_site_slogan) { print ' class="element-invisible"'; } ?>>
-                <?php print $site_slogan; ?>
-              </div>
-            <?php endif; ?>
+              <?php if ($site_slogan): ?>
+                <div id="site-slogan"<?php if ($hide_site_slogan) { print ' class="element-invisible"'; } ?>>
+                  <?php print $site_slogan; ?>
+                </div>
+              <?php endif; ?>
 
-          </div> <!-- /#name-and-slogan -->
-        <?php endif; ?>
+            </div> <!-- /#name-and-slogan -->
+          <?php endif; ?>
+        </div>
 
         <?php print render($page['header']); ?>
 
-        <?php if ($main_menu): ?>
-          <nav id="main-menu" role="navigation" class="navigation <?php print user_is_anonymous() ? 'shown' : ''; ?>">
-            <?php print theme('links__system_main_menu', array(
-              'links' => $main_menu,
-              'attributes' => array(
-                'id' => 'main-menu-links',
-                'class' => array('links', 'clearfix'),
-              ),
-              'heading' => array(
-                'text' => t('Main menu'),
-                'level' => 'h2',
-                'class' => array('element-invisible'),
-              ),
-            )); ?>
-          </nav> <!-- /#main-menu -->
-        <?php endif; ?>
+          <div class="col-md-10">
+            <?php if ($main_menu): ?>
+              <nav id="main-menu" role="navigation" class="navigation <?php print user_is_anonymous() ? 'shown' : ''; ?>">
+                <?php print theme('links__system_main_menu', array(
+                  'links' => $main_menu,
+                  'attributes' => array(
+                    'id' => 'main-menu-links',
+                    'class' => array('links', 'clearfix'),
+                  ),
+                  'heading' => array(
+                    'text' => t('Main menu'),
+                    'level' => 'h2',
+                    'class' => array('element-invisible'),
+                  ),
+                )); ?>
+              </nav> <!-- /#main-menu -->
+            <?php endif; ?>
+          </div>
 
         <?php if ($show_user_menu): ?>
           <!--<div class="b-topnav__icon"><span>&nbsp;</span></div>-->
@@ -176,7 +211,10 @@
           <?php print $education_common_anonymous_menu; ?>
         <?php endif; ?>
 
-      </div></header> <!-- /.section, /#header -->
+      </div>
+      </div>
+      </div>
+    </header> <!-- /.section, /#header -->
 
     <?php if ($messages): ?>
       <div id="messages"><div class="section clearfix">
@@ -242,7 +280,31 @@
         </div></div> <!-- /#triptych, /#triptych-wrapper -->
     <?php endif; ?>
 
-    <div id="footer-wrapper"><div class="section">
+    <div id="footer-wrapper">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="widget widget-text">
+              <img class="logo-footer" src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+            </div>
+          </div><!-- /.col-md-12 -->
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <div class="sidebar-inner-footer">
+              <div class="widget widget-infomation">
+                <ul class="flat-information">
+                  <li class="email"><a href="mailto:education@gmail.com">education@gmail.com</a></li>
+                  <li class="phone"><a href="699999999">+61 9 9999 9999</a></li>
+                  <li class="address">999 King Street, Toronto 3000 Canada</li>
+
+                </ul>
+              </div>
+            </div><!-- /.sidebar-inner-footer -->
+          </div><!-- /.col-md-12 -->
+        </div>
 
         <?php if ($page['footer_firstcolumn'] || $page['footer_secondcolumn'] || $page['footer_thirdcolumn'] || $page['footer_fourthcolumn']): ?>
           <div id="footer-columns" class="clearfix">
@@ -259,7 +321,50 @@
           </footer> <!-- /#footer -->
         <?php endif; ?>
 
-      </div></div> <!-- /.section, /#footer-wrapper -->
+      </div>
+    </div> <!-- /.section, /#footer-wrapper -->
+
+
+    <!-- BOTTOM -->
+    <div class="bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="line-top"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="container-bottom">
+            <div class="col-md-6">
+              <div class="copyright">
+                <!--
+                <p>© Copyright <a href="#">Alitstudio</a> 2015. All Rights Reserved.</p>
+                -->
+              </div>
+            </div><!-- /.col-md-6 -->
+
+            <div class="col-md-6">
+              <ul class="flat-socials text-right">
+                <li class="facebook">
+                  <a href="#"><i class="fa fa-facebook"></i></a>
+                </li>
+                <li class="twitter">
+                  <a href="#"><i class="fa fa-twitter"></i></a>
+                </li>
+                <li class="instagram">
+                  <a href="#"><i class="fa fa-instagram"></i></a>
+                </li>
+                <li class="linkedin">
+                  <a href="#"><i class="fa fa-linkedin"></i></a>
+                </li>
+              </ul>
+            </div><!-- /.col-md-6 -->
+          </div><!-- /.container-bottom -->
+        </div><!-- /.row -->
+      </div><!-- /.container -->
+    </div>
+    <!-- END BOTTOM -->
+
 
     <div id="popup__overlay" class="popup__overlay" style="display: none;"></div>
 

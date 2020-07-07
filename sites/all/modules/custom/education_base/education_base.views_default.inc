@@ -686,6 +686,8 @@ function education_base_views_default_views() {
   $handler->display->display_options['fields']['field_first_name']['alter']['text'] = '[field_first_name] [field_teacher_last_name]';
   $handler->display->display_options['fields']['field_first_name']['alter']['make_link'] = TRUE;
   $handler->display->display_options['fields']['field_first_name']['alter']['path'] = 'user/[uid]';
+  $handler->display->display_options['fields']['field_first_name']['element_type'] = 'h6';
+  $handler->display->display_options['fields']['field_first_name']['element_class'] = 'courses-topic';
   $handler->display->display_options['fields']['field_first_name']['element_label_colon'] = FALSE;
   /* Field: Indexed User: Grade and subject */
   $handler->display->display_options['fields']['field_grade_subject']['id'] = 'field_grade_subject';

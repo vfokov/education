@@ -34,8 +34,8 @@ function education_base_image_default_styles() {
       2 => array(
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => 150,
-          'height' => 150,
+          'width' => 373,
+          'height' => 278,
         ),
         'weight' => 1,
       ),

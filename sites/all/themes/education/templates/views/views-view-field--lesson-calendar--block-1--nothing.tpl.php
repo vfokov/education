@@ -1,6 +1,6 @@
 <?php
 global $user;
-// TODO перенести в preprocess field
+// TODO preprocess field
 
 if (strstr(current_path(), 'user')) {
   $current_path_uid = arg(1);
