@@ -2281,6 +2281,11 @@ nav.teachers-nav ul li ul li a:hover { background: #126d9b; }
 
 .container-inline-date .form-item input {
     width: 150px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+  outline: none;
 }
 
 .calendar-calendar .month-view .full td.single-day .inner div {
@@ -2454,6 +2459,17 @@ input[type="radio"].dls-radio {
     border-radius: 10px;
     background: none repeat scroll 0% 0% #0093c9;
     margin: 3px auto;
+}
+
+.course-list .list-content {
+  overflow: hidden;
+  padding-right: 40px;
+  width: 63%;
+}
+
+.course-list .list-content .courses-topic a {
+
+  color: #666666 !important;
 }
 
 .dls-radio-wrapper:hover {
@@ -2834,7 +2850,7 @@ div.vertical-tabs {
     padding: 0;
 }
 
-#block-views-exp-teachers-index-page button.form-submit,
+
 #block-education-common-front-tutors-search button.form-submit,
 .user-info-from-cookie button.form-submit {
     background: #f17c1e;
@@ -3546,6 +3562,80 @@ ol, ul {
 
 .pad-bottom50px {
   padding-bottom: 50px;
+}
+button, input[type="button"], input[type="reset"], input[type="submit"] {
+  font-size: 14px;
+  font-family: "Karla", sans-serif;
+  font-weight: 700;
+  color: #fff;
+  background-color: #697ea4;
+  text-transform: uppercase;
+  padding: 24px 120px 21px 124px;
+  letter-spacing: 1.2px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -ms-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+#block-views-exp-teachers-index-page button.form-submit {
+  background-color: #697ea4;
+  color: #fff;
+  padding: 13px 29px;
+  float: right;
+  border: none;
+}
+
+ select, .border-radius input[type="text"],
+ .border-radius input[type="password"],
+ .border-radius input[type="datetime"],
+ .border-radius input[type="datetime-local"],
+ .border-radius input[type="date"],
+ .border-radius input[type="month"],
+ .border-radius input[type="time"],
+ .border-radius input[type="week"],
+ .border-radius input[type="number"],
+ .border-radius input[type="email"],
+ .border-radius input[type="url"],
+ .border-radius input[type="search"],
+ .border-radius input[type="tel"],
+ .border-radius input[type="color"] {
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+}
+
+input.form-text, input.form-tel, input.form-email, input.form-url, input.form-search, input.form-number, input.form-color, textarea.form-textarea, select.form-select {
+  border: 1px solid #ccc;
+  font-family: "Karla", sans-serif;
+  color: #fefefe;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 2px solid #eeeeee;
+  height: 50px;
+  color: #999999;
+  padding: 4px 10px;
+  outline: none;
+}
+
+#edit-teacher-date-dates .form-item .description{
+  display: none;
+}
+
+#edit-teacher-date-dates .form-item label {
+  display: block;
 }
 
 /*end aqua*/
