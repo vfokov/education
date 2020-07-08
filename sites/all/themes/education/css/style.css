@@ -3689,6 +3689,17 @@ canvas {
   z-index: 9999;
 }
 
+.popup__title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.view .views-exposed-form .views-exposed-widget .form-submit {
+  margin-top: 32px;
+  padding: 10px 40px;
+  background: #697ea4;
+}
+
 .form__block .pay_from_balance_button {
   background: #ffc439;
   position: relative;
