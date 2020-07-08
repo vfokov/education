@@ -3657,6 +3657,20 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
 
 /*end aqua*/
 
+#education-common-quick-order .form__block {
+  margin-bottom: 5px;
+}
+
+#education-common-quick-order .form__block .form-text {
+  height: 34px;
+  line-height: 39px;
+  font-size: 13px;
+}
+
+.popup.popup_show {
+  z-index: 9999;
+}
+
 /*
 .lc-drawing.with-gui {
   width: 100%;
