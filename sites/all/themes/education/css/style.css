@@ -3469,6 +3469,12 @@ ol, ul {
   color: #000;
 }
 
+.tooltip.darkgrey {
+  z-index: 9;
+  background: #fff !important;
+  opacity: 1;
+}
+
 #main-menu > ul > li > a {
   position: relative;
   display: block;
