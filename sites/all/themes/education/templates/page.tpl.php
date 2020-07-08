@@ -96,8 +96,8 @@
           <div class="col-md-6">
             <div class="language">
               <ul class="flat-information">
-                <li class="email"><a href="mailto:AlitStudios@gmail.com">AlitStudios@gmail.com</a></li>
-                <li class="phone"><a href="61383766284">+61 3 8376 6284</a></li>
+                <li class="email"><a href="mailto:AlitStudios@gmail.com">mystudio@gmaill.com</a></li>
+                <li class="phone"><a href="699999999">+61 9 9999 9999</a></li>
               </ul>
             </div><!-- /.language -->
           </div><!-- /.col-md-6 -->
@@ -296,9 +296,9 @@
             <div class="sidebar-inner-footer">
               <div class="widget widget-infomation">
                 <ul class="flat-information">
-                  <li class="email"><a href="mailto:education@gmail.com">education@gmail.com</a></li>
-                  <li class="phone"><a href="699999999">+61 9 9999 9999</a></li>
-                  <li class="address">999 King Street, Toronto 3000 Canada</li>
+                  <li class="email"><a href="mailto:education@gmail.com">education@gmaill.com</a></li>
+                  <li class="phone"><a href="699999999">+69 9 9999 9999</a></li>
+                  <li class="address">999 King Street, Toronto 9999 Canada</li>
 
                 </ul>
               </div>
