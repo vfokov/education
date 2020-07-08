@@ -3685,6 +3685,10 @@ canvas {
   font-size: 26px;
 }
 
+#admin-menu, #admin-menu .dropdown {
+  z-index: 9999;
+}
+
 .form__block .pay_from_balance_button {
   background: #ffc439;
   position: relative;
