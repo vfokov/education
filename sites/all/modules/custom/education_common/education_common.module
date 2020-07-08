@@ -1033,7 +1033,7 @@ function education_common_preprocess_page(&$variables) {
         drupal_add_js(array('vox_password' => 'ladovod3'), 'setting');
       }
       */
-      if ($user_account->field_vox_username[LANGUAGE_NONE][0]) {
+      if (isset($user_account->field_vox_username[LANGUAGE_NONE]) && $user_account->field_vox_username[LANGUAGE_NONE][0]) {
         drupal_add_js(array('vox_username' => $user_account->field_vox_username[LANGUAGE_NONE][0]['value']), 'setting');
         drupal_add_js(array('vox_password' => $user_account->field_vox_password[LANGUAGE_NONE][0]['value']), 'setting');
       } else {

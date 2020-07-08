@@ -3700,6 +3700,7 @@ canvas {
   max-height: 55px;
   font-size: 18px;
   font-weight: bold;
+  padding: 4px 17px;
 }
 
 .form__block .pay_from_balance_button:hover {
