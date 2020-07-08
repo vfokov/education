@@ -3666,6 +3666,7 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   line-height: 39px;
   font-size: 13px;
   margin: 0;
+  text-transform: none;
 }
 
 #fast_cart {
@@ -3689,6 +3690,7 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   font-size: 14px;
   line-height: 18px;
   height: 30px;
+  text-transform: none;
 }
 
 #fast_cart .form__desc {
