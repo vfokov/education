@@ -3693,6 +3693,10 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   text-transform: none;
 }
 
+.switcher-container {
+  display: none !important;
+}
+
 #fast_cart .form__desc {
   padding: 0;
 }
