@@ -2927,7 +2927,8 @@ div.vertical-tabs {
     display: inline-block;
     font-size: 1em;
     height: 20px;
-    line-height: 14px;
+   /* line-height: 14px;*/
+    line-height: 26px;
     color: #fff;
     -webkit-font-smoothing: antialiased;
     content: 'Show';
@@ -2984,7 +2985,7 @@ input[type="submit"]:before {
 }
 
 .front .views-widget-filter-field_grade_subject select {
-    padding: 7px;
+    padding: 7px 20px;
     width: 100%;
 }
 
@@ -3816,6 +3817,54 @@ canvas {
 
 body #messages {
   margin-top: 100px;
+}
+
+/*front*/
+
+.front #edit-teacher-date-dates .form-item label {
+  display: none;
+}
+
+.front .views-exposed-form .views-exposed-widget .form-submit {
+  margin-top: 0;
+}
+.front #block-education-common-front-tutors-search button.form-submit {
+  background-color: #697ea4;
+  /*color: #fff;*/
+  color: #697ea4;
+  padding: 13px 29px;
+  float: right;
+  border: none;
+  outline: none;
+
+  font-family: "Karla", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -ms-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  margin-left: 12px;
+}
+
+.front #block-education-common-front-tutors-search .container-inline-date .form-item input {
+  margin-left: 12px;
+  padding: 9px 18px 10px;
+}
+
+.front #block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.front #views-exposed-form-teachers-index-page .container {
+  width: 100%;
 }
 
 
