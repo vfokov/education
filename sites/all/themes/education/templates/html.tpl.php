@@ -98,7 +98,7 @@
 <script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.magnific-popup.min.js"></script>
 <script type="text/javascript" src="/sites/all/themes/education/javascript/parallax.js"></script>
 <script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.countdown.js"></script>
-<script type="text/javascript" src="/sites/all/themes/education/javascript/switcher.js"></script>
+<!--<script type="text/javascript" src="/sites/all/themes/education/javascript/switcher.js"></script>-->
 <script type="text/javascript" src="/sites/all/themes/education/javascript/jquery.sticky.js"></script>
 <script type="text/javascript" src="/sites/all/themes/education/javascript/smoothscroll.js"></script>
 <script type="text/javascript" src="/sites/all/themes/education/javascript/main.js"></script>

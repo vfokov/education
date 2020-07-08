@@ -1869,8 +1869,8 @@ a#menu-toggle:after {
     float: left;
 }
 
-.img-wrapper {
-    /*margin-right: 5%;*/
+.profile .img-wrapper {
+    margin-right: 3%;
 }
 
 .content-wrapper {
@@ -3589,6 +3589,16 @@ button, input[type="button"], input[type="reset"], input[type="submit"] {
   padding: 13px 29px;
   float: right;
   border: none;
+  outline: none;
+}
+
+#block-views-exp-teachers-index-page button.form-submit:hover,
+.view .views-exposed-form .views-exposed-widget .form-submit {
+  color: #ccc
+}
+
+#views-exposed-form-lesson-calendar-page-1 {
+  margin-bottom: 40px;
 }
 
  select, .border-radius input[type="text"],
@@ -3699,6 +3709,7 @@ canvas {
   margin-top: 32px;
   padding: 10px 40px;
   background: #697ea4;
+  outline: none;
 }
 
 .form__block .pay_from_balance_button {
