@@ -3634,8 +3634,9 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   display: none;
 }
 
-#edit-teacher-date-dates .form-item label {
+#edit-teacher-date-dates .form-item label, .form-type-slider.form-item-time-slider label {
   display: block;
+  font-size: 1em;
 }
 
 /*end aqua*/
