@@ -3667,6 +3667,15 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   font-size: 13px;
 }
 
+#education-common-quick-order label {
+  margin-bottom: 0;
+}
+
+#education-common-quick-order .form-item {
+  margin-bottom: 0.6em;
+  margin-top: 1px;
+}
+
 .popup.popup_show {
   z-index: 9999;
 }
