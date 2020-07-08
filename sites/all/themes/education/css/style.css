@@ -3665,6 +3665,11 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   height: 34px;
   line-height: 39px;
   font-size: 13px;
+  margin: 0;
+}
+
+#fast_cart {
+  padding: 5px 30px;
 }
 
 #education-common-quick-order label {
@@ -3674,6 +3679,20 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
 #education-common-quick-order .form-item {
   margin-bottom: 0.6em;
   margin-top: 1px;
+}
+
+#fast_cart .popup__title {
+  margin-bottom: 0;
+}
+
+#fast_cart select.form-select {
+  font-size: 14px;
+  line-height: 18px;
+  height: 30px;
+}
+
+#fast_cart .form__desc {
+  padding: 0;
 }
 
 .popup.popup_show {
