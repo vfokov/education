@@ -284,7 +284,7 @@ table ul.links li {
 }
 .item-list .pager .pager-next a,
 .item-list .pager .pager-last a {
-    padding: 10px 0 10px 10px;
+  padding: 5px 20px 6px 10px;
 }
 ul.menu li {
     margin: 12px 0;
