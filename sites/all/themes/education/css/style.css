@@ -3680,6 +3680,10 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   color: #999999;
   padding: 4px 10px;
   outline: none;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
 }
 
 #edit-teacher-date-dates .form-item .description{
@@ -3893,12 +3897,32 @@ body #messages {
 }
 
 #user-login {
-  width: 50%;
+  width: 43%;
   margin: 0 auto;
+  background: #292929;
+  padding: 33px 12px 8px 55px;
+  background-color: #2b3341;
 }
 
 #user-login .form-item label {
-  display: block;
+  display: none;
+}
+
+#user-login input.form-text {
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
+  width: 90%;
+  padding-left: 20px;
+}
+
+#user-login #edit-actions input {
+  margin-right: 47px;
+}
+
+#user-login .form-item {
+  margin-bottom: 0;
 }
 
 .front #block-education-common-front-tutors-search .container-inline-date .form-item input {

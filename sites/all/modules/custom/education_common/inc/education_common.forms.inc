@@ -1037,8 +1037,13 @@ function education_common_form_user_profile_form_alter(&$form, &$form_state, $fo
  * Alters the main user login form.
  */
 function education_common_form_user_login_alter(&$form, &$form_state, $form_id) {
-  $form['name']['#title'] = t('Username or email address');
-  $form['name']['#description'] = t('Enter your username or email address.');
+  //$form['name']['#title'] = t('Username or email address');
+  $form['name']['#title'] = '';
+  $form['name']['#attributes']['placeholder'] = 'Username or email address';
+  $form['pass']['#title'] = '';
+  $form['pass']['#attributes']['placeholder'] = 'Enter password';
+  //$form['name']['#description'] = t('Enter your username or email address.');
+  $form['pass']['#description'] = '';
   $form['name']['#element_validate'][] = 'education_common_user_login_validate';
 }
 
