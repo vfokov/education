@@ -2432,7 +2432,7 @@ ul.flat-socials li a:hover i {
 }
 
 .not-logged-in.page-user #main #content .section {
-    width: 50%;
+    width: auto;
     margin: 0 auto;
 }
 
