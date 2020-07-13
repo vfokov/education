@@ -2899,17 +2899,21 @@ div.vertical-tabs {
 }
 
 #block-education-common-front-tutors-search .user-info-from-cookie #edit-account input {
-    width: 49.8%;
-    padding: 9px 9px 10px;
-    box-sizing: border-box;
-    border: none;
+  width: 46.8%;
+  padding: 9px 9px 10px 15px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 50px;
+  margin-right: 10px;
 }
 
 #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper input {
-    width: 99%;
-    padding: 9px 9px 10px;
-    box-sizing: border-box;
-    border: none;
+  width: 99%;
+  padding: 9px 9px 10px 15px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 50px;
+  margin-right: 10px;
 }
 
 #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper {
@@ -3867,6 +3871,10 @@ body #messages {
   -o-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
   margin-left: 12px;
+}
+
+.front #block-education-common-front-tutors-search .user-info-from-cookie button.form-submit {
+  color: #fff;
 }
 
 .front #block-education-common-front-tutors-search .container-inline-date .form-item input {
