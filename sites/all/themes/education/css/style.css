@@ -1447,6 +1447,10 @@ input.form-button-disabled:active,
   outline: none;
 }
 
+#edit-actions input:hover {
+  color: #cecece;
+}
+
 /* ------------------- Other Overrides -------------------- */
 
 div.password-suggestions {
