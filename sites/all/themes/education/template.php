@@ -165,6 +165,8 @@ function education_preprocess_html(&$variables) {
   ) {
     $variables['classes_array'][] = 'footer-columns';
   }
+
+  $variables['pp_key'] = variable_get_value('paypal_api_key');
 }
 
 /**

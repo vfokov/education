@@ -42,6 +42,16 @@ function education_common_variable_info($options) {
     'localize' => TRUE,
   );
 
+  $variables['paypal_api_key'] = array(
+    'type' => 'text',
+    'title' => 'Paypal api key.',
+    'default' => '',
+    'required' => TRUE,
+    'module' => 'education_common',
+    'group' => 'education_info',
+    'localize' => TRUE,
+  );
+
 
   $variables['pupil_registration_image_adult'] = array(
     'type' => 'image_managed',
