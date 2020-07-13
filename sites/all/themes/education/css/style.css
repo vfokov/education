@@ -2744,6 +2744,10 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     padding: 11px 53px 12px;
     border-radius: 1px;
     margin-top: 0;
+  webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
 }
 
 .vertical-tabs ul.vertical-tabs-list li {
