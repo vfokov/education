@@ -1043,6 +1043,7 @@ function education_common_form_user_login_alter(&$form, &$form_state, $form_id) 
   $form['pass']['#title'] = '';
   $form['pass']['#attributes']['placeholder'] = 'Enter password';
   //$form['name']['#description'] = t('Enter your username or email address.');
+  $form['name']['#description'] = '';
   $form['pass']['#description'] = '';
   $form['name']['#element_validate'][] = 'education_common_user_login_validate';
 }
