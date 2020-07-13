@@ -2711,6 +2711,10 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     box-sizing: border-box;
     margin-top: 0px;
     border: none;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  -o-border-radius: 50px;
+  border-radius: 50px;
 }
 
 .tutor-agree {
@@ -2722,6 +2726,7 @@ input[type="radio"].dls-radio:disabled ~ .dls-radio-wrapper {
     display: inline-block;
     margin-top:-5px;
     margin-right: 5px;
+    background: none;
 }
 
 #block-education-tutor-form-tutor-registation #edit-account input#edit-mail {
