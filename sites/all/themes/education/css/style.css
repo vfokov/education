@@ -3877,6 +3877,15 @@ body #messages {
   color: #fff;
 }
 
+#user-login {
+  width: 50%;
+  margin: 0 auto;
+}
+
+#user-login .form-item label {
+  display: block;
+}
+
 .front #block-education-common-front-tutors-search .container-inline-date .form-item input {
   margin-left: 12px;
   padding: 9px 18px 10px;
