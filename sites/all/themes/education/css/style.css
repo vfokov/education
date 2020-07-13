@@ -2431,6 +2431,11 @@ ul.flat-socials li a:hover i {
     margin: 0 auto;
 }
 
+.not-logged-in.page-user #main #content .section {
+    width: 50%;
+    margin: 0 auto;
+}
+
 .view-teacher-lessons .view-footer {
     margin-top: 20px;
 }
