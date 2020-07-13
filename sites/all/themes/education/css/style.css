@@ -1437,7 +1437,14 @@ input.form-button-disabled:active,
     margin-bottom: 0.4em;
 }
 #edit-actions input {
-    margin-right: 0.6em; /* LTR */
+  margin-right: 0.6em;
+  background: none;
+  background-color: #697ea4;
+  color: #fff;
+  padding: 13px 42px;
+  float: right;
+  border: none;
+  outline: none;
 }
 
 /* ------------------- Other Overrides -------------------- */
@@ -3486,7 +3493,7 @@ ol, ul {
   line-height: 120px;
   height: 120px;
   font-weight: 700;
-  padding: 0 33px 0 33px;
+  padding: 0 3px 0 33px;
   outline: none;
   letter-spacing: 1.8px;
 }
