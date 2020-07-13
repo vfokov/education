@@ -1315,6 +1315,7 @@ input.form-submit:focus {
 }
 .form-actions {
     padding-top: 10px;
+    overflow: hidden;
 }
 /* Contact Form */
 .contact-form #edit-name {
@@ -3250,6 +3251,11 @@ span.icon.i-tutor-card {
     font-size: 1.2em;
     padding: 0.5em 2em;
     margin: 1.5em 0;
+}
+
+.form-item.form-type-radio.form-item-field-student-age-category-und {
+  width: 29%;
+  margin: 2%;
 }
 
 /*Tutor profile redo*/
