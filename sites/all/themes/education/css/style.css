@@ -1894,7 +1894,7 @@ a#menu-toggle:after {
 }
 
 .content .profile .content-wrapper {
-    width: 65%;
+  width: 40%;
 }
 
 .quicktabs-tabs.quicktabs-style-nostyle {
@@ -3946,7 +3946,7 @@ body #messages {
 
 .profile .field.field-label-inline {
   margin: 0;
-  width: 50%;
+  /*width: 50%;*/
   background-color: #eef1f6;
   padding: 19px 25px;
   /* font-weight: 600; */
