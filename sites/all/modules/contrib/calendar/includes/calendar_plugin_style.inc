@@ -185,7 +185,7 @@ class calendar_plugin_style extends views_plugin_style {
   function date_argument_handler() {
     $i = 0;
     foreach ($this->view->argument as $name => $handler) {
-      if (date_views_handler_is_date($handler, 'argument') && isset($this->date_info)) {
+      if (date_views_handler_is_date($handler, 'argument')) {
         $this->date_info->date_arg_pos = $i;
         return $handler;
       }
