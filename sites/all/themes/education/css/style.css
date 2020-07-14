@@ -3941,6 +3941,7 @@ body #messages {
 
 .profile .field-type-taxonomy-term-reference h3 {
   font-weight: bold;
+  border: none;
 }
 
 .profile .field-type-taxonomy-term-reference ul.links {
