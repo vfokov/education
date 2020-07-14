@@ -3901,7 +3901,8 @@ body #messages {
   margin: 0 auto;
   padding: 41px 12px 8px 55px;
   border: 2px solid #eeeeee;
-  border-radius: 20px;
+  border-radius: 10px;
+  background: #e1e1e1;
 }
 
 #user-login .form-item label {
