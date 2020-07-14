@@ -3952,6 +3952,31 @@ body #messages {
   float: right;
 }
 
+.teacher-documents {
+  overflow: hidden;
+  clear: both;
+}
+
+.profile .teacher-documents .field.field-label-inline {
+  width: auto;
+}
+
+.profile .teacher-documents .field.field-label-inline .field-items {
+  float: left;
+  margin-left: 20px;
+}
+
+.profile .teacher-documents .field-label-inline .field-label {
+  float: none;
+}
+
+.profile .teacher-documents .field.field-label-inline .field-items {
+  float: none;
+  margin-left: 20px;
+  display: block;
+  margin-top: 10px;
+  margin-right: 20px;
+}
 
 .profile .field-type-taxonomy-term-reference ul.links li {
   padding: 0;
