@@ -43,10 +43,10 @@ hide($user_profile['field_teacher_last_name']);
 ?>
 
 <div class="profile"<?php print $attributes; ?>>
-
-  <?php print render($user_profile['field_first_name']); ?>
-  <?php print render($user_profile['field_teacher_last_name']); ?>
-
+  <div class="name-wrapper">
+    <?php print render($user_profile['field_first_name']); ?>
+    <?php print render($user_profile['field_teacher_last_name']); ?>
+  </div>
   <div class="img-wrapper"><?php print render($user_profile['field_teachecr_pic']);?></div>
       <div class="content-wrapper"><?php print render($user_profile); ?></div>
       <div class="teacher-documents"><?php print render($user_profile['field_documents']); ?></div>
