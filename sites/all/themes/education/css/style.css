@@ -3925,6 +3925,24 @@ body #messages {
   margin-bottom: 30px;
 }
 
+.profile .field-name-field-first-name,
+.profile .field-name-field-teacher-last-name {
+  font-size: 24px;
+  line-height: 30px;
+  padding-bottom: 23px;
+}
+
+.profile .content-wrapper .field-label {
+  font-size: 1em;
+  /* float: LEFT; */
+  /* display: inline-block; */
+  line-height: 28px;
+}
+
+.profile .field-type-taxonomy-term-reference h3 {
+  font-weight: bold;
+}
+
 .front #block-education-common-front-tutors-search .container-inline-date .form-item input {
   margin-left: 12px;
   padding: 9px 18px 10px;
