@@ -3944,6 +3944,10 @@ body #messages {
   border: none;
 }
 
+.profile .field.field-label-inline {
+  margin: 0 0 1.2em;
+}
+
 .profile .field-type-taxonomy-term-reference ul.links {
   font-size: 1em;
 }
