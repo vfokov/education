@@ -3943,6 +3943,10 @@ body #messages {
   font-weight: bold;
 }
 
+.profile .field-type-taxonomy-term-reference ul.links {
+  font-size: 1em;
+}
+
 .front #block-education-common-front-tutors-search .container-inline-date .form-item input {
   margin-left: 12px;
   padding: 9px 18px 10px;
