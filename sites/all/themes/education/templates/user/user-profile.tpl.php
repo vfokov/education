@@ -37,10 +37,15 @@
 //hide($user_profile['field_grade_subject'])
 hide($user_profile['field_teachecr_pic']);
 hide($user_profile['field_documents']);
+hide($user_profile['field_first_name']);
+hide($user_profile['field_teacher_last_name']);
 
 ?>
 
 <div class="profile"<?php print $attributes; ?>>
+
+  <?php print render($user_profile['field_first_name']); ?>
+  <?php print render($user_profile['field_teacher_last_name']); ?>
 
   <div class="img-wrapper"><?php print render($user_profile['field_teachecr_pic']);?></div>
       <div class="content-wrapper"><?php print render($user_profile); ?></div>
