@@ -262,6 +262,10 @@ function education_preprocess_page(&$variables) {
     drupal_add_js(drupal_get_path('theme', 'education') . '/js/front-slider.js');
     drupal_add_css(drupal_get_path('theme', 'education') . '/css/owl.carousel.css');
   }
+
+  if (strstr(current_path(), 'user/')) {
+    drupal_set_title('');
+  }
 }
 
 /**
