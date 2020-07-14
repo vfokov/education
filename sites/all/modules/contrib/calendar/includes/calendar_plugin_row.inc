@@ -310,9 +310,9 @@ class calendar_plugin_row extends views_plugin_row_fields {
 
     // Let the style know if a link to create a new date is required.
     try {
-      //if (isset($this->view->date_info)) {
+      if (isset($this->view) && isset($this->view->date_info)) {
         $this->view->date_info->calendar_date_link = !empty($this->options['calendar_date_link']) ? $this->options['calendar_date_link'] : '';
-      //}
+      }
     }catch(Exception $exc){}
 
     //if (isset($this->view->date_info)) {
