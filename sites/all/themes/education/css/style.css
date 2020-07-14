@@ -3973,6 +3973,11 @@ body #messages {
   width: 100%;
 }
 
+.profile .teacher-documents .field.field-label-inline .field-items .field-item {
+  float: LEFT;
+  margin-right: 30px;
+}
+
 .profile .teacher-documents .field.field-label-inline .field-items {
   float: left;
   margin-left: 20px;
