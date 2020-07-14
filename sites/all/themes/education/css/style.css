@@ -3945,8 +3945,14 @@ body #messages {
 }
 
 .profile .field.field-label-inline {
-  margin: 0 0 1.2em;
+  margin: 0;
   width: 50%;
+  background-color: #eef1f6;
+  padding: 19px 25px;
+  /* font-weight: 600; */
+  border-bottom: 1px solid #cfd7e7;
+  border-left: 1px solid #cfd7e7;
+  border-right: 1px solid #cfd7e7;
 }
 .profile .field.field-label-inline .field-items {
   float: right;
@@ -3959,6 +3965,8 @@ body #messages {
 
 .profile .teacher-documents .field.field-label-inline {
   width: auto;
+  background: none;
+  border: none;
 }
 
 .profile .teacher-documents .field.field-label-inline .field-items {
