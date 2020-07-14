@@ -3958,6 +3958,10 @@ body #messages {
   float: right;
 }
 
+.page-user .messages.error {
+  display: none;
+}
+
 .teacher-documents {
   overflow: hidden;
   clear: both;
