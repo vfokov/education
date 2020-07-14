@@ -3946,6 +3946,16 @@ body #messages {
 
 .profile .field.field-label-inline {
   margin: 0 0 1.2em;
+  width: 50%;
+}
+.profile .field.field-label-inline .field-items {
+  float: right;
+}
+
+
+.profile .field-type-taxonomy-term-reference ul.links li {
+  padding: 0;
+  float: right;
 }
 
 .profile .field-type-taxonomy-term-reference ul.links {
