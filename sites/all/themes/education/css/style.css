@@ -3742,6 +3742,7 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
 }
 
 .popup.popup_show {
+  background: #f1f0f0;
   z-index: 9999;
 }
 
