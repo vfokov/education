@@ -9,6 +9,23 @@ include_once 'inc/education_common.emails.inc';
 include_once 'inc/education_common.forms.inc';
 include_once 'inc/education_common.variable.inc';
 
+/*
+ * Implements hook_menu_alter().
+ */
+function education_common_menu_alter(&$items){
+  // Change 'node/add/page' page to admin theme (Assume by default node/add page uses default theme)
+  $items['user/%user/quiz-results']['access callback'] = 'education_common_access_user_quiz_results';
+  $items['user/%/quiz-results/%/view']['access callback'] = 'education_common_access_user_quiz_results';
+}
+
+function education_common_access_user_quiz_results($quiz) {
+  global $user;
+  if ($user->uid == arg(1)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
 
 /**
  * Implements hook_node_presave().
