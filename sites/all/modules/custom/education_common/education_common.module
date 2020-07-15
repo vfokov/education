@@ -17,6 +17,11 @@ function education_common_menu_alter(&$items){
   $items['user/%user/quiz-results']['access callback'] = 'education_common_access_user_quiz_results';
   $items['user/%/quiz-results/%/view']['access callback'] = 'education_common_access_user_quiz_results';
   $items['user/%/quiz-results']['access callback'] = 'education_common_access_user_quiz_results';
+  global $user;
+  $path_uid = arg(1);
+  if ($user->uid != $path_uid) {
+    unset($items['user/%/quiz-results']);
+  }
 }
 
 function education_common_access_user_quiz_results($quiz) {
@@ -952,6 +957,22 @@ function education_common_preprocess_node(&$variables) {
  * Override or insert variables into the node template.
  */
 function education_common_preprocess_page(&$variables) {
+  global $user;
+
+  $variables['show_tabs'] = TRUE;
+  if (strstr(current_path(), 'user/')) {
+    $current_path_uid = arg(1);
+    if ($current_path_uid != $user->uid) {
+      $variables['show_tabs'] = FALSE;
+    }
+  }
+
+  //echo arg(1); die();
+
+  //echo current_path(); die();
+
+  //global $user;
+  //echo $user->uid; die();
 
  // $l_node = node_load(31);
  // var_dump($l_node); die();
