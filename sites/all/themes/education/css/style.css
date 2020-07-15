@@ -2845,16 +2845,17 @@ div.vertical-tabs {
 }
 
 #fast_cart #edit-submit, #fast_cart .form-submit {
-    background: #f17c1e;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.929em;
-    font-weight: normal;
-    text-align: center;
-    padding: 9px 37px 10px;
-    border-radius: 1px;
-    margin-top: 0;
+  background: #f17c1e;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.929em;
+  font-weight: normal;
+  text-align: center;
+  padding: 11px 37px 12px;
+  border-radius: 1px;
+  margin-top: 0;
+  width: 100%;
 }
 
 #block-education-common-front-tutors-search {
