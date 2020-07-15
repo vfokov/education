@@ -3584,6 +3584,14 @@ ol, ul {
   color: #999999;
 }
 
+#main .form-managed-file .form-submit {
+  margin: 0;
+  background: #697ea4;
+  padding: 13px 42px;
+  border: none;
+  outline: none;
+}
+
 .logo-footer {
   margin-bottom: 30px;
 }

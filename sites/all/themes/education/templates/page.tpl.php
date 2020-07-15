@@ -242,7 +242,7 @@
               </h1>
             <?php endif; ?>
             <?php print render($title_suffix); ?>
-            <?php if ($tabs): ?>
+            <?php if ($tabs && $show_tabs): ?>
               <div class="tabs">
                 <?php print render($tabs); ?>
               </div>
