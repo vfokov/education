@@ -2124,7 +2124,7 @@ button.popup__close {
 }
 
 .calendar-agenda-hour span.calendar-hour {
-    font-size: 12px !important;
+    font-size: 13px !important;
     margin-top: 9px;
     display: inline-block;
 }
@@ -2389,7 +2389,7 @@ ul.flat-socials li a:hover i {
 .flat-information > li > a {
   display: inline-block;
   color: #999999;
-  font-size: 12px;
+  font-size: 13px;
   font-family: "Karla", sans-serif;
 }
 
@@ -3498,7 +3498,7 @@ ol, ul {
 .flat-information > li > a {
   display: inline-block;
   color: #999999;
-  font-size: 12px;
+  font-size: 13px;
   font-family: "Karla", sans-serif;
 }
 
@@ -3574,7 +3574,7 @@ ol, ul {
 }
 
 #footer-wrapper {
-  font-size: 0.857em;
+  font-size: 13px;
   background-color: #2b3341;
   padding: 50px 0 37px;
   color: #999999;
