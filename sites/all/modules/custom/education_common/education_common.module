@@ -16,6 +16,7 @@ function education_common_menu_alter(&$items){
   // Change 'node/add/page' page to admin theme (Assume by default node/add page uses default theme)
   $items['user/%user/quiz-results']['access callback'] = 'education_common_access_user_quiz_results';
   $items['user/%/quiz-results/%/view']['access callback'] = 'education_common_access_user_quiz_results';
+  $items['user/%/quiz-results']['access callback'] = 'education_common_access_user_quiz_results';
 }
 
 function education_common_access_user_quiz_results($quiz) {
