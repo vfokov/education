@@ -39,6 +39,7 @@ hide($user_profile['field_teachecr_pic']);
 hide($user_profile['field_documents']);
 hide($user_profile['field_first_name']);
 hide($user_profile['field_teacher_last_name']);
+hide($user_profile['field_resume_']);
 
 ?>
 
@@ -49,5 +50,6 @@ hide($user_profile['field_teacher_last_name']);
   </div>
   <div class="img-wrapper"><?php print render($user_profile['field_teachecr_pic']);?></div>
       <div class="content-wrapper"><?php print render($user_profile); ?></div>
+      <div class="teacher-resume"><?php print render($user_profile['field_resume_']); ?></div>
       <div class="teacher-documents"><?php print render($user_profile['field_documents']); ?></div>
 </div>
