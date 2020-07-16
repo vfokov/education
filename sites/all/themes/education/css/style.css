@@ -1724,7 +1724,7 @@ a#menu-toggle:after {
     /* ----------------- Menu on Small Resolutions ---------- */
     a#menu-toggle {
         display:block;
-        background: #0093c9;
+        background: #697ea4;
         text-indent: -9999px;
     }
 
@@ -1733,7 +1733,7 @@ a#menu-toggle:after {
         height: auto;
         position: fixed;
         top: 41px;
-        background: #0093c9;
+        background: #697ea4;
         width: 100%;
         margin: 0;
     }
@@ -4215,6 +4215,7 @@ body #messages {
         margin-top: 0;
         width: 100%;
         position: fixed;
+        left: 0;
         top: 0;
         z-index: 9;
     }
@@ -4232,6 +4233,18 @@ body #messages {
         width: 90%;
         padding: 10px 0 0 20px;
     }
+
+  #main-menu > ul > li > a {
+    text-transform: none;
+    color: #fff;
+    line-height: 31px;
+    height: 30px;
+    font-weight: 500;
+    padding: 10px 3px 10px 47px;
+    letter-spacing: 1.6px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
 
     #main-menu #main-menu-links li a.active, #main-menu-links li.active-trail a {
         background: none repeat scroll 0 0 rgba(255, 255, 255, 0.8);
