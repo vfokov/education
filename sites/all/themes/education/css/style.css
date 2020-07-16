@@ -2845,7 +2845,7 @@ div.vertical-tabs {
 }
 
 #fast_cart #edit-submit, #fast_cart .form-submit,
-#lesson_date_enable .form-submit {
+#lesson_date_enable .form-submit, #lesson_date_disable .form-submit {
   background: #f17c1e;
   border: none;
   color: #fff;
