@@ -4360,6 +4360,11 @@ body #messages {
     margin: 0;
   }
 
+  .not-front #block-education-tutor-form-tutor-registation .form-actions {
+    float: none;
+    width: 100%;
+  }
+
   .not-front #block-education-tutor-form-tutor-registation input.form-submit {
     padding: 11px 24px 12px;
     width: 100%;
