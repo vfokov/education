@@ -4099,13 +4099,21 @@ body #messages {
 
     #block-education-common-front-tutors-search .container-inline-date .form-item input {
       width: 100%;
-      margin: 15px 0;
+      margin: 15px 0 0 0;
     }
+
+  .front #block-education-common-front-tutors-search button.form-submit {
+    margin-top: 13px;
+  }
 
     .views-exposed-form .container-inline-date .date-padding {
       padding: 0;
       width: 100%;
     }
+
+  .front .views-exposed-form .views-exposed-widget {
+    padding: .5em 0 0 0;
+  }
 
     #block-education-common-front-tutors-search button.form-submit,
     #block-views-exp-teachers-index-page button.form-submit {
@@ -4133,6 +4141,22 @@ body #messages {
   .front #page #block-education-common-front-tutors-search #views-exposed-form-teachers-index-page {
     width: 100%;
   }
+
+  .front #page #block-education-common-front-tutors-search .container-inline-date .form-item input {
+    margin-left: 0;
+    padding: 9px 18px 10px 21px;
+  }
+
+  /*
+  .front #page .views-widget-filter-field_grade_subject select {
+    margin-bottom: 13px;
+  }
+
+  .front #page .views-widget-filter-field_grade_subject .form-item-field-grade-subject select {
+    margin-bottom: 0;
+  }
+  */
+   */
 
     #block-education-common-front-tutors-search .views-exposed-widget.views-submit-button .container-inline-date,
     #block-education-common-front-tutors-search .container-inline-date .form-item .form-item {
