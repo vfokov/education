@@ -4333,4 +4333,17 @@ body #messages {
     width: 28%;
     margin: 2%;
   }
+
+  .not-front #block-education-tutor-form-tutor-registation {
+    padding: 10%;
+  }
+
+  .not-front #block-education-tutor-form-tutor-registation #edit-account {
+    width: 100%;
+    float: none;
+  }
+  .not-front #block-education-tutor-form-tutor-registation .form-item-field-teaching-format-und {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 }
