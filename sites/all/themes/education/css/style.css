@@ -4380,4 +4380,10 @@ body #messages {
   #block-education-common-form-pupil-registation .field-name-field-terms-of-service {
     margin-left: 7%;
   }
+
+  .not-front #block-education-common-form-pupil-registation #edit-actions input {
+    float: left;
+    margin-left: 6%;
+    width: 87%;
+  }
 }
