@@ -7,7 +7,7 @@ function education_common_enable_lesson_date($form, &$form_state) {
 
   $form['enable_info'] = array(
     '#type' => 'markup',
-    '#markup' => '<div class="form__desc">Do you want to enable this lesson date?<br /><br /></div>',
+    '#markup' => '<div class="form__desc">Do you want to enable this lesson date?<br /></div>',
     '#theme_wrappers' => array(),
     '#prefix' => '<div class="form__block">',
     '#suffix' => '</div>',
