@@ -4371,4 +4371,13 @@ body #messages {
     box-sizing: border-box;
     float: none;
   }
+
+  .not-front #block-education-common-form-pupil-registation #edit-account .form-item {
+    width: 87%;
+  }
+
+  #block-education-common-form-pupil-registation .field-name-field-ready-to-get-news,
+  #block-education-common-form-pupil-registation .field-name-field-terms-of-service {
+    margin-left: 7%;
+  }
 }
