@@ -2844,7 +2844,8 @@ div.vertical-tabs {
     background: rgba(95, 94, 94, 0.6);
 }
 
-#fast_cart #edit-submit, #fast_cart .form-submit {
+#fast_cart #edit-submit, #fast_cart .form-submit,
+#lesson_date_enable .form-submit {
   background: #f17c1e;
   border: none;
   color: #fff;
@@ -3584,6 +3585,31 @@ ol, ul {
   color: #999999;
 }
 
+.popup.popup_show .container-inline-date .date-padding {
+  float: none;
+}
+
+.popup.popup_show .container-inline-date .form-item,
+.popup.popup_show .container-inline-date .form-item input {
+  width: 100%;
+}
+
+.popup.popup_show .container-inline-date .date-padding {
+  float: none;
+}
+
+.popup.popup_show .container-inline-date .form-item input {
+  outline: none;
+  height: 34px;
+  line-height: 39px;
+  font-size: 13px;
+  margin: 0;
+  text-transform: none;
+  width: 100%;
+  border: 1px solid #d9d7d7;
+  border-radius: 2px;
+}
+
 #main .form-managed-file .form-submit {
   margin: 0;
   background: #697ea4;
@@ -3735,11 +3761,17 @@ input.form-text, input.form-tel, input.form-email, input.form-url, input.form-se
   margin-bottom: 0;
 }
 
-#fast_cart select.form-select {
+#fast_cart select.form-select,
+#lesson_date_enable select.form-select {
   font-size: 14px;
   line-height: 18px;
   height: 30px;
   text-transform: none;
+}
+
+#lesson_date_enable .form-item {
+  margin-bottom: 0.1em;
+  margin-top: 1px;
 }
 
 .switcher-container {
