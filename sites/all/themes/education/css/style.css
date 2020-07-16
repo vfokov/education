@@ -4115,6 +4115,10 @@ body #messages {
     padding: .5em 0 0 0;
   }
 
+  .front #block-education-common-front-tutors-search .user-info-from-cookie #field-phone-add-more-wrapper input {
+    margin-bottom: 0;
+  }
+
     #block-education-common-front-tutors-search button.form-submit,
     #block-views-exp-teachers-index-page button.form-submit {
       width: 100%;
