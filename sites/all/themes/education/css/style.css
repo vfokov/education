@@ -1740,6 +1740,8 @@ a#menu-toggle:after {
         /*padding-bottom: 10px;*/
     }
 
+
+
     /* ----------------- Forms on Small Screens ------------- */
     input.form-text,
     input.form-tel,
@@ -4312,4 +4314,23 @@ body #messages {
         height: 50px;
         width: 75px;
     }
+
+  #block-education-common-form-pupil-registation {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0;
+  }
+
+  #block-education-common-form-pupil-registation #edit-actions input {
+    float: left;
+  }
+
+  .form-item-field-student-age-category-und {
+    margin: 10px 0px;
+  }
+
+  .form-item.form-type-radio.form-item-field-student-age-category-und {
+    width: 28%;
+    margin: 2%;
+  }
 }
