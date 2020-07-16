@@ -4346,4 +4346,8 @@ body #messages {
     width: 100%;
     margin-bottom: 20px;
   }
+
+  .not-front #block-education-tutor-form-tutor-registation #edit-account input {
+    width: 100%;
+  }
 }
