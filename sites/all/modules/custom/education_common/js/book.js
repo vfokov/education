@@ -337,8 +337,8 @@ function getOffsetRect(elem) {
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: amount_value,
-                  currency: 'CAD'
+                  //currency_code: 'CAD',
+                  value: amount_value
                 }
               }]
             });
@@ -431,8 +431,8 @@ function getOffsetRect(elem) {
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: amount_value,
-                  currency: 'CAD'
+                  //currency_code: 'CAD',
+                  value: amount_value
                 }
               }]
             });
@@ -471,8 +471,8 @@ function getOffsetRect(elem) {
             return actions.order.create({
               purchase_units: [{
                 amount: {
-                  value: amount_value,
-                  currency: 'CAD'
+                  //currency_code: 'CAD',
+                  value: amount_value
                 }
               }]
             });
