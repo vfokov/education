@@ -64,7 +64,7 @@
 <body class="<?php print $classes; ?> header-sticky" <?php print $attributes;?>>
 
 <script
-  src="https://www.paypal.com/sdk/js?client-id=<?php print $pp_key; ?>"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+  src="https://www.paypal.com/sdk/js?client-id=<?php print $pp_key; ?>&currency=CAD"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
 </script>
 
   <div id="skip-link">
