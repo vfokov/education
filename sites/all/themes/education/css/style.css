@@ -4073,6 +4073,10 @@ body #messages {
   width: 100%;
 }
 
+#block-education-common-front-video {
+  margin-top: 20px;
+}
+
 .container-video {
   position: relative;
   overflow: hidden;
