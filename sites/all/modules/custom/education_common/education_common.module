@@ -720,6 +720,12 @@ function education_common_theme() {
      'template' => 'education-common-anonymous-menu',
    ),
 
+    'front_video' => array(
+     'variables' => NULL,
+     'path' => drupal_get_path('module', 'education_common') . '/templates',
+     'template' => 'front-video',
+   ),
+
 
   );
 
@@ -1174,6 +1180,10 @@ function education_common_block_info() {
   $blocks['front-tutors-search'] = array(
     'info' => 'Front tutors search',
   );
+
+  $blocks['front-video'] = array(
+    'info' => 'Front video',
+  );
   return $blocks;
 }
 
@@ -1236,6 +1246,12 @@ function education_common_block_view($delta = '') {
 
       $block = module_invoke('views', 'block_view', '-exp-teachers_index-page');
       $block['content'] = $block['content'];
+      break;
+
+      case 'front-video':
+      $block['subject'] = '';
+
+      $block['content'] = theme('front_video');
       break;
   }
   return $block;
