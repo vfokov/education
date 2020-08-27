@@ -4099,6 +4099,22 @@ body #messages {
 
 @media all and (max-width: 768px) {
 
+  #user-login {
+    width: 100%;
+    padding: 25px;
+
+  }
+
+  #user-login input.form-text {
+    width: 100%;
+  }
+
+  #user-login #edit-actions input {
+    margin-right: 0;
+    width: 100%;
+    float: none;
+  }
+
     #page #featured {
       margin-top: 40px;
     }
