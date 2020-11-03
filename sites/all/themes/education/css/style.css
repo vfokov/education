@@ -1810,7 +1810,7 @@ a#menu-toggle:after {
     #logo {
       padding: 0; /* LTR */
       transition: all 0.3s linear;
-      margin: 42px 0 17px 0;
+      margin: 31px 0 17px 0;
     }
     #name-and-slogan {
         padding: 26px 0 0;
@@ -2004,7 +2004,8 @@ a#menu-toggle:after {
 
 .popup__close {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAALRJREFUeNqEkjEOgkAQRdcNnbRQSK9RpKfVc9rYewbt9AQapddCWnr9Y/4m42SMk7xm+G+ZWRjttpuAmoIHGIJfOZiALjJ8BUdQOGHpnZiZRZ58AQ04GKlgbwnO4B45xpqNWkkpXPOZZIaMJz3Z2CspqPAK9NLI1OutFGxYKpoFX+FPaaE0M9udvoRSjZLG8C7iI4ydcK92SpJkchEqsPAWdKRKbqkDc/koP34NkVoefHsLMAAPZDWZdDRSBwAAAABJRU5ErkJggg==") no-repeat 50% 50%;
-    cursor: pointer;
+
+  cursor: pointer;
     padding: 15px;
     position: absolute;
     right: 18px;
