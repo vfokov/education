@@ -3,6 +3,33 @@
 //define('STUDENT_ROLE', 5);
 
 /**
+ * Implements hook_menu().
+ */
+function education_pupil_menu() {
+  $items = array();
+
+  $items['pupil/profile'] = array(
+    'title' => 'Pupil profile',
+    'page callback' => 'education_pupil_setup',
+    'access callback' => TRUE,
+    //'page arguments' => array(1),
+    'file path' => drupal_get_path('module', 'user'),
+    'file' => 'user.pages.inc',
+  );
+
+  return $items;
+}
+
+function education_pupil_setup() {
+  global $user;
+  $account = user_load($user->uid);
+  $form_state['build_info']['args'][] = $account;
+  form_load_include($form_state, 'inc', 'user', 'user.pages');
+  $userform = drupal_build_form('user_profile_form', $form_state);
+  return drupal_render($userform);
+}
+
+/**
  * Implements hook_theme()
  */
 function education_pupil_theme() {
@@ -74,7 +101,9 @@ function education_pupil_block_view($delta = '') {
       $summ = isset($account->field_balance[LANGUAGE_NONE]) ? $account->field_balance[LANGUAGE_NONE][0]['value'] : 0;
       //$balance_summ = $summ;
 
-      $block['content'] = '<div class="balance"><div class="user-balance">Your balance is: ' . $summ . 'С$</div></div>';
+      $block['content'] = '<div class="balance">
+<a href="#" class="btn product__balance_recharge popup__link" data-popup="balance_recharge">Add balance</a>
+<span class="user-balance">Your balance is: ' . $summ . 'С$</span></div>';
       break;
   }
   return $block;
