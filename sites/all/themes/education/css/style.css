@@ -4121,6 +4121,12 @@ body #messages {
   max-width: inherit;
 }
 
+.balance a.btn {
+  font-size: 1.0em;
+  padding-right: 7px;
+  vertical-align: baseline;
+}
+
 @media all and (max-width: 768px) {
 
   #user-login {
