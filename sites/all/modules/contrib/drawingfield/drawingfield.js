@@ -7,8 +7,8 @@
 
   //TODO ws
   // создать подключение
-  var socket = new WebSocket("ws://localhost:8081");
-  var user_id = Math.random().toString(36).substr(2, 5);
+  // var socket = new WebSocket("ws://localhost:8081");
+  // var user_id = Math.random().toString(36).substr(2, 5);
 
   var lock = 0;
 
