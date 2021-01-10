@@ -1162,7 +1162,7 @@ function education_common_block_info() {
   );
 
   $blocks['form-pupil-registation'] = array(
-    'info' => 'Pupil registration form',
+    'info' => 'Student registration form',
   );
 
   $blocks['form-pupil-profile'] = array(
@@ -1217,7 +1217,7 @@ function education_common_block_view($delta = '') {
       break;
 
     case 'form-pupil-registation':
-      $block['subject'] = t('Pupil registration');
+      $block['subject'] = t('Student registration');
       $block['content'] = drupal_get_form('user_register_form');
       break;
     case 'form-pupil-profile':
