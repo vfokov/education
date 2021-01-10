@@ -435,7 +435,7 @@ function education_base_field_default_field_bases() {
     'settings' => array(
       'allowed_values' => array(
         'adult' => 'Adult',
-        'schoolboy' => 'Schoolboy',
+        'schoolboy' => 'School Student',
         'student' => 'Student',
       ),
       'allowed_values_function' => '',
