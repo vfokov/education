@@ -1051,9 +1051,11 @@ function education_common_preprocess_page(&$variables) {
   }
 
   //if (strstr(request_uri(), '/recharge-balance')) {
-    $block_balance_recharge = education_common_get_rendered_block('education_common', 'form-balance-recharge');
+  if (!strstr(current_path(), 'admin/')) {
+    $block_balance_recharge             = education_common_get_rendered_block('education_common', 'form-balance-recharge');
     $variables['form_balance_recharge'] = $block_balance_recharge;
     drupal_add_js(drupal_get_path('module', 'education_common') . '/js/book.js');
+  }
   //}
 
   //pupil/planned-lessons
