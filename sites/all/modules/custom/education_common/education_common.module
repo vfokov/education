@@ -542,41 +542,43 @@ function education_common_views_pre_render(&$view) {
  * Implements hook_user_init
  */
 function education_common_init() {
-  if (request_uri() == '/pupil/profile' ) {
-    if (user_has_role(TEACHER_ROLE)) {
-      drupal_goto('tutor-setup');
-    }
-    if (user_is_anonymous()) {
-      drupal_goto('/');
-    }
-  }
-
-  if (request_uri() == '/tutor-setup' ) {
-    if (user_has_role(STUDENT_ROLE)) {
-      drupal_goto('pupil/profile');
-    }
-    if (user_is_anonymous()) {
-      drupal_goto('/');
-    }
-  }
-
-  // for teacher user/56/edit
-  if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
-    if (user_has_role(TEACHER_ROLE)) {
-      if (!$_GET["pass-reset-token"]) {
+  if (!user_access('administer site configuration')) {
+    if (request_uri() == '/pupil/profile') {
+      if (user_has_role(TEACHER_ROLE)) {
         drupal_goto('tutor-setup');
       }
-    }
-  }
-
-  if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit') ) {
-    if (user_has_role(STUDENT_ROLE)) {
-      if (!$_GET["pass-reset-token"]) {
-        drupal_goto('pupil/profile');
+      if (user_is_anonymous()) {
+        drupal_goto('/');
       }
     }
-  }
 
+    if (request_uri() == '/tutor-setup') {
+      if (user_has_role(STUDENT_ROLE)) {
+        drupal_goto('pupil/profile');
+      }
+      if (user_is_anonymous()) {
+        drupal_goto('/');
+      }
+    }
+
+    // for teacher user/56/edit
+    if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit')) {
+      if (user_has_role(TEACHER_ROLE)) {
+        if (!$_GET["pass-reset-token"]) {
+          drupal_goto('tutor-setup');
+        }
+      }
+    }
+
+    if (strstr(request_uri(), 'user') && strstr(request_uri(), 'edit')) {
+      if (user_has_role(STUDENT_ROLE)) {
+        if (!$_GET["pass-reset-token"]) {
+          drupal_goto('pupil/profile');
+        }
+      }
+    }
+
+  }
 
 }
 
