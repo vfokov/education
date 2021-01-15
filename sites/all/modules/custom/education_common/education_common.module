@@ -512,14 +512,23 @@ function education_common_class_room($arg) {
 
 function education_recharge_balance() {
   global $user;
-  $account = user_load($user->uid);
-  $summ = isset($account->field_balance[LANGUAGE_NONE]) ? $account->field_balance[LANGUAGE_NONE][0]['value'] : 0;
+  $account      = user_load($user->uid);
+  $summ         = isset($account->field_balance[LANGUAGE_NONE]) ? $account->field_balance[LANGUAGE_NONE][0]['value'] : 0;
   $balance_summ = $summ;
-  return array(
-    '#markup' => '<div class="balance"><div class="user-balance">Your balance is: ' . $balance_summ . '$</div>
+
+  if (!user_has_role(TEACHER_ROLE)) {
+    return [
+      '#markup' => '<div class="balance"><div class="user-balance">Your balance is: ' . $balance_summ . '$</div>
 <div class="recharge"><a href="#" class="btn product__balance_recharge popup__link" data-popup="balance_recharge">Recharge balance</a>
 </div>',
-  );
+
+    ];
+  }
+  else {
+    return [
+      '#markup' => '<div class="balance"><div class="user-balance">Your balance is: ' . $balance_summ . '$</div></div>',
+      ];
+  }
 }
 
 /**
