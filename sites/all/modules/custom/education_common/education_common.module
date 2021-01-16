@@ -592,11 +592,33 @@ function education_common_init() {
 }
 
 /**
+ * Implements hook_block_view().
+ */
+function education_common_create_lesson($uid, $name) {
+  $node_lesson = new stdClass();
+  $node_lesson->type = 'lesson';
+  $node_lesson->language = LANGUAGE_NONE;
+  node_object_prepare($node_lesson);
+
+  $node_lesson->title = 'Introductory Lesson for ' .$name;
+  $node_lesson->status = 1;
+  $node_lesson->promote = 0;
+  $node_lesson->sticky = 0;
+
+  $node_lesson->uid = $uid;
+  $node_lesson->body[LANGUAGE_NONE][0]['value'] = 'This lesson was created for Introductory purposes';
+  $node_lesson->body[LANGUAGE_NONE][0]['summary'] = 'body summary';
+  $node_lesson->body[LANGUAGE_NONE][0]['format'] = 'full_html';
+  node_save($node_lesson);
+}
+
+/**
  * Implements hook_user_insert()
  */
 function education_common_user_insert(&$edit, $account, $category) {
   if (isset($edit['field_is_a_teacher'][LANGUAGE_NONE]) && $edit['field_is_a_teacher'][LANGUAGE_NONE]['0']['value'] ) {
     $role = TEACHER_ROLE;
+    education_common_create_lesson($account->uid, $account->name);
   }
   else {
     $role = STUDENT_ROLE;
