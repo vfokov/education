@@ -121,8 +121,7 @@ function education_common_form_lesson_node_form_alter(&$form, &$form_state, $for
       ),
     ),
   );
-
-
+  
   // Uncheck anonymous field when the name field is filled.
   $form['enabled_enable_time_range'] = array(
     '#type' => 'checkbox',
